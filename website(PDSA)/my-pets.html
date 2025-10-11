@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Pets | PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-dark: #1a252f;
+            --primary-light: #d6eaf8;
+            --secondary: #3498db;
+            --secondary-dark: #2980b9;
+            --secondary-light: #ebf5fb;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-light: #f8f9fa;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-user {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links a.active {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .user-profile-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-header h1 i {
+            color: var(--secondary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+        }
+
+        .btn-accent:hover {
+            background: #c0392b;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary-light);
+        }
+
+        /* Pets Grid */
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .pet-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .pet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .pet-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pet-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .pet-card:hover .pet-image img {
+            transform: scale(1.05);
+        }
+
+        .pet-type {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--secondary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .pet-info {
+            padding: 1.5rem;
+        }
+
+        .pet-name {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .pet-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .pet-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .pet-detail i {
+            color: var(--secondary);
+        }
+
+        .pet-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+        }
+
+        .pet-actions .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* Add/Edit Pet Form */
+        .pet-form-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 3rem;
+            display: none;
+            position: relative;
+        }
+
+        .pet-form-container.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .close-form {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-form:hover {
+            background: var(--bg-light);
+        }
+
+        .close-form:focus {
+            outline: 2px solid var(--secondary);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Image Upload */
+        .image-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 2px dashed var(--primary-light);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview i {
+            font-size: 3rem;
+            color: var(--primary-light);
+        }
+
+        .upload-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .upload-btn:hover {
+            background: var(--secondary-light);
+        }
+
+        /* No Pets State */
+        .no-pets {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .no-pets i {
+            font-size: 4rem;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .no-pets h2 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .no-pets p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Medical History Section */
+        .medical-history {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .medical-history h3 {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .vaccination-list {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+        }
+
+        .vaccination-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .vaccination-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Modal for pet details */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .pets-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .pet-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+            <span>PDSA Veterinary Clinic</span>
+        </a>
+        
+        <div class="nav-user">
+            <nav class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="services.html"><i class="fas fa-stethoscope"></i> Services</a>
+                <a href="appointments.html"><i class="fas fa-calendar"></i> Appointments</a>
+                <a href="#" class="active"><i class="fas fa-paw"></i> My Pets</a>
+                <a href="payment-history.html"><i class="fas fa-receipt"></i> Payments</a>
+            </nav>
+            
+            <div class="user-profile-btn">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
+                <span>Alex J.</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-paw"></i>
+                My Pets
+            </h1>
+            <button class="btn" id="add-pet-btn">
+                <i class="fas fa-plus"></i>
+                Add New Pet
+            </button>
+        </div>
+
+        <!-- Add/Edit Pet Form -->
+        <div class="pet-form-container" id="pet-form-container">
+            <div class="form-header">
+                <h2 id="form-title">Add a New Pet</h2>
+                <button class="close-form" id="close-form" aria-label="Close form">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="pet-form">
+                <input type="hidden" id="pet-id">
+                
+                <div class="image-upload">
+                    <div class="image-preview" id="image-preview">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <input type="file" id="pet-image-upload" accept="image/*" style="display: none;">
+                    <button type="button" class="upload-btn" id="upload-trigger">
+                        <i class="fas fa-upload"></i> Upload Photo
+                    </button>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="pet-name">Pet Name *</label>
+                        <input type="text" id="pet-name" class="form-control" required aria-required="true">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pet-type">Animal Type *</label>
+                        <select id="pet-type" class="form-control" required aria-required="true">
+                            <option value="">Select Type</option>
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="bird">Bird</option>
+                            <option value="rabbit">Rabbit</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pet-breed">Breed</label>
+                        <input type="text" id="pet-breed" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pet-age">Age (years)</label>
+                        <input type="number" id="pet-age" class="form-control" min="0" max="30">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pet-weight">Weight (kg)</label>
+                        <input type="number" id="pet-weight" class="form-control" min="0" step="0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pet-birthday">Birthday</label>
+                        <input type="date" id="pet-birthday" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pet-notes">Medical Notes</label>
+                    <textarea id="pet-notes" class="form-control" rows="3" placeholder="Any medical conditions, allergies, or special care instructions"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-form">Cancel</button>
+                    <button type="submit" class="btn btn-accent" id="submit-form">Save Pet</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Pets Grid -->
+        <div class="pets-grid" id="pets-container">
+            <!-- Pet cards will be dynamically added here -->
+        </div>
+
+        <!-- No Pets State -->
+        <div class="no-pets" id="no-pets">
+            <i class="fas fa-paw"></i>
+            <h2>You don't have any pets registered yet</h2>
+            <p>Add your pets to keep track of their medical history, appointments, and vaccination records all in one place.</p>
+            <button class="btn" id="add-first-pet">
+                <i class="fas fa-plus"></i>
+                Add Your First Pet
+            </button>
+        </div>
+    </div>
+
+    <!-- Pet Detail Modal -->
+    <div class="modal" id="pet-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-pet-name">Pet Details</h2>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Pet details will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved. | <a href="index.html">Home</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
+    </footer>
+
+    <script>
+        // Load pets from localStorage or use sample data
+        let pets = JSON.parse(localStorage.getItem('pdsa-pets')) || [
+            {
+                id: 1,
+                name: "Bella",
+                type: "dog",
+                breed: "Golden Retriever",
+                age: 3,
+                weight: 25,
+                birthday: "2020-05-15",
+                image: "https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80",
+                notes: "Annual vaccination due next month. Allergic to chicken.",
+                vaccinations: [
+                    { name: "Rabies", date: "2022-05-15", due: "2023-05-15" },
+                    { name: "DHPP", date: "2022-05-15", due: "2023-05-15" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Whiskers",
+                type: "cat",
+                breed: "Siamese",
+                age: 5,
+                weight: 4.5,
+                birthday: "2018-11-22",
+                image: "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80",
+                notes: "Requires dental checkup. Last visit was 6 months ago.",
+                vaccinations: [
+                    { name: "FVRCP", date: "2022-11-22", due: "2023-11-22" },
+                    { name: "Rabies", date: "2022-11-22", due: "2023-11-22" }
+                ]
+            }
+        ];
+
+        // DOM Elements
+        const petsContainer = document.getElementById('pets-container');
+        const noPets = document.getElementById('no-pets');
+        const petFormContainer = document.getElementById('pet-form-container');
+        const formTitle = document.getElementById('form-title');
+        const petForm = document.getElementById('pet-form');
+        const petIdInput = document.getElementById('pet-id');
+        const addPetBtn = document.getElementById('add-pet-btn');
+        const addFirstPetBtn = document.getElementById('add-first-pet');
+        const closeFormBtn = document.getElementById('close-form');
+        const cancelFormBtn = document.getElementById('cancel-form');
+        const submitFormBtn = document.getElementById('submit-form');
+        const imagePreview = document.getElementById('image-preview');
+        const imageUpload = document.getElementById('pet-image-upload');
+        const uploadTrigger = document.getElementById('upload-trigger');
+        const petModal = document.getElementById('pet-modal');
+        const modalPetName = document.getElementById('modal-pet-name');
+        const modalBody = document.getElementById('modal-body');
+        const modalClose = document.getElementById('modal-close');
+
+        // Initialize the page
+        function init() {
+            savePets(); // Save sample data if first visit
+            renderPets();
+            updateNoPetsState();
+            
+            // Event listeners
+            addPetBtn.addEventListener('click', () => openPetForm());
+            addFirstPetBtn.addEventListener('click', () => openPetForm());
+            closeFormBtn.addEventListener('click', closePetForm);
+            cancelFormBtn.addEventListener('click', closePetForm);
+            petForm.addEventListener('submit', handleFormSubmit);
+            uploadTrigger.addEventListener('click', () => imageUpload.click());
+            imageUpload.addEventListener('change', handleImageUpload);
+            modalClose.addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside
+            petModal.addEventListener('click', (e) => {
+                if (e.target === petModal) closeModal();
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && petModal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Save pets to localStorage
+        function savePets() {
+            localStorage.setItem('pdsa-pets', JSON.stringify(pets));
+        }
+
+        // Render all pets
+        function renderPets() {
+            petsContainer.innerHTML = '';
+            
+            if (pets.length === 0) {
+                return;
+            }
+            
+            pets.forEach(pet => {
+                const petCard = createPetCard(pet);
+                petsContainer.appendChild(petCard);
+            });
+        }
+
+        // Create pet card HTML
+        function createPetCard(pet) {
+            const card = document.createElement('div');
+            card.className = 'pet-card';
+            
+            const typeIcon = pet.type === 'dog' ? 'fa-dog' : 
+                            pet.type === 'cat' ? 'fa-cat' :
+                            pet.type === 'bird' ? 'fa-crow' :
+                            pet.type === 'rabbit' ? 'fa-rabbit' : 'fa-paw';
+            
+            card.innerHTML = `
+                <div class="pet-image">
+                    <img src="${pet.image}" alt="${pet.name}">
+                    <span class="pet-type">${pet.type.charAt(0).toUpperCase() + pet.type.slice(1)}</span>
+                </div>
+                <div class="pet-info">
+                    <h3 class="pet-name">${pet.name}</h3>
+                    <div class="pet-details">
+                        <div class="pet-detail">
+                            <i class="fas ${typeIcon}"></i>
+                            <span>${pet.breed}</span>
+                        </div>
+                        <div class="pet-detail">
+                            <i class="fas fa-birthday-cake"></i>
+                            <span>${pet.age} years</span>
+                        </div>
+                        <div class="pet-detail">
+                            <i class="fas fa-weight"></i>
+                            <span>${pet.weight} kg</span>
+                        </div>
+                    </div>
+                    <p>${pet.notes}</p>
+                    <div class="pet-actions">
+                        <button class="btn" data-action="edit" data-id="${pet.id}">
+                            <i class="fas fa-edit"></i>
+                            Edit
+                        </button>
+                        <button class="btn btn-secondary" data-action="view" data-id="${pet.id}">
+                            <i class="fas fa-eye"></i>
+                            View
+                        </button>
+                        <button class="btn btn-secondary" data-action="appointment" data-id="${pet.id}">
+                            <i class="fas fa-calendar"></i>
+                            Schedule
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners to buttons
+            const buttons = card.querySelectorAll('button');
+            buttons.forEach(button => {
+                const action = button.getAttribute('data-action');
+                const id = button.getAttribute('data-id');
+                
+                button.addEventListener('click', () => {
+                    if (action === 'edit') {
+                        editPet(parseInt(id));
+                    } else if (action === 'view') {
+                        viewPet(parseInt(id));
+                    } else if (action === 'appointment') {
+                        scheduleAppointment(parseInt(id));
+                    }
+                });
+            });
+            
+            return card;
+        }
+
+        // Show/hide no pets state
+        function updateNoPetsState() {
+            if (pets.length === 0) {
+                noPets.style.display = 'block';
+                petsContainer.style.display = 'none';
+            } else {
+                noPets.style.display = 'none';
+                petsContainer.style.display = 'grid';
+            }
+        }
+
+        // Open pet form for adding new pet
+        function openPetForm(editMode = false, pet = null) {
+            formTitle.textContent = editMode ? 'Edit Pet' : 'Add a New Pet';
+            petFormContainer.classList.add('active');
+            
+            if (editMode && pet) {
+                // Fill form with pet data
+                petIdInput.value = pet.id;
+                document.getElementById('pet-name').value = pet.name;
+                document.getElementById('pet-type').value = pet.type;
+                document.getElementById('pet-breed').value = pet.breed;
+                document.getElementById('pet-age').value = pet.age;
+                document.getElementById('pet-weight').value = pet.weight;
+                document.getElementById('pet-birthday').value = pet.birthday;
+                document.getElementById('pet-notes').value = pet.notes;
+                
+                // Set image preview
+                imagePreview.innerHTML = `<img src="${pet.image}" alt="${pet.name}">`;
+            } else {
+                // Reset form
+                petForm.reset();
+                imagePreview.innerHTML = '<i class="fas fa-camera"></i>';
+            }
+            
+            // Scroll to form
+            petFormContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Close pet form
+        function closePetForm() {
+            petFormContainer.classList.remove('active');
+            petForm.reset();
+        }
+
+        // Handle image upload
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.match('image.*')) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(petForm);
+            const imageSrc = imagePreview.querySelector('img') ? 
+                            imagePreview.querySelector('img').src : 
+                            "https://images.unsplash.com/photo-1560809454-892b55bce5f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80";
+            
+            const petData = {
+                id: petIdInput.value ? parseInt(petIdInput.value) : Date.now(),
+                name: document.getElementById('pet-name').value,
+                type: document.getElementById('pet-type').value,
+                breed: document.getElementById('pet-breed').value,
+                age: document.getElementById('pet-age').value ? parseInt(document.getElementById('pet-age').value) : 1,
+                weight: document.getElementById('pet-weight').value ? parseFloat(document.getElementById('pet-weight').value) : 5,
+                birthday: document.getElementById('pet-birthday').value,
+                notes: document.getElementById('pet-notes').value,
+                image: imageSrc
+            };
+            
+            if (petIdInput.value) {
+                // Edit existing pet
+                const index = pets.findIndex(p => p.id === parseInt(petIdInput.value));
+                if (index !== -1) {
+                    // Preserve vaccinations
+                    petData.vaccinations = pets[index].vaccinations || [];
+                    pets[index] = petData;
+                }
+            } else {
+                // Add new pet
+                petData.vaccinations = [];
+                pets.push(petData);
+            }
+            
+            savePets();
+            renderPets();
+            updateNoPetsState();
+            closePetForm();
+            
+            // Show success message
+            alert(`${petData.name} has been ${petIdInput.value ? 'updated' : 'added'} successfully!`);
+        }
+
+        // Edit pet
+        function editPet(id) {
+            const pet = pets.find(p => p.id === id);
+            if (pet) {
+                openPetForm(true, pet);
+            }
+        }
+
+        // View pet details
+        function viewPet(id) {
+            const pet = pets.find(p => p.id === id);
+            if (!pet) return;
+            
+            const typeIcon = pet.type === 'dog' ? 'fa-dog' : 
+                            pet.type === 'cat' ? 'fa-cat' :
+                            pet.type === 'bird' ? 'fa-crow' :
+                            pet.type === 'rabbit' ? 'fa-rabbit' : 'fa-paw';
+            
+            modalPetName.textContent = pet.name;
+            
+            modalBody.innerHTML = `
+                <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden;">
+                        <img src="${pet.image}" alt="${pet.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${pet.name}</h3>
+                        <p style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <i class="fas ${typeIcon}" style="color: var(--secondary);"></i>
+                            ${pet.breed} • ${pet.type}
+                        </p>
+                        <p style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-birthday-cake" style="color: var(--secondary);"></i>
+                            ${pet.age} years old • ${pet.weight} kg
+                        </p>
+                        ${pet.birthday ? `
+                            <p style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-calendar" style="color: var(--secondary);"></i>
+                                Birthday: ${new Date(pet.birthday).toLocaleDateString()}
+                            </p>
+                        ` : ''}
+                    </div>
+                </div>
+                
+                ${pet.notes ? `
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Medical Notes</h4>
+                        <p>${pet.notes}</p>
+                    </div>
+                ` : ''}
+                
+                ${pet.vaccinations && pet.vaccinations.length > 0 ? `
+                    <div class="medical-history">
+                        <h3><i class="fas fa-syringe"></i> Vaccination History</h3>
+                        <div class="vaccination-list">
+                            ${pet.vaccinations.map(vacc => `
+                                <div class="vaccination-item">
+                                    <div>${vacc.name}</div>
+                                    <div>Given: ${new Date(vacc.date).toLocaleDateString()}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button class="btn" onclick="editPet(${pet.id}); closeModal();">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-secondary" onclick="scheduleAppointment(${pet.id}); closeModal();">
+                        <i class="fas fa-calendar"></i> Schedule Appointment
+                    </button>
+                </div>
+            `;
+            
+            petModal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            petModal.classList.remove('active');
+        }
+
+        // Schedule appointment for pet
+        function scheduleAppointment(petId) {
+            const pet = pets.find(p => p.id === petId);
+            if (pet) {
+                // Store the selected pet in sessionStorage to pre-fill the appointment form
+                sessionStorage.setItem('selectedPet', JSON.stringify({id: pet.id, name: pet.name}));
+                // Redirect to appointments page
+                window.location.href = 'appointments.html';
+            }
+        }
+
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

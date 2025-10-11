@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renew Membership | PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-dark: #1a252f;
+            --primary-light: #d6eaf8;
+            --secondary: #3498db;
+            --secondary-dark: #2980b9;
+            --secondary-light: #ebf5fb;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-light: #f8f9fa;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-user {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links a.active {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .user-profile-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-header h1 i {
+            color: var(--secondary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+        }
+
+        .btn-accent:hover {
+            background: #c0392b;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary-light);
+        }
+
+        /* Currency Indicator */
+        .currency-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            width: fit-content;
+        }
+
+        .currency-indicator i {
+            font-size: 0.9rem;
+        }
+
+        /* Membership Status */
+        .membership-status {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .status-content {
+            flex: 1;
+        }
+
+        .status-content h2 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .status-content p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--accent);
+            display: inline-block;
+        }
+
+        .status-badge.active {
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--success);
+        }
+
+        /* Plans Section */
+        .plans-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-header h2 {
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .plans-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .plan-card.popular {
+            border: 2px solid var(--secondary);
+            transform: scale(1.02);
+        }
+
+        .plan-card.popular::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -10px;
+            right: 1.5rem;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+        }
+
+        .plan-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .plan-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .plan-features {
+            flex: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .plan-feature i {
+            color: var(--success);
+            width: 20px;
+        }
+
+        .plan-feature.disabled {
+            color: var(--text-light);
+        }
+
+        .plan-feature.disabled i {
+            color: var(--text-light);
+        }
+
+        .plan-action {
+            margin-top: auto;
+        }
+
+        /* Payment Section */
+        .payment-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-header h2 {
+            color: var(--primary);
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-method {
+            border: 2px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .payment-method:hover {
+            border-color: var(--secondary);
+        }
+
+        .payment-method.active {
+            border-color: var(--secondary);
+            background: var(--secondary-light);
+        }
+
+        .payment-method i {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .payment-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .summary-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-header h2 {
+            color: var(--primary);
+        }
+
+        .summary-details {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-item.total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #eee;
+        }
+
+        .summary-item .value {
+            font-weight: 500;
+        }
+
+        .terms {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .terms input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .terms label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .terms a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Billing Toggle */
+        .billing-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--secondary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .plans-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .plan-card.popular {
+                transform: scale(1);
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+            
+            .membership-status {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+            <span>PDSA Veterinary Clinic</span>
+        </a>
+        
+        <div class="nav-user">
+            <nav class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="my-pets.html"><i class="fas fa-paw"></i> My Pets</a>
+                <a href="appointments.html"><i class="fas fa-calendar"></i> Appointments</a>
+                <a href="#" class="active"><i class="fas fa-crown"></i> Membership</a>
+                <a href="payment-history.html"><i class="fas fa-receipt"></i> Payments</a>
+            </nav>
+            
+            <div class="user-profile-btn">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
+                <span>Alex J.</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-sync-alt"></i>
+                Renew Membership
+            </h1>
+            <button class="btn btn-outline" onclick="location.href='membership.html'">
+                <i class="fas fa-arrow-left"></i>
+                Back to Membership
+            </button>
+        </div>
+
+        <!-- Currency Indicator -->
+        <div class="currency-indicator">
+            <i class="fas fa-info-circle"></i>
+            <span>All prices shown in South African Rand (ZAR)</span>
+        </div>
+
+        <!-- Membership Status -->
+        <div class="membership-status">
+            <div class="status-content">
+                <h2>Your Current Membership</h2>
+                <p>Your Premium membership will expire in <strong>5 days</strong> on June 30, 2023. Renew now to continue enjoying exclusive benefits.</p>
+                <span class="status-badge">Expiring Soon</span>
+            </div>
+            <button class="btn" onclick="location.href='membership-history.html'">
+                <i class="fas fa-history"></i>
+                View Membership History
+            </button>
+        </div>
+
+        <!-- Plans Section -->
+        <div class="plans-section">
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-crown"></i>
+                    Choose a Membership Plan
+                </h2>
+                <div class="billing-toggle">
+                    <span>Monthly</span>
+                    <label class="switch">
+                        <input type="checkbox" id="billing-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>Annual <small>(Save 20%)</small></span>
+                </div>
+            </div>
+            
+            <div class="plans-container">
+                <!-- Basic Plan -->
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <h3 class="plan-name">Basic Care</h3>
+                        <div class="plan-price">R249<span>/month</span></div>
+                        <p class="plan-description">Essential veterinary care for your pet</p>
+                    </div>
+                    
+                    <div class="plan-features">
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Annual wellness exam</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>10% off all services</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Priority appointment scheduling</span>
+                        </div>
+                        <div class="plan-feature disabled">
+                            <i class="fas fa-times"></i>
+                            <span>Emergency care discount</span>
+                        </div>
+                        <div class="plan-feature disabled">
+                            <i class="fas fa-times"></i>
+                            <span>Dental cleaning</span>
+                        </div>
+                    </div>
+                    
+                    <div class="plan-action">
+                        <button class="btn btn-outline" data-plan="basic">Select Plan</button>
+                    </div>
+                </div>
+                
+                <!-- Premium Plan -->
+                <div class="plan-card popular">
+                    <div class="plan-header">
+                        <h3 class="plan-name">Premium Care</h3>
+                        <div class="plan-price">R499<span>/month</span></div>
+                        <p class="plan-description">Comprehensive veterinary care package</p>
+                    </div>
+                    
+                    <div class="plan-features">
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Bi-annual wellness exams</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>20% off all services & products</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Priority scheduling</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Emergency care coverage</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Annual dental cleaning</span>
+                        </div>
+                    </div>
+                    
+                    <div class="plan-action">
+                        <button class="btn" data-plan="premium">Select Plan</button>
+                    </div>
+                </div>
+                
+                <!-- Family Plan -->
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <h3 class="plan-name">Family Plan</h3>
+                        <div class="plan-price">R799<span>/month</span></div>
+                        <p class="plan-description">Complete care for all your pets</p>
+                    </div>
+                    
+                    <div class="plan-features">
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Covers up to 3 pets</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>All Premium benefits</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>25% off additional services</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Free annual vaccines</span>
+                        </div>
+                        <div class="plan-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Priority emergency care</span>
+                        </div>
+                    </div>
+                    
+                    <div class="plan-action">
+                        <button class="btn btn-outline" data-plan="family">Select Plan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div class="payment-section">
+            <div class="payment-header">
+                <i class="fas fa-credit-card"></i>
+                <h2>Payment Information</h2>
+            </div>
+            
+            <div class="payment-methods">
+                <div class="payment-method active">
+                    <i class="fab fa-cc-visa"></i>
+                    <span>Visa ending in 4567</span>
+                </div>
+                <div class="payment-method">
+                    <i class="fab fa-cc-mastercard"></i>
+                    <span>Mastercard ending in 7890</span>
+                </div>
+                <div class="payment-method">
+                    <i class="fab fa-cc-amex"></i>
+                    <span>American Express</span>
+                </div>
+                <div class="payment-method">
+                    <i class="fas fa-plus"></i>
+                    <span>Add New Card</span>
+                </div>
+            </div>
+            
+            <div class="payment-form">
+                <div class="form-group">
+                    <label for="card-name">Name on Card</label>
+                    <input type="text" id="card-name" class="form-control" placeholder="John Doe">
+                </div>
+                
+                <div class="form-group">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="card-expiry">Expiration Date</label>
+                        <input type="text" id="card-expiry" class="form-control" placeholder="MM/YY">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="card-cvc">Security Code</label>
+                        <input type="text" id="card-cvc" class="form-control" placeholder="CVC">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="summary-section">
+            <div class="summary-header">
+                <i class="fas fa-receipt"></i>
+                <h2>Order Summary</h2>
+            </div>
+            
+            <div class="summary-details">
+                <div class="summary-item">
+                    <span>Premium Care Membership (Monthly)</span>
+                    <span class="value">R499.00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Tax (15% VAT)</span>
+                    <span class="value">R74.85</span>
+                </div>
+                <div class="summary-item total">
+                    <span>Total Due Today</span>
+                    <span class="value">R573.85</span>
+                </div>
+            </div>
+            
+            <div class="terms">
+                <input type="checkbox" id="terms">
+                <label for="terms">I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></label>
+            </div>
+            
+            <button class="btn btn-accent" style="width: 100%;" id="complete-renewal">
+                <i class="fas fa-check-circle"></i>
+                Complete Renewal
+            </button>
+            
+            <p style="text-align: center; margin-top: 1rem; color: var(--text-light); font-size: 0.9rem;">
+                Your membership will automatically renew each month. You can cancel anytime.
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved. | <a href="index.html">Home</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const planButtons = document.querySelectorAll('[data-plan]');
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const renewButton = document.getElementById('complete-renewal');
+        const billingToggle = document.getElementById('billing-toggle');
+        
+        // Pricing in ZAR (South African Rand)
+        const monthlyPrices = {
+            basic: 249,
+            premium: 499,
+            family: 799
+        };
+        
+        const annualPrices = {
+            basic: 2390, // 249 * 12 * 0.8 (20% discount)
+            premium: 4790, // 499 * 12 * 0.8
+            family: 7670 // 799 * 12 * 0.8
+        };
+        
+        // Initialize the page
+        function init() {
+            // Set up plan selection
+            planButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const plan = button.getAttribute('data-plan');
+                    selectPlan(plan);
+                });
+            });
+            
+            // Set up payment method selection
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', () => {
+                    paymentMethods.forEach(m => m.classList.remove('active'));
+                    method.classList.add('active');
+                });
+            });
+            
+            // Set up billing toggle
+            billingToggle.addEventListener('change', updatePricing);
+            
+            // Set up renew button
+            renewButton.addEventListener('click', () => {
+                if (document.getElementById('terms').checked) {
+                    alert('Membership renewal completed successfully! You will receive a confirmation email shortly.');
+                    // In a real application, this would redirect to a success page
+                    setTimeout(() => {
+                        window.location.href = 'membership-success.html';
+                    }, 1000);
+                } else {
+                    alert('Please agree to the Terms of Service and Privacy Policy to continue.');
+                }
+            });
+            
+            // Select default plan
+            selectPlan('premium');
+        }
+        
+        // Select a plan
+        function selectPlan(plan) {
+            // Remove popular class from all plans
+            document.querySelectorAll('.plan-card').forEach(card => {
+                card.classList.remove('popular');
+            });
+            
+            // Update plan buttons
+            planButtons.forEach(button => {
+                if (button.getAttribute('data-plan') === plan) {
+                    button.classList.remove('btn-outline');
+                    button.classList.add('btn');
+                } else {
+                    button.classList.remove('btn');
+                    button.classList.add('btn-outline');
+                }
+            });
+            
+            // Add popular class to selected plan
+            document.querySelector(`.plan-card [data-plan="${plan}"]`).closest('.plan-card').classList.add('popular');
+            
+            // Update summary based on selected plan
+            updateSummary(plan);
+        }
+        
+        // Update pricing based on billing cycle
+        function updatePricing() {
+            const isAnnual = billingToggle.checked;
+            const prices = isAnnual ? annualPrices : monthlyPrices;
+            const period = isAnnual ? '/year' : '/month';
+            
+            // Update plan prices
+            document.querySelector('[data-plan="basic"]').closest('.plan-card').querySelector('.plan-price').innerHTML = `R${prices.basic}<span>${period}</span>`;
+            document.querySelector('[data-plan="premium"]').closest('.plan-card').querySelector('.plan-price').innerHTML = `R${prices.premium}<span>${period}</span>`;
+            document.querySelector('[data-plan="family"]').closest('.plan-card').querySelector('.plan-price').innerHTML = `R${prices.family}<span>${period}</span>`;
+            
+            // Update summary
+            const selectedPlan = document.querySelector('.plan-card.popular [data-plan]').getAttribute('data-plan');
+            updateSummary(selectedPlan);
+        }
+        
+        // Update order summary based on selected plan
+        function updateSummary(plan) {
+            const isAnnual = billingToggle.checked;
+            const prices = isAnnual ? annualPrices : monthlyPrices;
+            const period = isAnnual ? 'Annual' : 'Monthly';
+            
+            const price = prices[plan];
+            const vat = price * 0.15; // 15% VAT in South Africa
+            const total = price + vat;
+            
+            // Format currency in ZAR
+            const formatZAR = (amount) => {
+                return 'R' + amount.toFixed(2);
+            };
+            
+            // Update summary
+            document.querySelector('.summary-item:first-child span:first-child').textContent = `${period} ${plan.charAt(0).toUpperCase() + plan.slice(1)} Membership`;
+            document.querySelector('.summary-item:first-child .value').textContent = formatZAR(price);
+            document.querySelector('.summary-item:nth-child(2) .value').textContent = formatZAR(vat);
+            document.querySelector('.summary-item.total .value').textContent = formatZAR(total);
+        }
+        
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/images/pdsa-logo.png" alt="PDSA Logo">
+                <h1>PDSA Veterinary Clinic</h1>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <div class="user-avatar">
+                    <img src="assets/images/user-avatar.jpg" alt="User Avatar" id="user-avatar-small">
+                    <div class="user-dropdown">
+                        <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a>
+                        <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="edit-profile-container">
+        <div class="container">
+            <div class="edit-profile-header">
+                <h1><i class="fas fa-user-edit"></i> Edit Profile</h1>
+                <nav class="breadcrumbs">
+                    <a href="profile.html">My Profile</a>
+                    <span>/</span>
+                    <span>Edit Profile</span>
+                </nav>
+            </div>
+
+            <form id="edit-profile-form" class="edit-profile-form">
+                <div class="form-section">
+                    <h2><i class="fas fa-id-card"></i> Personal Information</h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" name="first_name" value="John" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" name="last_name" value="Doe" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" value="john@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" value="+44 7123 456789" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" name="dob" value="1985-03-15" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-home"></i> Address Information</h2>
+                    
+                    <div class="form-group">
+                        <label for="address-line1">Address Line 1</label>
+                        <input type="text" id="address-line1" name="address_line1" value="123 Pet Street" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address-line2">Address Line 2 (Optional)</label>
+                        <input type="text" id="address-line2" name="address_line2" value="">
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" value="London" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="postcode">Postcode</label>
+                            <input type="text" id="postcode" name="postcode" value="SW1A 1AA" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <select id="country" name="country" required>
+                                <option value="UK" selected>United Kingdom</option>
+                                <!-- Other country options -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-paw"></i> Pet Owner Information</h2>
+                    
+                    <div class="form-group">
+                        <label>Primary Pet Owner</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="primary_owner" value="yes" checked>
+                                <span class="radio-checkmark"></span>
+                                Yes, I'm the primary pet owner
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="primary_owner" value="no">
+                                <span class="radio-checkmark"></span>
+                                No, I'm a family member/carer
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="vet-preferences">Preferred Veterinarian (Optional)</label>
+                        <select id="vet-preferences" name="vet_preferences">
+                            <option value="">No preference</option>
+                            <option value="dr_smith" selected>Dr. Sarah Smith</option>
+                            <option value="dr_jones">Dr. Michael Jones</option>
+                            <option value="dr_wilson">Dr. Emma Wilson</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="communication-pref">Communication Preferences</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="email_notifications" checked>
+                                <span class="checkbox-checkmark"></span>
+                                Email notifications
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="sms_notifications" checked>
+                                <span class="checkbox-checkmark"></span>
+                                SMS notifications
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="postal_mail">
+                                <span class="checkbox-checkmark"></span>
+                                Postal mail
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="profile.html" class="btn btn-outline">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- Same footer as profile.html -->
+                 <div class="footer-section">
+                    <h3>PDSA Veterinary Clinic</h3>
+                    <p>Providing compassionate care for pets since 1917.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/edit-profile.js"></script>
+</body>
+</html>

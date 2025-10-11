@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dental Care - PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-dark: #1a252f;
+            --primary-light: #d6eaf8;
+            --secondary: #3498db;
+            --secondary-dark: #2980b9;
+            --secondary-light: #ebf5fb;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-light: #f8f9fa;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1544568100-847a948585b9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 5rem 0;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background-color: var(--secondary);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-3px);
+        }
+        
+        .btn:focus {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary);
+        }
+        
+        .section-title p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        /* Sidebar Navigation */
+        .content-with-sidebar {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar h3 {
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+            font-size: 1.4rem;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.6rem 0.8rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background-color: var(--primary-light);
+            color: var(--secondary);
+        }
+        
+        .sidebar i {
+            width: 20px;
+            color: var(--secondary);
+        }
+        
+        /* Service Detail */
+        .service-detail {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .service-detail h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+            font-size: 2rem;
+        }
+        
+        .service-detail p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .detail-card {
+            background-color: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--secondary);
+            transition: var(--transition);
+        }
+        
+        .detail-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .detail-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .detail-card p {
+            margin-bottom: 0;
+            color: var(--text-color);
+        }
+        
+        /* Tabs for service pages */
+        .service-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .service-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+        
+        .service-tab.active {
+            color: var(--secondary);
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .service-tab:hover {
+            color: var(--secondary);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Pricing table */
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .pricing-table th, .pricing-table td {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .pricing-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .pricing-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .pricing-table tr:nth-child(even) {
+            background-color: var(--bg-light);
+        }
+        
+        .pricing-table tr:hover {
+            background-color: var(--secondary-light);
+        }
+        
+        /* Warning Signs */
+        .warning-signs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+        
+        .warning-sign {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border-left: 4px solid var(--accent);
+        }
+        
+        .warning-sign h4 {
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Process Steps */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+        
+        .process-step {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .process-step h4 {
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+        }
+        
+        /* Home Care Tips */
+        .home-care {
+            background: var(--primary-light);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin: 2rem 0;
+        }
+        
+        .home-care h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .care-tips {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .care-tip {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .care-tip i {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        /* Appointment Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 3rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+        
+        .footer-col p {
+            margin-bottom: 1rem;
+            color: #bbb;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-col ul li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-col ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bbb;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 900px) {
+            .content-with-sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .service-tabs {
+                flex-direction: column;
+            }
+            
+            .service-tab {
+                text-align: center;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+            }
+            
+            .modal-footer .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+                    <h1>PDSA Veterinary Clinic</h1>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="services.html" class="active"><i class="fas fa-stethoscope"></i> Services</a></li>
+                        <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                        <li><a href="team.html"><i class="fas fa-users"></i> Our Team</a></li>
+                        <li><a href="contact.html"><i class="fas fa-phone"></i> Contact</a></li>
+                        <li><a href="appointments.html"><i class="fas fa-calendar"></i> Appointments</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Dental Care Services</h2>
+            <p>Comprehensive dental care to keep your pet's teeth healthy and prevent dental disease</p>
+            <button class="btn" id="book-appointment-btn">
+                <i class="fas fa-calendar-check"></i> Book a Dental Checkup
+            </button>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services">
+        <div class="container">
+            <div class="content-with-sidebar">
+                <!-- Sidebar Navigation -->
+                <div class="sidebar">
+                    <h3>Our Services</h3>
+                    <ul>
+                        <li><a href="vaccinations.html"><i class="fas fa-syringe"></i> Vaccinations</a></li>
+                        <li><a href="surgery.html"><i class="fas fa-procedures"></i> Surgical Procedures</a></li>
+                        <li><a href="dental-care.html" class="active"><i class="fas fa-tooth"></i> Dental Care</a></li>
+                        <li><a href="emergency-care.html"><i class="fas fa-ambulance"></i> Emergency Care</a></li>
+                        <li><a href="microchipping.html"><i class="fas fa-microchip"></i> Microchipping</a></li>
+                        <li><a href="pet-health-advice.html"><i class="fas fa-heartbeat"></i> Pet Health Advice</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Service Detail -->
+                <div class="service-detail">
+                    <h2>Dental Care Services</h2>
+                    <p>Proper dental care is essential for your pet's overall health. At PDSA Veterinary Clinic, we provide comprehensive dental services to prevent and treat dental disease, which affects most pets by age three. Our dental services include cleanings, extractions, and oral surgery performed under safe anesthesia with advanced monitoring.</p>
+                    
+                    <div class="service-tabs">
+                        <div class="service-tab active" data-tab="overview">Overview</div>
+                        <div class="service-tab" data-tab="services">Services</div>
+                        <div class="service-tab" data-tab="pricing">Pricing</div>
+                        <div class="service-tab" data-tab="homecare">Home Care</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="overview">
+                        <p>Dental health is a critical component of your pet's overall wellbeing. Poor dental hygiene can lead to painful infections, tooth loss, and can even affect major organs like the heart and kidneys. Our veterinary dental team is dedicated to providing the highest quality care to keep your pet's mouth healthy and pain-free.</p>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <h4><i class="fas fa-tooth"></i> Dental Exams</h4>
+                                <p>Comprehensive oral examinations to detect early signs of dental disease and other oral health issues.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-teeth"></i> Professional Cleaning</h4>
+                                <p>Thorough cleaning above and below the gumline to remove plaque and tartar buildup.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-x-ray"></i> Dental X-rays</h4>
+                                <p>Digital radiographs to evaluate the health of tooth roots and jawbones below the gumline.</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Signs Your Pet Needs Dental Care</h3>
+                        <div class="warning-signs">
+                            <div class="warning-sign">
+                                <h4><i class="fas fa-exclamation-circle"></i> Bad Breath</h4>
+                                <p>Persistent bad breath can indicate dental disease or other health issues.</p>
+                            </div>
+                            <div class="warning-sign">
+                                <h4><i class="fas fa-exclamation-circle"></i> Difficulty Eating</h4>
+                                <p>Dropping food, chewing on one side, or loss of appetite may signal dental pain.</p>
+                            </div>
+                            <div class="warning-sign">
+                                <h4><i class="fas fa-exclamation-circle"></i> Pawing at Mouth</h4>
+                                <p>Pets often paw at their mouths when experiencing dental discomfort.</p>
+                            </div>
+                            <div class="warning-sign">
+                                <h4><i class="fas fa-exclamation-circle"></i> Red or Bleeding Gums</h4>
+                                <p>Inflammation and bleeding are signs of gingivitis and periodontal disease.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="services">
+                        <h3>Our Dental Services</h3>
+                        <p>We offer a complete range of dental services to address all your pet's oral health needs:</p>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <h4><i class="fas fa-tooth"></i> Comprehensive Dental Exams</h4>
+                                <p>Thorough oral examinations including assessment of teeth, gums, and oral tissues.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-broom"></i> Professional Cleaning</h4>
+                                <p>Ultrasonic scaling and polishing to remove plaque and tartar above and below the gumline.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-teeth-open"></i> Tooth Extractions</h4>
+                                <p>Careful removal of damaged or diseased teeth with minimal discomfort.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-teeth"></i> Oral Surgery</h4>
+                                <p>Advanced procedures including root canals, crown repairs, and treatment of oral tumors.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-x-ray"></i> Dental X-rays</h4>
+                                <p>Digital radiography to evaluate tooth roots, jawbones, and identify hidden problems.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-shield-alt"></i> Preventive Care</h4>
+                                <p>Customized home care plans and products to maintain your pet's dental health.</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Our Dental Cleaning Process</h3>
+                        <div class="process-steps">
+                            <div class="process-step">
+                                <div class="step-number">1</div>
+                                <h4>Pre-Anesthetic Assessment</h4>
+                                <p>Physical exam and blood work to ensure safe anesthesia</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">2</div>
+                                <h4>Anesthesia</h4>
+                                <p>Safe anesthesia tailored to your pet's needs with continuous monitoring</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">3</div>
+                                <h4>Cleaning & Polishing</h4>
+                                <p>Ultrasonic scaling and polishing to remove plaque and tartar</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">4</div>
+                                <h4>Treatment</h4>
+                                <p>Any necessary extractions or other dental procedures</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="pricing">
+                        <h3>Dental Care Pricing</h3>
+                        <p>The cost of dental care varies depending on the specific procedures needed. Below are our baseline prices for common dental services:</p>
+                        
+                        <table class="pricing-table">
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Description</th>
+                                    <th>Starting From</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Dental Examination</td>
+                                    <td>Comprehensive oral health assessment</td>
+                                    <td>R300</td>
+                                </tr>
+                                <tr>
+                                    <td>Basic Dental Cleaning</td>
+                                    <td>Cleaning for pets with minimal tartar buildup</td>
+                                    <td>R800</td>
+                                </tr>
+                                <tr>
+                                    <td>Advanced Dental Cleaning</td>
+                                    <td>Cleaning for pets with significant tartar and gingivitis</td>
+                                    <td>R1,200</td>
+                                </tr>
+                                <tr>
+                                    <td>Simple Extraction</td>
+                                    <td>Removal of a single-root tooth</td>
+                                    <td>R450</td>
+                                </tr>
+                                <tr>
+                                    <td>Surgical Extraction</td>
+                                    <td>Removal of multi-rooted or complicated teeth</td>
+                                    <td>R800</td>
+                                </tr>
+                                <tr>
+                                    <td>Dental X-rays</td>
+                                    <td>Full mouth series of digital radiographs</td>
+                                    <td>R600</td>
+                                </tr>
+                                <tr>
+                                    <td>Oral Surgery</td>
+                                    <td>Complex procedures including root canals</td>
+                                    <td>R1,500</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="detail-card" style="margin-top: 2rem;">
+                            <h4><i class="fas fa-info-circle"></i> Note on Pricing</h4>
+                            <p>These are baseline prices. The final cost will depend on your pet's specific needs, which will be determined during a dental examination. Anesthesia, medications, and any necessary extractions are additional costs.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="homecare">
+                        <h3>At-Home Dental Care</h3>
+                        <p>Regular professional cleanings combined with proper home care are essential for maintaining your pet's dental health. Here are our recommendations for at-home dental care:</p>
+                        
+                        <div class="home-care">
+                            <h3>Home Dental Care Tips</h3>
+                            <div class="care-tips">
+                                <div class="care-tip">
+                                    <i class="fas fa-toothbrush"></i>
+                                    <h4>Tooth Brushing</h4>
+                                    <p>Brush your pet's teeth daily with pet-safe toothpaste</p>
+                                </div>
+                                <div class="care-tip">
+                                    <i class="fas fa-bone"></i>
+                                    <h4>Dental Chews</h4>
+                                    <p>Use veterinary-approved dental chews and toys</p>
+                                </div>
+                                <div class="care-tip">
+                                    <i class="fas fa-utensils"></i>
+                                    <h4>Dental Diets</h4>
+                                    <p>Special foods designed to reduce plaque and tartar</p>
+                                </div>
+                                <div class="care-tip">
+                                    <i class="fas fa-tint"></i>
+                                    <h4>Water Additives</h4>
+                                    <p>Additives that help reduce bacteria in the mouth</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3>How to Brush Your Pet's Teeth</h3>
+                        <div class="process-steps">
+                            <div class="process-step">
+                                <div class="step-number">1</div>
+                                <h4>Get Your Pet Comfortable</h4>
+                                <p>Start by letting them taste the pet toothpaste and gently handling their mouth</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">2</div>
+                                <h4>Introduce the Toothbrush</h4>
+                                <p>Use a soft-bristled brush designed for pets</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">3</div>
+                                <h4>Brush Gently</h4>
+                                <p>Use circular motions focusing on the gumline</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">4</div>
+                                <h4>Reward Your Pet</h4>
+                                <p>Always end with praise and a small treat</p>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-card">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Important Warning</h4>
+                            <p>Never use human toothpaste for your pet as it contains ingredients that are toxic to animals. Always use toothpaste specifically formulated for pets.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <div class="container">
+        <div class="detail-card" style="text-align: center; background-color: var(--primary-light);">
+            <h3><i class="fas fa-calendar-check"></i> Schedule a Dental Checkup Today</h3>
+            <p>Don't wait until your pet shows signs of dental pain. Regular dental checkups can prevent serious health issues and keep your pet comfortable.</p>
+            <button class="btn" id="book-now-btn">
+                <i class="fas fa-calendar"></i> Book an Appointment
+            </button>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div class="modal" id="appointment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Book a Dental Appointment</h2>
+                <button class="close-modal" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="appointment-form">
+                    <div class="form-group">
+                        <label for="pet-name">Pet's Name</label>
+                        <input type="text" id="pet-name" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pet-type">Pet Type</label>
+                        <select id="pet-type" class="form-control" required>
+                            <option value="">Select Pet Type</option>
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="rabbit">Rabbit</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service">Service Needed</label>
+                        <select id="service" class="form-control" required>
+                            <option value="">Select Service</option>
+                            <option value="exam">Dental Examination</option>
+                            <option value="cleaning">Dental Cleaning</option>
+                            <option value="extraction">Tooth Extraction</option>
+                            <option value="surgery">Oral Surgery</option>
+                            <option value="other">Other Dental Service</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date">Preferred Date</label>
+                        <input type="date" id="date" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time">Preferred Time</label>
+                        <select id="time" class="form-control" required>
+                            <option value="">Select Time</option>
+                            <option value="morning">Morning (8am - 12pm)</option>
+                            <option value="afternoon">Afternoon (12pm - 4pm)</option>
+                            <option value="evening">Evening (4pm - 7pm)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">Additional Notes</label>
+                        <textarea id="notes" class="form-control" rows="3" placeholder="Any specific concerns or information about your pet's dental health"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-appointment">
+                    Cancel
+                </button>
+                <button class="btn btn-primary" id="submit-appointment">
+                    Submit Appointment Request
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>About PDSA</h3>
+                    <p>Providing quality veterinary care to pets in need since 2010. Our mission is to ensure every pet receives the care they deserve.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="services.html"><i class="fas fa-chevron-right"></i> Services</a></li>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Dental Services</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dental Exams</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Professional Cleaning</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Tooth Extractions</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Oral Surgery</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dental X-rays</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 1188 Nancefield Road, Mfolo, Soweto</p>
+                    <p><i class="fas fa-phone"></i> 011 984 4340</p>
+                    <p><i class="fas fa-envelope"></i> info@pdsa.org.za</p>
+                    <p><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 7:00 PM</p>
+                    <p><i class="fas fa-calendar"></i> Sat: 9:00 AM - 4:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab functionality for service pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.service-tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab content
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Appointment modal functionality
+            const appointmentModal = document.getElementById('appointment-modal');
+            const bookAppointmentBtn = document.getElementById('book-appointment-btn');
+            const bookNowBtn = document.getElementById('book-now-btn');
+            const closeModalBtn = document.getElementById('close-modal');
+            const cancelAppointmentBtn = document.getElementById('cancel-appointment');
+            const submitAppointmentBtn = document.getElementById('submit-appointment');
+            const appointmentForm = document.getElementById('appointment-form');
+            
+            // Open modal
+            function openModal() {
+                appointmentModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            }
+            
+            // Close modal
+            function closeModal() {
+                appointmentModal.classList.remove('active');
+                document.body.style.overflow = ''; // Enable scrolling
+            }
+            
+            // Event listeners
+            bookAppointmentBtn.addEventListener('click', openModal);
+            bookNowBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelAppointmentBtn.addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside
+            appointmentModal.addEventListener('click', (e) => {
+                if (e.target === appointmentModal) {
+                    closeModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && appointmentModal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+            
+            // Form submission
+            submitAppointmentBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Basic form validation
+                const petName = document.getElementById('pet-name').value;
+                const petType = document.getElementById('pet-type').value;
+                const service = document.getElementById('service').value;
+                const date = document.getElementById('date').value;
+                const time = document.getElementById('time').value;
+                
+                if (!petName || !petType || !service || !date || !time) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                // In a real application, this would submit to a backend
+                // For this example, we'll show a confirmation message
+                alert(`Thank you! Your dental appointment request for ${petName} has been received. We will contact you to confirm your appointment.`);
+                
+                // Reset form and close modal
+                appointmentForm.reset();
+                closeModal();
+            });
+            
+            // Set minimum date for appointment to today
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const minDate = `${yyyy}-${mm}-${dd}`;
+            document.getElementById('date').setAttribute('min', minDate);
+        });
+    </script>
+</body>
+</html>

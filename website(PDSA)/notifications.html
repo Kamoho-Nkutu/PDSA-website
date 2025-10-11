@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <!-- Same header as main page -->
+    </header>
+
+    <main class="notifications-container">
+        <h1><i class="fas fa-bell"></i> Notifications</h1>
+        
+        <div class="notification-actions">
+            <button class="btn btn-primary" id="mark-all-read">Mark All as Read</button>
+            <button class="btn btn-outline" id="clear-notifications">Clear All</button>
+        </div>
+
+        <div class="notifications-list">
+            <div class="notification-item unread">
+                <div class="notification-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="notification-content">
+                    <h3>Appointment Confirmed</h3>
+                    <p>Your appointment for Max on June 15 at 10:30 AM has been confirmed.</p>
+                    <span class="notification-time">2 hours ago</span>
+                </div>
+                <button class="notification-dismiss">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- More notification items -->
+        </div>
+    </main>
+
+    <script src="js/notifications.js"></script>
+</body>
+</html>

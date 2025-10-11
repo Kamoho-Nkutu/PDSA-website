@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDSA Veterinary Clinic - Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1543852786-1cf6624b9987?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 5rem 0;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #3498db;
+        }
+        
+        .section-title p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .service-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .service-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .service-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .service-card:hover .service-img img {
+            transform: scale(1.05);
+        }
+        
+        .service-content {
+            padding: 1.5rem;
+        }
+        
+        .service-content h3 {
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            font-size: 1.4rem;
+        }
+        
+        .service-content p {
+            color: #666;
+            margin-bottom: 1.2rem;
+        }
+        
+        .service-features {
+            margin-bottom: 1.5rem;
+        }
+        
+        .service-features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+        
+        .service-features i {
+            color: #3498db;
+        }
+        
+        .service-price {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        /* Sidebar Navigation */
+        .content-with-sidebar {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar h3 {
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #444;
+            text-decoration: none;
+            padding: 0.6rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #e1f0fa;
+            color: #3498db;
+        }
+        
+        .sidebar i {
+            width: 20px;
+        }
+        
+        /* Service Detail */
+        .service-detail {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-detail h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .service-detail p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: #444;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .detail-card {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .detail-card h4 {
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 3rem 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #3498db;
+        }
+        
+        .footer-col p {
+            margin-bottom: 1rem;
+            color: #bbb;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-col ul li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-col ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bbb;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 900px) {
+            .content-with-sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        /* Tabs for service pages */
+        .service-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .service-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .service-tab.active {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .service-tab:hover {
+            color: #3498db;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Emergency banner */
+        .emergency-banner {
+            background-color: #e74c3c;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+        
+        /* Pricing table */
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+        
+        .pricing-table th, .pricing-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .pricing-table th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+        
+        .pricing-table tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+                    <h1>PDSA Veterinary Clinic</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#" class="active">Services</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Team</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Comprehensive Veterinary Services</h2>
+            <p>Providing exceptional care for your beloved pets with state-of-the-art facilities and compassionate professionals</p>
+            <a href="#services" class="btn">Explore Our Services</a>
+        </div>
+    </section>
+
+    <!-- Services Overview -->
+    <section class="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Services</h2>
+                <p>We offer a wide range of veterinary services to keep your pets healthy and happy</p>
+            </div>
+            
+            <div class="content-with-sidebar">
+                <!-- Sidebar Navigation -->
+                <div class="sidebar">
+                    <h3>Our Services</h3>
+                    <ul>
+                        <li><a href="veterinaryclinic.html" class="active"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
+                        <li><a href="Surgical-Procedures.html"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
+                        <li><a href="dental-care.html"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
+                        <li><a href="emergency-care.html"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Service Detail -->
+                <div class="service-detail">
+                    <h2>Vaccinations</h2>
+                    <p>Protect your pet from preventable diseases with our comprehensive vaccination programs. Our veterinarians will create a customized vaccination schedule based on your pet's age, lifestyle, and risk factors.</p>
+                    
+                    <div class="service-tabs">
+                        <div class="service-tab active" data-tab="overview">Overview</div>
+                        <div class="service-tab" data-tab="pricing">Pricing</div>
+                        <div class="service-tab" data-tab="faq">FAQ</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="overview">
+                        <p>Vaccinations are a crucial part of preventive healthcare for your pet. They help protect against serious illnesses and contribute to your pet's overall wellbeing.</p>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <h4>Core Vaccines</h4>
+                                <p>Essential for all pets, protecting against widespread diseases like rabies, distemper, and parvovirus.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>Non-Core Vaccines</h4>
+                                <p>Recommended based on your pet's specific lifestyle and risk factors, such as kennel cough or feline leukemia.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>Vaccination Schedule</h4>
+                                <p>Puppies and kittens require a series of vaccinations for full protection, followed by regular boosters.</p>
+                            </div>
+                        </div>
+                        
+                        <p>Our veterinary team will guide you through the vaccination process and answer any questions you may have about keeping your pet protected against preventable diseases.</p>
+                    </div>
+                    
+                    <div class="tab-content" id="pricing">
+                        <h3>Vaccination Pricing</h3>
+                        <table class="pricing-table">
+                            <thead>
+                                <tr>
+                                    <th>Vaccine Type</th>
+                                    <th>Description</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Core Canine Vaccines</td>
+                                    <td>DHPP (Distemper, Hepatitis, Parainfluenza, Parvovirus)</td>
+                                    <td>R250</td>
+                                </tr>
+                                <tr>
+                                    <td>Rabies Vaccine</td>
+                                    <td>Required by law for all dogs and cats</td>
+                                    <td>R200</td>
+                                </tr>
+                                <tr>
+                                    <td>Bordetella</td>
+                                    <td>Kennel cough prevention</td>
+                                    <td>R180</td>
+                                </tr>
+                                <tr>
+                                    <td>Core Feline Vaccines</td>
+                                    <td>FVRCP (Feline Viral Rhinotracheitis, Calicivirus, Panleukopenia)</td>
+                                    <td>R240</td>
+                                </tr>
+                                <tr>
+                                    <td>Feline Leukemia</td>
+                                    <td>For outdoor cats or multi-cat households</td>
+                                    <td>R220</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="tab-content" id="faq">
+                        <h3>Frequently Asked Questions</h3>
+                        
+                        <div class="detail-card">
+                            <h4>How often does my pet need vaccinations?</h4>
+                            <p>Puppies and kittens need a series of vaccinations every 3-4 weeks until they are 16 weeks old. Adult pets typically need booster shots annually or every three years, depending on the vaccine.</p>
+                        </div>
+                        
+                        <div class="detail-card">
+                            <h4>Are there any side effects to vaccinations?</h4>
+                            <p>Most pets experience no side effects. Some may have mild symptoms like lethargy or soreness at the injection site for a day or two. Serious reactions are rare but should be reported to your vet immediately.</p>
+                        </div>
+                        
+                        <div class="detail-card">
+                            <h4>Why are vaccines important?</h4>
+                            <p>Vaccines protect your pet from serious diseases, some of which can be fatal. They also help prevent the spread of diseases to other animals in the community.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="services-grid" id="services">
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1964&q=80" alt="Vaccinations">
+                    </div>
+                    <div class="service-content">
+                        <h3>Vaccinations</h3>
+                        <p>Protect your pet from preventable diseases with our comprehensive vaccination programs.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Core vaccines for all pets</li>
+                            <li><i class="fas fa-check-circle"></i> Lifestyle-based vaccines</li>
+                            <li><i class="fas fa-check-circle"></i> Puppy and kitten series</li>
+                        </ul>
+                        <div class="service-price">From R250</div>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1583511655826-05700442b31f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="Surgical Procedures">
+                    </div>
+                    <div class="service-content">
+                        <h3>Surgical Procedures</h3>
+                        <p>From routine spaying/neutering to complex surgeries, our experienced veterinary surgeons provide compassionate care.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Spay and neuter services</li>
+                            <li><i class="fas fa-check-circle"></i> Soft tissue surgery</li>
+                            <li><i class="fas fa-check-circle"></i> Advanced orthopedic procedures</li>
+                        </ul>
+                        <div class="service-price">From R800</div>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="Dental Care">
+                    </div>
+                    <div class="service-content">
+                        <h3>Dental Care</h3>
+                        <p>Comprehensive dental services including cleaning, extractions, and oral health assessments.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Dental cleanings</li>
+                            <li><i class="fas fa-check-circle"></i> Tooth extractions</li>
+                            <li><i class="fas fa-check-circle"></i> Oral surgery</li>
+                        </ul>
+                        <div class="service-price">From R450</div>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1577982787983-e07c8490b261?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" alt="Emergency Care">
+                    </div>
+                    <div class="service-content">
+                        <h3>Emergency Care</h3>
+                        <p>24/7 emergency services for critical situations when your pet needs immediate medical attention.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> 24/7 availability</li>
+                            <li><i class="fas fa-check-circle"></i> Critical care unit</li>
+                            <li><i class="fas fa-check-circle"></i> Trauma surgery</li>
+                        </ul>
+                        <div class="service-price">Emergency fee: R500</div>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1553284965-e2815db2e5a0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" alt="Microchipping">
+                    </div>
+                    <div class="service-content">
+                        <h3>Microchipping</h3>
+                        <p>Quick and painless microchipping to ensure your pet can always be identified if lost.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Quick procedure</li>
+                            <li><i class="fas fa-check-circle"></i> Lifetime registration</li>
+                            <li><i class="fas fa-check-circle"></i> International standards</li>
+                        </ul>
+                        <div class="service-price">R350 once-off</div>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="https://images.unsplash.com/photo-1596276023096-329a9605c5c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" alt="Pet Health Advice">
+                    </div>
+                    <div class="service-content">
+                        <h3>Pet Health Advice</h3>
+                        <p>Professional guidance on nutrition, behavior, and general wellness for your pet.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check-circle"></i> Nutritional counseling</li>
+                            <li><i class="fas fa-check-circle"></i> Behavior consultations</li>
+                            <li><i class="fas fa-check-circle"></i> Wellness plans</li>
+                        </ul>
+                        <div class="service-price">From R300</div>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Banner -->
+    <div class="container">
+        <div class="emergency-banner">
+            <h3><i class="fas fa-exclamation-triangle"></i> Emergency Services Available 24/7</h3>
+            <p>If your pet is experiencing a medical emergency, call us immediately at <strong>011 984 4340</strong></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>About PDSA</h3>
+                    <p>Providing quality veterinary care to pets in need since 2010. Our mission is to ensure every pet receives the care they deserve.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Services</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Microchipping</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 1188 Nancefield Road, Mfolo, Soweto</p>
+                    <p><i class="fas fa-phone"></i> 011 984 4340</p>
+                    <p><i class="fas fa-envelope"></i> info@pdsa.org.za</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab functionality for service pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.service-tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab content
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
