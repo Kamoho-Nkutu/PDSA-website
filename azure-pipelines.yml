@@ -1,65 +1,64 @@
-# azure-pipelines.yml
-name: PDSA-Clinic-Website
+name: Deploy PDSA Clinic
 
-trigger:
-- main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-pool:
-  vmImage: ubuntu-latest
-
-steps:
-- checkout: self
-
-- script: |
-    echo "🌐 PDSA Veterinary Clinic - Static Website Build"
-    echo "================================================"
-    echo "Build: $(Build.BuildNumber)"
-    echo "Branch: $(Build.SourceBranch)"
-    echo "Commit: $(Build.SourceVersion)"
-    echo ""
+jobs:
+  build:
+    runs-on: ubuntu-latest
     
-    # Validate website structure
-    echo "🔍 Validating website structure..."
-    if [ -f "index.html" ]; then
-        echo "✅ index.html found"
-    else
-        echo "❌ ERROR: index.html not found!"
-        exit 1
-    fi
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
     
-    # Check HTML structure
-    if grep -q "<!DOCTYPE html>" index.html; then
-        echo "✅ Valid HTML5 doctype"
-    else
-        echo "❌ ERROR: Invalid HTML structure"
-        exit 1
-    fi
+    - name: Validate Website
+      run: |
+        echo "🌐 PDSA Veterinary Clinic - GitHub Actions Build"
+        echo "================================================"
+        echo "Build: $GITHUB_RUN_ID"
+        echo "Commit: $GITHUB_SHA"
+        echo ""
+        
+        # Validate website structure
+        if [ -f "index.html" ]; then
+            echo "✅ index.html found"
+        else
+            echo "❌ ERROR: index.html not found!"
+            exit 1
+        fi
+        
+        # Check HTML structure
+        if grep -q "<!DOCTYPE html>" index.html; then
+            echo "✅ Valid HTML5 doctype"
+        else
+            echo "❌ ERROR: Invalid HTML structure"
+            exit 1
+        fi
+        
+        # Show project files
+        echo ""
+        echo "📁 Project Files:"
+        find . -name "*.html" -o -name "*.css" -o -name "*.js" | head -15
+        
+        echo ""
+        echo "📊 File Analysis:"
+        echo "HTML files: $(find . -name "*.html" | wc -l)"
+        echo "CSS files: $(find . -name "*.css" | wc -l)"
+        echo "JS files: $(find . -name "*.js" | wc -l)"
+        echo "Total size: $(du -sh . | cut -f1)"
+        
+        echo "🎉 PDSA Clinic validation completed successfully!"
     
-    # Show project files
-    echo ""
-    echo "📁 Project Files:"
-    find . -name "*.html" -o -name "*.css" -o -name "*.js" | head -15
-  displayName: 'Validate Website Structure'
-
-- script: |
-    echo "📊 File Analysis:"
-    echo "HTML files: $(find . -name "*.html" | wc -l)"
-    echo "CSS files: $(find . -name "*.css" | wc -l)"
-    echo "JS files: $(find . -name "*.js" | wc -l)"
-    echo "Total size: $(du -sh . | cut -f1)"
-  displayName: 'File Analysis'
-
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/pdsa-website-$(Build.BuildNumber).zip'
-    replaceExistingArchive: true
-  displayName: 'Create Website Package'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'pdsa-clinic-website'
-  displayName: 'Publish Website'
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: pdsa-website
+        path: |
+          *.html
+          *.css
+          *.js
+          images/
+        retention-days: 7
