@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two-Factor Authentication Setup | PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c6ecf;
+            --primary-dark: #1e5bb8;
+            --primary-light: #e8f1ff;
+            --secondary: #ff7e33;
+            --secondary-dark: #e86a20;
+            --secondary-light: #fff0e8;
+            --accent: #4caf50;
+            --danger: #f44336;
+            --warning: #ff9800;
+            --success: #4caf50;
+            --text-color: #333;
+            --text-light: #666;
+            --text-lighter: #888;
+            --bg-light: #f8f9fa;
+            --border-color: #e0e0e0;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header img {
+            height: 40px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .breadcrumb {
+            padding: 15px 20px;
+            background: var(--primary-light);
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .security-container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        .security-content {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+        }
+
+        .security-content h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .security-content p {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .status-badge.inactive {
+            background: #ffecb3;
+            color: #f57c00;
+        }
+
+        .status-badge.active {
+            background: #c8e6c9;
+            color: #388e3c;
+        }
+
+        .status-badge i {
+            font-size: 0.9rem;
+        }
+
+        .benefits-list {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+        .benefits-list li {
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .setup-options {
+            margin-top: 30px;
+        }
+
+        .option-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .option-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .option-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .option-icon.sms {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .option-icon.app {
+            background: #f1f8e9;
+            color: #689f38;
+        }
+
+        .option-icon.email {
+            background: #ffecb3;
+            color: #ffa000;
+        }
+
+        .option-header h3 {
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+
+        .option-description {
+            color: var(--text-light);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #3d8b40;
+        }
+
+        .security-sidebar {
+            background: var(--primary-light);
+            padding: 25px;
+            border-radius: var(--border-radius-lg);
+        }
+
+        .sidebar-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .help-links {
+            list-style: none;
+        }
+
+        .help-links li {
+            margin-bottom: 12px;
+        }
+
+        .help-links a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .help-links a:hover {
+            color: var(--primary);
+        }
+
+        .help-links i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+
+        /* Setup Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: var(--transition);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 110, 207, 0.1);
+        }
+
+        .verification-code {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .verification-code input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .verification-code input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .countdown {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin: 10px 0;
+        }
+
+        .countdown.expired {
+            color: var(--danger);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .qr-code img {
+            max-width: 200px;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: var(--border-radius);
+        }
+
+        .backup-codes {
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .backup-codes code {
+            display: block;
+            font-family: monospace;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            .security-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .verification-code {
+                justify-content: center;
+            }
+            
+            .verification-code input {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://via.placeholder.com/40x40/ffffff/2c6ecf?text=PDSA" alt="PDSA Logo">
+            <h1>PDSA Veterinary Clinic</h1>
+        </header>
+
+        <div class="breadcrumb">
+            <a href="index.html">Home</a> > <a href="profile.html">Account Settings</a> > <a href="security.html">Security</a> > Two-Factor Authentication
+        </div>
+
+        <div class="content">
+            <a href="security.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Security Settings
+            </a>
+
+            <div class="security-container">
+                <div class="security-content">
+                    <h2><i class="fas fa-shield-alt"></i> Two-Factor Authentication</h2>
+                    <p>Add an extra layer of security to your PDSA Veterinary Clinic account by enabling Two-Factor Authentication (2FA). When enabled, you'll need to provide a verification code in addition to your password when signing in.</p>
+
+                    <div class="status-badge inactive" id="status-badge">
+                        <i class="fas fa-exclamation-circle"></i> Currently inactive
+                    </div>
+
+                    <h3>Why enable Two-Factor Authentication?</h3>
+                    <ul class="benefits-list">
+                        <li><strong>Enhanced Security:</strong> Protects your account even if your password is compromised</li>
+                        <li><strong>Protect Personal Information:</strong> Keeps your pet's medical records and personal data secure</li>
+                        <li><strong>Prevent Unauthorized Access:</strong> Ensures only you can access your account, even if someone else knows your password</li>
+                        <li><strong>Secure Transactions:</strong> Adds an extra layer of protection for any payments or prescription requests</li>
+                    </ul>
+
+                    <div class="setup-options">
+                        <h3>Set Up Two-Factor Authentication</h3>
+                        <p>Choose your preferred method for receiving verification codes:</p>
+
+                        <div class="option-card">
+                            <div class="option-header">
+                                <div class="option-icon sms">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <h3>SMS Text Message</h3>
+                            </div>
+                            <p class="option-description">Receive verification codes via text message to your mobile phone. This is the easiest method to set up and use.</p>
+                            <button class="btn btn-primary" id="setup-sms">
+                                <i class="fas fa-plus-circle"></i> Set Up SMS Verification
+                            </button>
+                        </div>
+
+                        <div class="option-card">
+                            <div class="option-header">
+                                <div class="option-icon app">
+                                    <i class="fas fa-mobile"></i>
+                                </div>
+                                <h3>Authenticator App</h3>
+                            </div>
+                            <p class="option-description">Use an authenticator app like Google Authenticator or Authy to generate verification codes. Works even without mobile reception.</p>
+                            <button class="btn btn-outline" id="setup-app">
+                                <i class="fas fa-cog"></i> Set Up Authenticator App
+                            </button>
+                        </div>
+
+                        <div class="option-card">
+                            <div class="option-header">
+                                <div class="option-icon email">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <h3>Email Verification</h3>
+                            </div>
+                            <p class="option-description">Receive verification codes via email. This method is convenient if you always have access to your email account.</p>
+                            <button class="btn btn-outline" id="setup-email">
+                                <i class="fas fa-envelope"></i> Set Up Email Verification
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="security-sidebar">
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-lightbulb"></i> Tips for Success</h3>
+                        <p>• Keep your phone secure and with you when accessing your account</p>
+                        <p>• Save backup codes in a secure location</p>
+                        <p>• Update your verification methods if you change your phone number</p>
+                    </div>
+
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-question-circle"></i> Need Help?</h3>
+                        <p>If you have trouble setting up or using Two-Factor Authentication, our support team is here to help.</p>
+                        <ul class="help-links">
+                            <li><a href="#"><i class="fas fa-book"></i> 2FA Setup Guide</a></li>
+                            <li><a href="#"><i class="fas fa-video"></i> Video Tutorial</a></li>
+                            <li><a href="#"><i class="fas fa-envelope"></i> Contact Support</a></li>
+                            <li><a href="#"><i class="fas fa-question"></i> FAQ</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- SMS Setup Modal -->
+    <div class="modal-overlay" id="sms-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-mobile-alt"></i> Set Up SMS Verification</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>We'll send verification codes to your mobile phone via text message.</p>
+                
+                <div class="form-group">
+                    <label for="phone-number">Mobile Phone Number</label>
+                    <input type="tel" id="phone-number" placeholder="+27 712 345 689">
+                </div>
+                
+                <button class="btn btn-primary" id="send-sms-code">Send Verification Code</button>
+                
+                <div class="verification-step" id="sms-verification" style="display: none;">
+                    <div class="form-group">
+                        <label>Enter the 6-digit code sent to your phone</label>
+                        <div class="verification-code">
+                            <input type="text" maxlength="1" pattern="[0-9]">
+                            <input type="text" maxlength="1" pattern="[0-9]">
+                            <input type="text" maxlength="1" pattern="[0-9]">
+                            <input type="text" maxlength="1" pattern="[0-9]">
+                            <input type="text" maxlength="1" pattern="[0-9]">
+                            <input type="text" maxlength="1" pattern="[0-9]">
+                        </div>
+                    </div>
+                    
+                    <div class="countdown" id="sms-countdown">Code expires in: 05:00</div>
+                    
+                    <p>Didn't receive the code? <a href="#" id="resend-sms">Resend code</a></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">Cancel</button>
+                <button class="btn btn-primary" id="confirm-sms" disabled>Verify & Activate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Authenticator App Setup Modal -->
+    <div class="modal-overlay" id="app-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-mobile"></i> Set Up Authenticator App</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Scan the QR code with your authenticator app or enter the setup key manually.</p>
+                
+                <div class="qr-code">
+                    <img src="https://via.placeholder.com/200x200/ffffff/333333?text=QR+Code" alt="QR Code">
+                </div>
+                
+                <div class="form-group">
+                    <label for="setup-key">Setup Key</label>
+                    <input type="text" id="setup-key" value="ABCD EFGH IJKL MNOP" readonly>
+                    <button class="btn btn-outline" id="copy-key">Copy Key</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>Enter the 6-digit code from your authenticator app</label>
+                    <div class="verification-code">
+                        <input type="text" maxlength="1" pattern="[0-9]">
+                        <input type="text" maxlength="1" pattern="[0-9]">
+                        <input type="text" maxlength="1" pattern="[0-9]">
+                        <input type="text" maxlength="1" pattern="[0-9]">
+                        <input type="text" maxlength="1" pattern="[0-9]">
+                        <input type="text" maxlength="1" pattern="[0-9]">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline close-modal">Cancel</button>
+                <button class="btn btn-primary" id="confirm-app">Verify & Activate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="success-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-check-circle" style="color: var(--success);"></i> Two-Factor Authentication Activated</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Two-factor authentication has been successfully enabled for your account.</p>
+                
+                <div class="backup-codes">
+                    <h3><i class="fas fa-key"></i> Backup Codes</h3>
+                    <p>Save these backup codes in a secure place. Each code can be used once if you lose access to your authentication device.</p>
+                    <code>
+                        ABCD-EFGH-IJKL<br>
+                        MNOP-QRST-UVWX<br>
+                        YZ12-3456-7890<br>
+                        1234-ABCD-EFGH<br>
+                        IJKL-MNOP-5678
+                    </code>
+                    <button class="btn btn-outline" id="download-codes">Download Backup Codes</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success close-modal">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const statusBadge = document.getElementById('status-badge');
+            const setupSmsBtn = document.getElementById('setup-sms');
+            const setupAppBtn = document.getElementById('setup-app');
+            const setupEmailBtn = document.getElementById('setup-email');
+            const smsModal = document.getElementById('sms-modal');
+            const appModal = document.getElementById('app-modal');
+            const successModal = document.getElementById('success-modal');
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            const sendSmsCodeBtn = document.getElementById('send-sms-code');
+            const smsVerification = document.getElementById('sms-verification');
+            const smsCountdown = document.getElementById('sms-countdown');
+            const resendSmsBtn = document.getElementById('resend-sms');
+            const confirmSmsBtn = document.getElementById('confirm-sms');
+            const confirmAppBtn = document.getElementById('confirm-app');
+            const copyKeyBtn = document.getElementById('copy-key');
+            const downloadCodesBtn = document.getElementById('download-codes');
+            const codeInputs = document.querySelectorAll('.verification-code input');
+            
+            // Open modals
+            setupSmsBtn.addEventListener('click', () => openModal(smsModal));
+            setupAppBtn.addEventListener('click', () => openModal(appModal));
+            setupEmailBtn.addEventListener('click', () => {
+                alert('Email verification setup would be implemented here.');
+            });
+            
+            // Close modals
+            closeModalButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    closeAllModals();
+                });
+            });
+            
+            // Send SMS code
+            sendSmsCodeBtn.addEventListener('click', () => {
+                sendSmsCodeBtn.textContent = 'Code Sent!';
+                sendSmsCodeBtn.disabled = true;
+                smsVerification.style.display = 'block';
+                
+                // Start countdown
+                let timeLeft = 300; // 5 minutes
+                const countdownInterval = setInterval(() => {
+                    timeLeft--;
+                    
+                    const minutes = Math.floor(timeLeft / 60);
+                    const seconds = timeLeft % 60;
+                    
+                    smsCountdown.textContent = `Code expires in: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(countdownInterval);
+                        smsCountdown.textContent = 'Code expired';
+                        smsCountdown.classList.add('expired');
+                        resendSmsBtn.style.display = 'inline';
+                    }
+                }, 1000);
+            });
+            
+            // Resend SMS code
+            resendSmsBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('New code sent!');
+            });
+            
+            // Copy setup key
+            copyKeyBtn.addEventListener('click', () => {
+                const setupKey = document.getElementById('setup-key');
+                setupKey.select();
+                document.execCommand('copy');
+                copyKeyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyKeyBtn.textContent = 'Copy Key';
+                }, 2000);
+            });
+            
+            // Verify codes and activate 2FA
+            confirmSmsBtn.addEventListener('click', () => activate2FA());
+            confirmAppBtn.addEventListener('click', () => activate2FA());
+            
+            // Download backup codes
+            downloadCodesBtn.addEventListener('click', () => {
+                alert('Backup codes would be downloaded as a text file.');
+            });
+            
+            // Handle code input fields
+            codeInputs.forEach((input, index) => {
+                input.addEventListener('input', () => {
+                    if (input.value) {
+                        if (index < codeInputs.length - 1) {
+                            codeInputs[index + 1].focus();
+                        }
+                    }
+                });
+                
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        codeInputs[index - 1].focus();
+                    }
+                });
+            });
+            
+            // Functions
+            function openModal(modal) {
+                closeAllModals();
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeAllModals() {
+                document.querySelectorAll('.modal-overlay').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = 'auto';
+                
+                // Reset SMS form
+                sendSmsCodeBtn.textContent = 'Send Verification Code';
+                sendSmsCodeBtn.disabled = false;
+                smsVerification.style.display = 'none';
+                smsCountdown.textContent = 'Code expires in: 05:00';
+                smsCountdown.classList.remove('expired');
+            }
+            
+            function activate2FA() {
+                closeAllModals();
+                setTimeout(() => {
+                    openModal(successModal);
+                    
+                    // Update status badge
+                    statusBadge.className = 'status-badge active';
+                    statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> Currently active';
+                }, 300);
+            }
+            
+            // Close modal when clicking outside
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        closeAllModals();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

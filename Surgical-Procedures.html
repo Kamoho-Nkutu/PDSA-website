@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surgical Procedures - PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1583511655826-05700442b31f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 5rem 0;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #3498db;
+        }
+        
+        .section-title p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        /* Sidebar Navigation */
+        .content-with-sidebar {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar h3 {
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+            font-size: 1.4rem;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #444;
+            text-decoration: none;
+            padding: 0.6rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #e1f0fa;
+            color: #3498db;
+        }
+        
+        .sidebar i {
+            width: 20px;
+            color: #3498db;
+        }
+        
+        /* Service Detail */
+        .service-detail {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-detail h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+            font-size: 2rem;
+        }
+        
+        .service-detail p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: #444;
+            font-size: 1.1rem;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .detail-card {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            transition: transform 0.3s;
+        }
+        
+        .detail-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .detail-card h4 {
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+        
+        .detail-card p {
+            margin-bottom: 0;
+            color: #555;
+        }
+        
+        /* Tabs for service pages */
+        .service-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .service-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .service-tab.active {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .service-tab:hover {
+            color: #3498db;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Pricing table */
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .pricing-table th, .pricing-table td {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .pricing-table th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .pricing-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .pricing-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .pricing-table tr:hover {
+            background-color: #e9f7fe;
+        }
+        
+        /* Process Steps */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+        
+        .process-step {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .process-step h4 {
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+        }
+        
+        /* Emergency banner */
+        .emergency-banner {
+            background-color: #e74c3c;
+            color: white;
+            padding: 1.2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .emergency-banner h3 {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 3rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #3498db;
+        }
+        
+        .footer-col p {
+            margin-bottom: 1rem;
+            color: #bbb;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-col ul li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-col ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bbb;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 900px) {
+            .content-with-sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .service-tabs {
+                flex-direction: column;
+            }
+            
+            .service-tab {
+                text-align: center;
+                border-bottom: 1px solid #e0e0e0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+                    <h1>PDSA Veterinary Clinic</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#" class="active">Services</a></li>
+                        <li><a href="#About">About Us</a></li>
+                        <li><a href="#">Our Team</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Surgical Procedures</h2>
+            <p>Expert surgical care for your pets with state-of-the-art facilities and compassionate veterinary surgeons</p>
+            <a href="#contact" class="btn">Schedule a Consultation</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services">
+        <div class="container">
+            <div class="content-with-sidebar">
+                <!-- Sidebar Navigation -->
+                <div class="sidebar">
+                    <h3>Our Services</h3>
+                    <ul>
+                        <li><a href="veterinaryclinic.html"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
+                        <li><a href="Surgical-Procedures.html" class="active"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
+                        <li><a href="dental-care.html"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
+                        <li><a href="emergency-care.html"><i class="fas fa-chevron-right"></i> Emergency Care</a></li> n
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Service Detail -->
+                <div class="service-detail">
+                    <h2>Surgical Procedures</h2>
+                    <p>Our veterinary surgical team provides compassionate and expert care for a wide range of surgical procedures. From routine spays and neuters to complex orthopedic surgeries, we utilize the latest techniques and technology to ensure the best outcomes for your pets.</p>
+                    
+                    <div class="service-tabs">
+                        <div class="service-tab active" data-tab="overview">Overview</div>
+                        <div class="service-tab" data-tab="procedures">Procedures</div>
+                        <div class="service-tab" data-tab="pricing">Pricing</div>
+                        <div class="service-tab" data-tab="recovery">Recovery</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="overview">
+                        <p>At PDSA Veterinary Clinic, we understand that surgery can be a stressful experience for both pets and their owners. That's why we've created a comfortable, state-of-the-art surgical suite and developed comprehensive protocols to ensure your pet's safety and comfort throughout the surgical process.</p>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <h4><i class="fas fa-stethoscope"></i> Pre-Surgical Assessment</h4>
+                                <p>Comprehensive health evaluation and blood work to ensure your pet is a good candidate for anesthesia and surgery.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-procedures"></i> Modern Surgical Suite</h4>
+                                <p>Our surgical facility is equipped with advanced monitoring equipment and sterilization systems to ensure the highest standards of care.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-user-md"></i> Experienced Surgeons</h4>
+                                <p>Our veterinary surgeons have years of experience and regularly pursue continuing education to stay current with the latest techniques.</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Our Surgical Process</h3>
+                        <div class="process-steps">
+                            <div class="process-step">
+                                <div class="step-number">1</div>
+                                <h4>Consultation</h4>
+                                <p>Comprehensive examination and discussion of surgical options</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">2</div>
+                                <h4>Pre-Op Preparation</h4>
+                                <p>Blood work, fasting instructions, and pre-anesthetic medications</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">3</div>
+                                <h4>Surgery</h4>
+                                <p>Procedure performed with continuous monitoring by our surgical team</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">4</div>
+                                <h4>Recovery</h4>
+                                <p>Careful monitoring during recovery with pain management as needed</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="procedures">
+                        <h3>Common Surgical Procedures</h3>
+                        <p>We perform a wide range of surgical procedures to address various health conditions in pets:</p>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <h4><i class="fas fa-cut"></i> Spay & Neuter</h4>
+                                <p>Routine sterilization procedures to prevent unwanted litters and provide health benefits.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-bone"></i> Orthopedic Surgery</h4>
+                                <p>Fracture repairs, cruciate ligament repairs, and other bone and joint procedures.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-tumor"></i> Soft Tissue Surgery</h4>
+                                <p>Mass removals, abdominal surgeries, and other non-orthopedic procedures.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-teeth"></i> Dental Surgery</h4>
+                                <p>Tooth extractions, oral tumor removals, and other dental procedures.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-eye"></i> Ophthalmic Surgery</h4>
+                                <p>Eyelid corrections, cataract removal, and other eye procedures.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-first-aid"></i> Emergency Surgery</h4>
+                                <p>Foreign body removal, wound repairs, and other urgent procedures.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="pricing">
+                        <h3>Surgical Procedure Pricing</h3>
+                        <p>The cost of surgery varies depending on the complexity of the procedure, the size of your pet, and any special circumstances. Below are our baseline prices for common procedures:</p>
+                        
+                        <table class="pricing-table">
+                            <thead>
+                                <tr>
+                                    <th>Procedure</th>
+                                    <th>Description</th>
+                                    <th>Starting From</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Spay (Ovariohysterectomy)</td>
+                                    <td>Female dog or cat sterilization</td>
+                                    <td>R1,200</td>
+                                </tr>
+                                <tr>
+                                    <td>Neuter (Castration)</td>
+                                    <td>Male dog or cat sterilization</td>
+                                    <td>R950</td>
+                                </tr>
+                                <tr>
+                                    <td>Dental Extractions</td>
+                                    <td>Tooth removal under anesthesia</td>
+                                    <td>R450</td>
+                                </tr>
+                                <tr>
+                                    <td>Mass Removal</td>
+                                    <td>Simple lump removal</td>
+                                    <td>R800</td>
+                                </tr>
+                                <tr>
+                                    <td>Cruciate Ligament Repair</td>
+                                    <td>Knee surgery for ligament tears</td>
+                                    <td>R4,500</td>
+                                </tr>
+                                <tr>
+                                    <td>Fracture Repair</td>
+                                    <td>Simple bone fracture repair</td>
+                                    <td>R3,200</td>
+                                </tr>
+                                <tr>
+                                    <td>Foreign Body Removal</td>
+                                    <td>Emergency surgery to remove ingested objects</td>
+                                    <td>R3,800</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <p class="emergency-banner" style="background-color: #3498db; margin-top: 2rem;">
+                            <i class="fas fa-info-circle"></i> <strong>Note:</strong> These are baseline prices. A detailed estimate will be provided after your surgical consultation.
+                        </p>
+                    </div>
+                    
+                    <div class="tab-content" id="recovery">
+                        <h3>Post-Surgical Recovery</h3>
+                        <p>Proper aftercare is essential for your pet's recovery. Our team will provide detailed instructions tailored to your pet's specific procedure.</p>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-card">
+                                <h4><i class="fas fa-home"></i> Home Care</h4>
+                                <p>Instructions for confinement, activity restriction, and monitoring your pet's incision site.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-pills"></i> Medication</h4>
+                                <p>Pain management and antibiotics as needed to keep your pet comfortable and prevent infection.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-utensils"></i> Nutrition</h4>
+                                <p>Dietary recommendations to support healing and recovery.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4><i class="fas fa-calendar-check"></i> Follow-up</h4>
+                                <p>Scheduled recheck appointments to monitor healing and remove stitches if necessary.</p>
+                            </div>
+                        </div>
+                        
+                        <h3>When to Call the Vet</h3>
+                        <p>Contact us immediately if you notice any of the following during your pet's recovery:</p>
+                        <ul style="margin-left: 2rem; margin-bottom: 1.5rem; color: #555;">
+                            <li>Excessive swelling, redness, or discharge from the incision site</li>
+                            <li>Loss of appetite for more than 24 hours</li>
+                            <li>Lethargy or depression lasting more than a day</li>
+                            <li>Difficulty breathing</li>
+                            <li>Vomiting or diarrhea</li>
+                            <li>Signs of pain that aren't controlled with medication</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Banner -->
+    <div class="container">
+        <div class="emergency-banner">
+            <h3><i class="fas fa-exclamation-triangle"></i> Emergency Surgical Services Available 24/7</h3>
+            <p>If your pet needs emergency surgery, call us immediately at <strong>011 984 4340</strong></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>About PDSA</h3>
+                    <p>Providing quality veterinary care to pets in need since 2010. Our mission is to ensure every pet receives the care they deserve.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Services</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Surgical Services</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Spay & Neuter</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Orthopedic Surgery</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Soft Tissue Surgery</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dental Surgery</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Emergency Surgery</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 1188 Nancefield Road, Mfolo, Soweto</p>
+                    <p><i class="fas fa-phone"></i> 011 984 4340</p>
+                    <p><i class="fas fa-envelope"></i> info@pdsa.org.za</p>
+                    <p><i class="fas fa-clock"></i> Mon-Fri: 8:00 AM - 7:00 PM</p>
+                    <p><i class="fas fa-calendar"></i> Sat: 9:00 AM - 4:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab functionality for service pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.service-tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab content
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Records | PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-dark: #1a252f;
+            --primary-light: #d6eaf8;
+            --secondary: #3498db;
+            --secondary-dark: #2980b9;
+            --secondary-light: #ebf5fb;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #ff4757;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-light: #f8f9fa;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-user {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links a.active {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .user-profile-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-header h1 i {
+            color: var(--secondary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+        }
+
+        .btn-accent:hover {
+            background: #c0392b;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary-light);
+        }
+
+        /* Pet Selector */
+        .pet-selector {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .pet-selector label {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .pet-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .pet-option {
+            padding: 0.75rem 1.25rem;
+            border: 2px solid #eee;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pet-option:hover {
+            border-color: var(--secondary);
+        }
+
+        .pet-option.active {
+            border-color: var(--secondary);
+            background: var(--primary-light);
+        }
+
+        .pet-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Medical Summary */
+        .medical-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .summary-card .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-primary .icon {
+            background: rgba(52, 152, 219, 0.15);
+            color: var(--secondary);
+        }
+
+        .card-success .icon {
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--success);
+        }
+
+        .card-warning .icon {
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--warning);
+        }
+
+        .card-danger .icon {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--accent);
+        }
+
+        .summary-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .summary-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--primary-light);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--secondary);
+            z-index: 1;
+        }
+
+        .timeline-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-left: 1rem;
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .timeline-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .timeline-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .timeline-detail label {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .timeline-detail span {
+            font-weight: 500;
+        }
+
+        .timeline-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* Filters and Tabs */
+        .filters-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .tab:not(.active):hover {
+            background: var(--primary-light);
+            color: var(--secondary);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: var(--text-color);
+            white-space: nowrap;
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            background: white;
+            color: var(--text-color);
+            min-width: 150px;
+        }
+
+        /* Vaccination Records */
+        .vaccination-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .vaccination-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .vaccination-card {
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            transition: var(--transition);
+        }
+
+        .vaccination-card:hover {
+            border-color: var(--secondary);
+            box-shadow: var(--box-shadow);
+        }
+
+        .vaccination-name {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .vaccination-details {
+            display: grid;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .vaccination-detail {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .vaccination-detail label {
+            color: var(--text-light);
+        }
+
+        .vaccination-detail span {
+            font-weight: 500;
+        }
+
+        .vaccination-status {
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .status-current {
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--success);
+        }
+
+        .status-due {
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--warning);
+        }
+
+        .status-overdue {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--accent);
+        }
+
+        /* No Records State */
+        .no-records {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .no-records i {
+            font-size: 4rem;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .no-records h2 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .no-records p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: var(--bg-light);
+        }
+
+        .close-modal:focus {
+            outline: 2px solid var(--secondary);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-item {
+            margin-bottom: 1rem;
+        }
+
+        .modal-item label {
+            display: block;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-item p {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .modal-notes {
+            background: var(--bg-light);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .modal-notes h3 {
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .timeline::before {
+                left: 10px;
+            }
+            
+            .timeline-dot {
+                left: -1.5rem;
+            }
+            
+            .pet-options {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .pet-option {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .medical-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .vaccination-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-actions {
+                flex-direction: column;
+            }
+            
+            .timeline-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+            }
+            
+            .modal-footer .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+            <span>PDSA Veterinary Clinic</span>
+        </a>
+        
+        <div class="nav-user">
+            <nav class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="my-pets.html"><i class="fas fa-paw"></i> My Pets</a>
+                <a href="appointments.html"><i class="fas fa-calendar"></i> Appointments</a>
+                <a href="#" class="active"><i class="fas fa-file-medical"></i> Medical Records</a>
+                <a href="payment-history.html"><i class="fas fa-receipt"></i> Payments</a>
+            </nav>
+            
+            <div class="user-profile-btn">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
+                <span>Alex J.</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-file-medical"></i>
+                Medical Records
+            </h1>
+            <button class="btn" id="download-records">
+                <i class="fas fa-download"></i>
+                Download Records
+            </button>
+        </div>
+
+        <!-- Pet Selector -->
+        <div class="pet-selector">
+            <label>Select Pet:</label>
+            <div class="pet-options">
+                <div class="pet-option active" data-pet="bella">
+                    <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80" alt="Bella" class="pet-avatar">
+                    <span>Bella</span>
+                </div>
+                <div class="pet-option" data-pet="whiskers">
+                    <img src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80" alt="Whiskers" class="pet-avatar">
+                    <span>Whiskers</span>
+                </div>
+                <div class="pet-option" data-pet="max">
+                    <img src="https://images.unsplash.com/photo-1560809454-892b55bce5f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80" alt="Max" class="pet-avatar">
+                    <span>Max</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Medical Summary -->
+        <div class="medical-summary">
+            <div class="summary-card card-primary">
+                <div class="icon">
+                    <i class="fas fa-weight"></i>
+                </div>
+                <h3>25.4 kg</h3>
+                <p>Current Weight</p>
+            </div>
+            
+            <div class="summary-card card-success">
+                <div class="icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3>Good</h3>
+                <p>Overall Health</p>
+            </div>
+            
+            <div class="summary-card card-warning">
+                <div class="icon">
+                    <i class="fas fa-syringe"></i>
+                </div>
+                <h3>2</h3>
+                <p>Vaccinations Due</p>
+            </div>
+            
+            <div class="summary-card card-danger">
+                <div class="icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>1</h3>
+                <p>Allergies</p>
+            </div>
+        </div>
+
+        <!-- Filters and Tabs -->
+        <div class="filters-container">
+            <div class="tabs" role="tablist">
+                <div class="tab active" data-tab="all" role="tab" aria-selected="true">All Records</div>
+                <div class="tab" data-tab="visits" role="tab" aria-selected="false">Vet Visits</div>
+                <div class="tab" data-tab="vaccinations" role="tab" aria-selected="false">Vaccinations</div>
+                <div class="tab" data-tab="medications" role="tab" aria-selected="false">Medications</div>
+                <div class="tab" data-tab="tests" role="tab" aria-selected="false">Test Results</div>
+            </div>
+            
+            <div class="filter-group">
+                <label for="date-filter">Time Period:</label>
+                <select id="date-filter" class="filter-select">
+                    <option value="all">All Time</option>
+                    <option value="year">Past Year</option>
+                    <option value="6months">Past 6 Months</option>
+                    <option value="3months">Past 3 Months</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Medical Timeline -->
+        <div class="timeline" id="medical-timeline">
+            <!-- Timeline items will be dynamically added here -->
+        </div>
+
+        <!-- Vaccination Section -->
+        <div class="vaccination-section">
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-syringe"></i>
+                    Vaccination History
+                </h2>
+                <button class="btn btn-outline" id="add-reminder">
+                    <i class="fas fa-plus"></i>
+                    Add Reminder
+                </button>
+            </div>
+            
+            <div class="vaccination-grid" id="vaccination-grid">
+                <!-- Vaccination cards will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- No Records State -->
+        <div class="no-records" id="no-records">
+            <i class="fas fa-file-medical-alt"></i>
+            <h2>No medical records found</h2>
+            <p>You don't have any medical records yet. Your pet's medical history will appear here after their first veterinary visit.</p>
+        </div>
+    </div>
+
+    <!-- Record Detail Modal -->
+    <div class="modal" id="record-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Medical Record Details</h2>
+                <button class="close-modal" id="close-modal" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-details">
+                    <div class="modal-item">
+                        <label>Date</label>
+                        <p id="modal-date">Jun 15, 2023</p>
+                    </div>
+                    <div class="modal-item">
+                        <label>Pet</label>
+                        <p id="modal-pet">Bella (Golden Retriever)</p>
+                    </div>
+                    <div class="modal-item">
+                        <label>Veterinarian</label>
+                        <p id="modal-vet">Dr. Sarah Johnson</p>
+                    </div>
+                    <div class="modal-item">
+                        <label>Type</label>
+                        <p id="modal-type">Annual Checkup</p>
+                    </div>
+                </div>
+                
+                <div class="modal-item">
+                    <label>Diagnosis</label>
+                    <p id="modal-diagnosis">Healthy - no issues found</p>
+                </div>
+                
+                <div class="modal-notes">
+                    <h3>Veterinarian Notes</h3>
+                    <p id="modal-notes">Bella is in excellent health. Weight is stable at 25.4kg. Dental health is good with minimal plaque buildup. Recommended to continue current diet and exercise routine. Next checkup scheduled in 6 months.</p>
+                </div>
+                
+                <div class="modal-details">
+                    <div class="modal-item">
+                        <label>Temperature</label>
+                        <p id="modal-temp">38.2°C (100.8°F)</p>
+                    </div>
+                    <div class="modal-item">
+                        <label>Heart Rate</label>
+                        <p id="modal-heart">72 bpm</p>
+                    </div>
+                    <div class="modal-item">
+                        <label>Weight</label>
+                        <p id="modal-weight">25.4 kg</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="print-record">
+                    <i class="fas fa-print"></i>
+                    Print Record
+                </button>
+                <button class="btn" id="download-pdf">
+                    <i class="fas fa-download"></i>
+                    Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved. | <a href="index.html">Home</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
+    </footer>
+
+    <script>
+        // Sample medical records data
+        const medicalRecords = [
+            {
+                id: "MR-789456123",
+                pet: "Bella",
+                date: "2023-06-15",
+                type: "Annual Checkup",
+                veterinarian: "Dr. Sarah Johnson",
+                diagnosis: "Healthy - no issues found",
+                notes: "Bella is in excellent health. Weight is stable at 25.4kg. Dental health is good with minimal plaque buildup. Recommended to continue current diet and exercise routine. Next checkup scheduled in 6 months.",
+                temperature: "38.2°C (100.8°F)",
+                heartRate: "72 bpm",
+                weight: "25.4 kg",
+                category: "visits"
+            },
+            {
+                id: "MR-789456124",
+                pet: "Bella",
+                date: "2023-05-10",
+                type: "Vaccination",
+                veterinarian: "Dr. Sarah Johnson",
+                diagnosis: "Rabies and DHPP vaccines administered",
+                notes: "Bella received her annual rabies and DHPP vaccines. No adverse reactions observed. Next rabies vaccine due in 3 years, DHPP due in 1 year.",
+                temperature: "38.1°C (100.6°F)",
+                heartRate: "68 bpm",
+                weight: "25.2 kg",
+                category: "vaccinations"
+            },
+            {
+                id: "MR-789456125",
+                pet: "Bella",
+                date: "2023-04-05",
+                type: "Dental Cleaning",
+                veterinarian: "Dr. Michael Chen",
+                diagnosis: "Mild gingivitis, dental cleaning performed",
+                notes: "Performed dental cleaning under general anesthesia. Extracted one compromised tooth (P4). Recommended dental chews and regular brushing to maintain oral health.",
+                temperature: "38.3°C (100.9°F)",
+                heartRate: "70 bpm",
+                weight: "25.3 kg",
+                category: "procedures"
+            },
+            {
+                id: "MR-789456126",
+                pet: "Bella",
+                date: "2023-03-15",
+                type: "Blood Test",
+                veterinarian: "Dr. Emily Rodriguez",
+                diagnosis: "Normal bloodwork results",
+                notes: "Complete blood count and chemistry panel within normal ranges. No signs of infection or organ dysfunction. Results consistent with healthy adult dog.",
+                temperature: "38.0°C (100.4°F)",
+                heartRate: "65 bpm",
+                weight: "25.1 kg",
+                category: "tests"
+            },
+            {
+                id: "MR-789456127",
+                pet: "Bella",
+                date: "2023-01-20",
+                type: "Medication Prescription",
+                veterinarian: "Dr. Sarah Johnson",
+                diagnosis: "Seasonal allergies",
+                notes: "Prescribed Apoquel for seasonal allergy symptoms. Recommended dosage: 16mg twice daily for 7 days, then once daily as needed for itching.",
+                temperature: "38.2°C (100.8°F)",
+                heartRate: "70 bpm",
+                weight: "24.9 kg",
+                category: "medications"
+            }
+        ];
+
+        // Sample vaccination data
+        const vaccinations = [
+            {
+                id: "VAC-123456",
+                name: "Rabies",
+                dateAdministered: "2023-05-10",
+                nextDue: "2026-05-10",
+                veterinarian: "Dr. Sarah Johnson",
+                lotNumber: "RB12345",
+                status: "current"
+            },
+            {
+                id: "VAC-123457",
+                name: "DHPP",
+                dateAdministered: "2023-05-10",
+                nextDue: "2024-05-10",
+                veterinarian: "Dr. Sarah Johnson",
+                lotNumber: "DH98765",
+                status: "current"
+            },
+            {
+                id: "VAC-123458",
+                name: "Bordetella",
+                dateAdministered: "2022-11-15",
+                nextDue: "2023-11-15",
+                veterinarian: "Dr. Michael Chen",
+                lotNumber: "BD45678",
+                status: "due"
+            },
+            {
+                id: "VAC-123459",
+                name: "Lyme Disease",
+                dateAdministered: "2022-08-20",
+                nextDue: "2023-08-20",
+                veterinarian: "Dr. Emily Rodriguez",
+                lotNumber: "LY23456",
+                status: "overdue"
+            }
+        ];
+
+        // DOM Elements
+        const medicalTimeline = document.getElementById('medical-timeline');
+        const vaccinationGrid = document.getElementById('vaccination-grid');
+        const noRecords = document.getElementById('no-records');
+        const recordModal = document.getElementById('record-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const dateFilter = document.getElementById('date-filter');
+        const tabs = document.querySelectorAll('.tab');
+        const petOptions = document.querySelectorAll('.pet-option');
+        const downloadRecordsBtn = document.getElementById('download-records');
+        const addReminderBtn = document.getElementById('add-reminder');
+        const printRecordBtn = document.getElementById('print-record');
+        const downloadPdfBtn = document.getElementById('download-pdf');
+
+        // Initialize the page
+        function init() {
+            renderMedicalTimeline();
+            renderVaccinations();
+            
+            // Event listeners
+            closeModalBtn.addEventListener('click', () => {
+                recordModal.classList.remove('active');
+            });
+            
+            dateFilter.addEventListener('change', filterRecords);
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.getAttribute('data-tab');
+                    activateTab(tabName);
+                    filterRecords();
+                });
+            });
+            
+            petOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const pet = option.getAttribute('data-pet');
+                    activatePet(pet);
+                    filterRecords();
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === recordModal) {
+                    recordModal.classList.remove('active');
+                }
+            });
+            
+            // Download records button
+            downloadRecordsBtn.addEventListener('click', () => {
+                alert('Downloading all medical records...');
+                // In a real application, this would generate and download a PDF
+            });
+            
+            // Add reminder button
+            addReminderBtn.addEventListener('click', () => {
+                alert('Opening reminder creation form...');
+                // In a real application, this would open a form to create a new reminder
+            });
+            
+            // Print record button
+            printRecordBtn.addEventListener('click', () => {
+                window.print();
+            });
+            
+            // Download PDF button
+            downloadPdfBtn.addEventListener('click', () => {
+                alert('Downloading PDF version of this record...');
+                // In a real application, this would generate and download a PDF
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && recordModal.classList.contains('active')) {
+                    recordModal.classList.remove('active');
+                }
+            });
+        }
+
+        // Render medical timeline
+        function renderMedicalTimeline(records = medicalRecords) {
+            medicalTimeline.innerHTML = '';
+            
+            if (records.length === 0) {
+                noRecords.style.display = 'block';
+                medicalTimeline.style.display = 'none';
+                return;
+            }
+            
+            noRecords.style.display = 'none';
+            medicalTimeline.style.display = 'block';
+            
+            records.forEach(record => {
+                const timelineItem = createTimelineItem(record);
+                medicalTimeline.appendChild(timelineItem);
+            });
+        }
+
+        // Create timeline item HTML
+        function createTimelineItem(record) {
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            
+            const icon = record.type === 'Vaccination' ? 'fa-syringe' :
+                       record.type === 'Dental Cleaning' ? 'fa-tooth' :
+                       record.type === 'Blood Test' ? 'fa-vial' :
+                       record.type === 'Medication Prescription' ? 'fa-pills' : 'fa-stethoscope';
+            
+            item.innerHTML = `
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">
+                        <i class="fas fa-calendar"></i>
+                        ${formatDate(record.date)}
+                    </div>
+                    <h3 class="timeline-title">
+                        <i class="fas ${icon}"></i>
+                        ${record.type}
+                    </h3>
+                    <p>${record.diagnosis}</p>
+                    
+                    <div class="timeline-details">
+                        <div class="timeline-detail">
+                            <label>Veterinarian</label>
+                            <span>${record.veterinarian}</span>
+                        </div>
+                        <div class="timeline-detail">
+                            <label>Weight</label>
+                            <span>${record.weight}</span>
+                        </div>
+                        <div class="timeline-detail">
+                            <label>Temperature</label>
+                            <span>${record.temperature}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-actions">
+                        <button class="btn btn-outline view-details" data-id="${record.id}">
+                            <i class="fas fa-eye"></i>
+                            View Details
+                        </button>
+                        <button class="btn download-record" data-id="${record.id}">
+                            <i class="fas fa-download"></i>
+                            Download
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners
+            item.querySelector('.view-details').addEventListener('click', () => {
+                showRecordDetails(record.id);
+            });
+            
+            item.querySelector('.download-record').addEventListener('click', () => {
+                alert(`Downloading record: ${record.type} from ${formatDate(record.date)}`);
+                // In a real application, this would download the specific record
+            });
+            
+            return item;
+        }
+
+        // Render vaccinations
+        function renderVaccinations() {
+            vaccinationGrid.innerHTML = '';
+            
+            vaccinations.forEach(vaccination => {
+                const card = document.createElement('div');
+                card.className = 'vaccination-card';
+                
+                const statusClass = `status-${vaccination.status}`;
+                const statusText = vaccination.status.charAt(0).toUpperCase() + vaccination.status.slice(1);
+                
+                card.innerHTML = `
+                    <div class="vaccination-name">${vaccination.name} Vaccine</div>
+                    <div class="vaccination-details">
+                        <div class="vaccination-detail">
+                            <label>Administered:</label>
+                            <span>${formatDate(vaccination.dateAdministered)}</span>
+                        </div>
+                        <div class="vaccination-detail">
+                            <label>Next Due:</label>
+                            <span>${formatDate(vaccination.nextDue)}</span>
+                        </div>
+                        <div class="vaccination-detail">
+                            <label>Veterinarian:</label>
+                            <span>${vaccination.veterinarian}</span>
+                        </div>
+                        <div class="vaccination-detail">
+                            <label>Lot Number:</label>
+                            <span>${vaccination.lotNumber}</span>
+                        </div>
+                    </div>
+                    <span class="vaccination-status ${statusClass}">${statusText}</span>
+                `;
+                
+                vaccinationGrid.appendChild(card);
+            });
+        }
+
+        // Filter records
+        function filterRecords() {
+            const dateRange = dateFilter.value;
+            const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
+            const activePet = document.querySelector('.pet-option.active').getAttribute('data-pet');
+            
+            let filteredRecords = medicalRecords;
+            
+            // Filter by pet
+            filteredRecords = filteredRecords.filter(record => record.pet.toLowerCase() === activePet);
+            
+            // Filter by tab
+            if (activeTab !== 'all') {
+                filteredRecords = filteredRecords.filter(record => record.category === activeTab);
+            }
+            
+            // Filter by date
+            if (dateRange !== 'all') {
+                const days = dateRange === 'year' ? 365 :
+                           dateRange === '6months' ? 180 :
+                           dateRange === '3months' ? 90 : 0;
+                
+                const cutoffDate = new Date();
+                cutoffDate.setDate(cutoffDate.getDate() - days);
+                
+                filteredRecords = filteredRecords.filter(record => {
+                    const recordDate = new Date(record.date);
+                    return recordDate >= cutoffDate;
+                });
+            }
+            
+            renderMedicalTimeline(filteredRecords);
+        }
+
+        // Activate tab
+        function activateTab(tabName) {
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabName) {
+                    tab.classList.add('active');
+                    tab.setAttribute('aria-selected', 'true');
+                } else {
+                    tab.classList.remove('active');
+                    tab.setAttribute('aria-selected', 'false');
+                }
+            });
+        }
+
+        // Activate pet
+        function activatePet(petName) {
+            petOptions.forEach(option => {
+                if (option.getAttribute('data-pet') === petName) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+        }
+
+        // Show record details
+        function showRecordDetails(recordId) {
+            const record = medicalRecords.find(r => r.id === recordId);
+            
+            if (!record) return;
+            
+            // Update modal details
+            document.getElementById('modal-date').textContent = formatDate(record.date);
+            document.getElementById('modal-pet').textContent = `${record.pet} (Golden Retriever)`;
+            document.getElementById('modal-vet').textContent = record.veterinarian;
+            document.getElementById('modal-type').textContent = record.type;
+            document.getElementById('modal-diagnosis').textContent = record.diagnosis;
+            document.getElementById('modal-notes').textContent = record.notes;
+            document.getElementById('modal-temp').textContent = record.temperature;
+            document.getElementById('modal-heart').textContent = record.heartRate;
+            document.getElementById('modal-weight').textContent = record.weight;
+            
+            // Show modal
+            recordModal.classList.add('active');
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

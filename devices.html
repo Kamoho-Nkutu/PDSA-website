@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connected Devices | PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-dark: #1a252f;
+            --primary-light: #d6eaf8;
+            --secondary: #3498db;
+            --secondary-dark: #2980b9;
+            --secondary-light: #ebf5fb;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-light: #f8f9fa;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-user {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links a.active {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .user-profile-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-header h1 i {
+            color: var(--secondary);
+        }
+
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .breadcrumbs a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .breadcrumbs span {
+            color: var(--text-light);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+        }
+
+        .btn-accent:hover {
+            background: #c0392b;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary-light);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Device Cards */
+        .devices-container {
+            margin-bottom: 3rem;
+        }
+
+        .device-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--box-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .device-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .device-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .device-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .device-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--secondary);
+        }
+
+        .device-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--primary);
+        }
+
+        .device-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .current-device {
+            background-color: rgba(39, 174, 96, 0.05);
+            border-left: 3px solid var(--success);
+        }
+
+        .device-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .last-active {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .security-alert {
+            background-color: rgba(231, 76, 60, 0.05);
+            border-left: 3px solid var(--danger);
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .security-alert i {
+            color: var(--danger);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background-color: rgba(39, 174, 96, 0.15);
+            color: var(--success);
+        }
+
+        /* Security Actions */
+        .security-actions {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        .security-note {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-message {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .device-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .device-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+            
+            .modal-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .device-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .device-icon {
+                margin-right: 0;
+                margin-bottom: 0.75rem;
+            }
+            
+            .security-note {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+            <span>PDSA Veterinary Clinic</span>
+        </a>
+        
+        <div class="nav-user">
+            <nav class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="my-pets.html"><i class="fas fa-paw"></i> My Pets</a>
+                <a href="appointments.html"><i class="fas fa-calendar"></i> Appointments</a>
+                <a href="medical-records.html"><i class="fas fa-file-medical"></i> Medical Records</a>
+                <a href="pet-health-advice.html"><i class="fas fa-heartbeat"></i> Pet Health Advice</a>
+                <a href="payment-history.html"><i class="fas fa-receipt"></i> Payments</a>
+            </nav>
+            
+            <div class="user-profile-btn">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
+                <span>Kamoho N.</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <div>
+                <div class="breadcrumbs">
+                    <a href="profile.html">My Profile</a>
+                    <span>/</span>
+                    <a href="security.html">Security</a>
+                    <span>/</span>
+                    <span>Connected Devices</span>
+                </div>
+                <h1>
+                    <i class="fas fa-laptop"></i>
+                    Connected Devices
+                </h1>
+                <p>Manage devices that have accessed your account</p>
+            </div>
+            <a href="security.html" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i>
+                Back to Security
+            </a>
+        </div>
+
+        <div class="devices-container">
+            <!-- Current Device -->
+            <div class="device-card current-device">
+                <div class="device-header">
+                    <div class="device-info">
+                        <div class="device-icon">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <div>
+                            <div class="device-name">MacBook Pro (Current Device)</div>
+                            <div class="device-meta">Chrome • macOS • Johannesburg, South Africa</div>
+                        </div>
+                    </div>
+                    <div class="device-actions">
+                        <span class="badge badge-success">Active now</span>
+                    </div>
+                </div>
+                <div class="last-active">
+                    Last active: Just now • IP: 192.168.1.100
+                </div>
+            </div>
+
+            <!-- Other Devices -->
+            <div class="device-card">
+                <div class="device-header">
+                    <div class="device-info">
+                        <div class="device-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div>
+                            <div class="device-name">iPhone 13</div>
+                            <div class="device-meta">Safari • iOS • Soweto, South Africa</div>
+                        </div>
+                    </div>
+                    <div class="device-actions">
+                        <button class="btn btn-outline btn-sm sign-out-btn" data-device-id="device2" data-device-name="iPhone 13">
+                            <i class="fas fa-sign-out-alt"></i> Sign out
+                        </button>
+                    </div>
+                </div>
+                <div class="last-active">
+                    Last active: 2 hours ago • IP: 86.145.32.10
+                </div>
+            </div>
+
+            <div class="device-card">
+                <div class="device-header">
+                    <div class="device-info">
+                        <div class="device-icon">
+                            <i class="fas fa-tablet-alt"></i>
+                        </div>
+                        <div>
+                            <div class="device-name">iPad Air</div>
+                            <div class="device-meta">Safari • iPadOS • London, UK</div>
+                        </div>
+                    </div>
+                    <div class="device-actions">
+                        <button class="btn btn-outline btn-sm sign-out-btn" data-device-id="device3" data-device-name="iPad Air">
+                            <i class="fas fa-sign-out-alt"></i> Sign out
+                        </button>
+                    </div>
+                </div>
+                <div class="last-active">
+                    Last active: 3 days ago • IP: 86.145.32.12
+                </div>
+            </div>
+
+            <div class="device-card">
+                <div class="device-header">
+                    <div class="device-info">
+                        <div class="device-icon">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div>
+                            <div class="device-name">Windows PC</div>
+                            <div class="device-meta">Firefox • Windows • Mbombela, South Africa</div>
+                        </div>
+                    </div>
+                    <div class="device-actions">
+                        <button class="btn btn-outline btn-sm sign-out-btn" data-device-id="device4" data-device-name="Windows PC">
+                            <i class="fas fa-sign-out-alt"></i> Sign out
+                        </button>
+                    </div>
+                </div>
+                <div class="last-active">
+                    Last active: 2 weeks ago • IP: 81.103.45.67
+                </div>
+                <div class="security-alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Unusual login location detected</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="security-actions">
+            <button class="btn btn-danger" id="sign-out-all">
+                <i class="fas fa-sign-out-alt"></i> Sign out of all devices
+            </button>
+            <p class="security-note">
+                <i class="fas fa-info-circle"></i> Signing out will require you to log in again on all devices except this one.
+            </p>
+        </div>
+    </div>
+
+    <!-- Sign Out Confirmation Modal -->
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Sign Out Device</h2>
+                <button class="close-modal" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">Are you sure you want to sign out this device?</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="cancel-action">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn btn-danger" id="confirm-action">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved. | <a href="index.html">Home</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const signOutButtons = document.querySelectorAll('.sign-out-btn');
+        const signOutAllButton = document.getElementById('sign-out-all');
+        const confirmModal = document.getElementById('confirm-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const confirmAction = document.getElementById('confirm-action');
+        const cancelAction = document.getElementById('cancel-action');
+        const closeModal = document.getElementById('close-modal');
+        
+        // Current action state
+        let currentAction = null;
+        let currentDeviceId = null;
+        let currentDeviceName = null;
+
+        // Initialize the page
+        function init() {
+            // Event listeners for sign out buttons
+            signOutButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const deviceId = e.currentTarget.getAttribute('data-device-id');
+                    const deviceName = e.currentTarget.getAttribute('data-device-name');
+                    showSignOutModal(deviceId, deviceName, 'device');
+                });
+            });
+            
+            // Event listener for sign out all button
+            signOutAllButton.addEventListener('click', () => {
+                showSignOutModal(null, null, 'all');
+            });
+            
+            // Event listeners for modal actions
+            confirmAction.addEventListener('click', executeAction);
+            cancelAction.addEventListener('click', hideModal);
+            closeModal.addEventListener('click', hideModal);
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === confirmModal) {
+                    hideModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && confirmModal.classList.contains('active')) {
+                    hideModal();
+                }
+            });
+        }
+        
+        // Show sign out confirmation modal
+        function showSignOutModal(deviceId, deviceName, actionType) {
+            currentAction = actionType;
+            currentDeviceId = deviceId;
+            currentDeviceName = deviceName;
+            
+            if (actionType === 'all') {
+                modalTitle.textContent = 'Sign Out All Devices';
+                modalMessage.textContent = 'Are you sure you want to sign out of all devices? This will log you out everywhere except this device.';
+            } else {
+                modalTitle.textContent = 'Sign Out Device';
+                modalMessage.textContent = `Are you sure you want to sign out of your ${deviceName}?`;
+            }
+            
+            confirmModal.classList.add('active');
+        }
+        
+        // Hide modal
+        function hideModal() {
+            confirmModal.classList.remove('active');
+            currentAction = null;
+            currentDeviceId = null;
+            currentDeviceName = null;
+        }
+        
+        // Execute the confirmed action
+        function executeAction() {
+            if (currentAction === 'all') {
+                // Sign out all devices
+                signOutAllDevices();
+            } else {
+                // Sign out specific device
+                signOutDevice(currentDeviceId, currentDeviceName);
+            }
+            
+            hideModal();
+        }
+        
+        // Sign out all devices (simulated)
+        function signOutAllDevices() {
+            // In a real application, this would make an API call to sign out all devices
+            // For this demo, we'll just show a confirmation message
+            
+            // Find all device cards except the current one
+            const deviceCards = document.querySelectorAll('.device-card:not(.current-device)');
+            
+            // Remove all devices except current
+            deviceCards.forEach(card => {
+                card.remove();
+            });
+            
+            // Show success message
+            alert('You have been signed out of all other devices.');
+            
+            // Update security note
+            const securityNote = document.querySelector('.security-note');
+            securityNote.innerHTML = '<i class="fas fa-check-circle" style="color: var(--success);"></i> All other devices have been signed out.';
+        }
+        
+        // Sign out specific device (simulated)
+        function signOutDevice(deviceId, deviceName) {
+            // In a real application, this would make an API call to sign out the specific device
+            // For this demo, we'll just remove the device card from the UI
+            
+            // Find the device card with the matching data attribute
+            const deviceCard = document.querySelector(`.sign-out-btn[data-device-id="${deviceId}"]`).closest('.device-card');
+            
+            // Remove the device card
+            deviceCard.remove();
+            
+            // Show success message
+            alert(`You have been signed out of your ${deviceName}.`);
+            
+            // Check if there are any devices left (other than current)
+            const otherDevices = document.querySelectorAll('.device-card:not(.current-device)');
+            if (otherDevices.length === 0) {
+                const securityActions = document.querySelector('.security-actions');
+                securityActions.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>No other devices connected</h3>
+                        <p>Your account is only active on this device.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

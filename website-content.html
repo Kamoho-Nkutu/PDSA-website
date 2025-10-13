@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Content Management | PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #95a5a6;
+            --white: #ffffff;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Admin Layout */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            transition: var(--transition);
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header img {
+            height: 40px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.9rem 1.5rem;
+            color: #bbb;
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+            border-left-color: var(--secondary);
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-label {
+            margin: 1rem 1.5rem 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            color: #777;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .admin-main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: var(--transition);
+        }
+
+        /* Header */
+        .admin-header {
+            background-color: var(--white);
+            height: var(--header-height);
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--dark);
+            margin-right: 1rem;
+            display: none;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 250px;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-action {
+            position: relative;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background-color: var(--light);
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--secondary);
+        }
+
+        /* Dashboard Content */
+        .admin-content {
+            padding: 1.5rem;
+        }
+
+        .page-title {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .page-title h1 {
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        /* Website Editor Styles */
+        .website-editor {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .editor-header h3 {
+            color: var(--primary);
+        }
+
+        .editor-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            overflow-x: auto;
+        }
+
+        .editor-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .editor-tab.active {
+            color: var(--secondary);
+            border-bottom-color: var(--secondary);
+        }
+
+        .editor-content {
+            display: none;
+        }
+
+        .editor-content.active {
+            display: block;
+        }
+
+        .editor-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .editor-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-danger {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-header h3 {
+            color: var(--primary);
+        }
+
+        .preview-content {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .preview-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .preview-item-info h4 {
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .preview-item-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .preview-item-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        /* Image Upload */
+        .image-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .image-upload:hover {
+            border-color: var(--secondary);
+        }
+
+        .image-upload i {
+            font-size: 2rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .image-upload p {
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .image-preview {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 4px;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            color: white;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background-color: var(--success);
+        }
+
+        .toast.error {
+            background-color: var(--accent);
+        }
+
+        .toast.info {
+            background-color: var(--secondary);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .editor-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .admin-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .toggle-sidebar {
+                display: block;
+            }
+            
+            .search-box {
+                display: none;
+            }
+            
+            .editor-tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-header">
+                <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+                <h2>PDSA Admin</h2>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <div class="menu-label">Main</div>
+                <a href="admin-dashboard.html" class="menu-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                
+                <div class="menu-label">Management</div>
+                <a href="appointments.html" class="menu-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Appointments</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Patients</span>
+                </a>
+                <a href="veterinaryclinic.html" class="menu-item">
+                    <i class="fas fa-user-md"></i>
+                    <span>Veterinarians</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Products</span>
+                </a>
+                <a href="payment-history.html" class="menu-item">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Payments</span>
+                </a>
+                
+                <div class="menu-label">Website Management</div>
+                <a href="website-content.html" class="menu-item active">
+                    <i class="fas fa-edit"></i>
+                    <span>Website Content</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-images"></i>
+                    <span>Media Gallery</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                
+                <div class="menu-label">System</div>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-database"></i>
+                    <span>Backups</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar" id="toggle-sidebar">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search..." id="global-search">
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="header-action">
+                        <i class="far fa-bell"></i>
+                        <span class="notification-badge">5</span>
+                    </div>
+                    <div class="header-action">
+                        <i class="far fa-envelope"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&q=80" alt="Admin User">
+                        <span>Admin User</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="admin-content">
+                <div class="page-title">
+                    <h1><i class="fas fa-edit"></i> Website Content Editor</h1>
+                    <div class="breadcrumb">
+                        <a href="admin-dashboard.html">Dashboard</a> / <span>Website Content</span>
+                    </div>
+                </div>
+
+                <!-- Website Editor -->
+                <div class="website-editor">
+                    <div class="editor-header">
+                        <h3>Edit Website Content</h3>
+                        <button class="btn btn-success" id="publish-changes">
+                            <i class="fas fa-cloud-upload-alt"></i> Publish Changes
+                        </button>
+                    </div>
+
+                    <div class="editor-tabs">
+                        <button class="editor-tab active" data-tab="hero">Hero Section</button>
+                        <button class="editor-tab" data-tab="services">Services</button>
+                        <button class="editor-tab" data-tab="products">Products</button>
+                        <button class="editor-tab" data-tab="team">Team</button>
+                        <button class="editor-tab" data-tab="contact">Contact Info</button>
+                        <button class="editor-tab" data-tab="footer">Footer</button>
+                        <button class="editor-tab" data-tab="seo">SEO Settings</button>
+                    </div>
+
+                    <!-- Hero Section Editor -->
+                    <div class="editor-content active" id="hero-editor">
+                        <form class="editor-form">
+                            <div class="form-group full-width">
+                                <label for="hero-title">Hero Title</label>
+                                <input type="text" id="hero-title" value="Compassionate Care for Your Pets">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="hero-description">Hero Description</label>
+                                <textarea id="hero-description">PDSA provides quality veterinary services to pets in Mfolo, Soweto. Book an appointment today and give your pet the care they deserve.</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="hero-button1-text">Primary Button Text</label>
+                                <input type="text" id="hero-button1-text" value="Book Appointment">
+                            </div>
+                            <div class="form-group">
+                                <label for="hero-button2-text">Secondary Button Text</label>
+                                <input type="text" id="hero-button2-text" value="Learn More">
+                            </div>
+                            <div class="form-group">
+                                <label for="emergency-number">Emergency Number</label>
+                                <input type="text" id="emergency-number" value="011 984 4340">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="hero-image">Hero Background Image</label>
+                                <div class="image-upload" id="hero-image-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <p>PNG, JPG, GIF up to 10MB</p>
+                                </div>
+                                <div class="image-preview" id="hero-image-preview">
+                                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" alt="Hero Background">
+                                </div>
+                            </div>
+                            <div class="editor-actions">
+                                <button type="button" class="btn btn-outline">Cancel</button>
+                                <button type="button" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Services Editor -->
+                    <div class="editor-content" id="services-editor">
+                        <div class="preview-panel">
+                            <div class="preview-header">
+                                <h3>Current Services</h3>
+                                <button class="btn btn-primary" id="add-service">
+                                    <i class="fas fa-plus"></i> Add Service
+                                </button>
+                            </div>
+                            <div class="preview-content">
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Vaccinations</h4>
+                                        <p>From R250 | 30 mins</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-service"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-service"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Surgical Procedures</h4>
+                                        <p>From R800 | 1-3 hours</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-service"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-service"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Dental Care</h4>
+                                        <p>From R450 | 45 mins</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-service"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-service"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Microchipping</h4>
+                                        <p>R350 | 15 mins</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-service"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-service"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Nutrition Counseling</h4>
+                                        <p>From R300 | 45 mins</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-service"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-service"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Professional Grooming</h4>
+                                        <p>From R250 | 1-2 hours</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-service"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-service"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form class="editor-form" id="service-form">
+                            <div class="form-group">
+                                <label for="service-name">Service Name</label>
+                                <input type="text" id="service-name" placeholder="Enter service name">
+                            </div>
+                            <div class="form-group">
+                                <label for="service-price">Price</label>
+                                <input type="text" id="service-price" placeholder="e.g., From R250">
+                            </div>
+                            <div class="form-group">
+                                <label for="service-duration">Duration</label>
+                                <input type="text" id="service-duration" placeholder="e.g., 30 mins">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="service-description">Description</label>
+                                <textarea id="service-description" placeholder="Enter service description"></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="service-image">Service Image</label>
+                                <div class="image-upload" id="service-image-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <p>PNG, JPG, GIF up to 10MB</p>
+                                </div>
+                                <div class="image-preview" id="service-image-preview">
+                                    <!-- Image preview will appear here -->
+                                </div>
+                            </div>
+                            <div class="editor-actions">
+                                <button type="button" class="btn btn-outline" id="cancel-service">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Service</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Products Editor -->
+                    <div class="editor-content" id="products-editor">
+                        <div class="preview-panel">
+                            <div class="preview-header">
+                                <h3>Current Products</h3>
+                                <button class="btn btn-primary" id="add-product">
+                                    <i class="fas fa-plus"></i> Add Product
+                                </button>
+                            </div>
+                            <div class="preview-content">
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Premium Dog Food</h4>
+                                        <p>R249.99 | Food & Treats</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-product"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-product"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Interactive Cat Toy</h4>
+                                        <p>R89.99 | Toys</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-product"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-product"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Flea & Tick Treatment</h4>
+                                        <p>R179.99 | Health & Wellness</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-product"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-product"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Designer Dog Collar</h4>
+                                        <p>R149.99 | Accessories</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-product"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-product"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Grain-Free Cat Food</h4>
+                                        <p>R199.99 | Food & Treats</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-product"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-product"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Joint Supplement</h4>
+                                        <p>R289.99 | Health & Wellness</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-product"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-product"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form class="editor-form" id="product-form">
+                            <div class="form-group">
+                                <label for="product-name">Product Name</label>
+                                <input type="text" id="product-name" placeholder="Enter product name">
+                            </div>
+                            <div class="form-group">
+                                <label for="product-price">Price (R)</label>
+                                <input type="number" id="product-price" step="0.01" min="0" placeholder="Enter price">
+                            </div>
+                            <div class="form-group">
+                                <label for="product-category">Category</label>
+                                <select id="product-category">
+                                    <option value="food">Food & Treats</option>
+                                    <option value="toys">Toys</option>
+                                    <option value="health">Health & Wellness</option>
+                                    <option value="accessories">Accessories</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="product-rating">Rating</label>
+                                <select id="product-rating">
+                                    <option value="5">5 Stars</option>
+                                    <option value="4">4 Stars</option>
+                                    <option value="3">3 Stars</option>
+                                    <option value="2">2 Stars</option>
+                                    <option value="1">1 Star</option>
+                                </select>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="product-description">Description</label>
+                                <textarea id="product-description" placeholder="Enter product description"></textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="product-image">Product Image</label>
+                                <div class="image-upload" id="product-image-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <p>PNG, JPG, GIF up to 10MB</p>
+                                </div>
+                                <div class="image-preview" id="product-image-preview">
+                                    <!-- Image preview will appear here -->
+                                </div>
+                            </div>
+                            <div class="editor-actions">
+                                <button type="button" class="btn btn-outline" id="cancel-product">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Product</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Team Editor -->
+                    <div class="editor-content" id="team-editor">
+                        <div class="preview-panel">
+                            <div class="preview-header">
+                                <h3>Current Team Members</h3>
+                                <button class="btn btn-primary" id="add-team-member">
+                                    <i class="fas fa-plus"></i> Add Team Member
+                                </button>
+                            </div>
+                            <div class="preview-content">
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Dr. Sarah Johnson</h4>
+                                        <p>Head Veterinarian</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-team"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-team"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Dr. Michael Brown</h4>
+                                        <p>Senior Veterinarian</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-team"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-team"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>Dr. Emma Wilson</h4>
+                                        <p>Emergency Veterinarian</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-team"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-team"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <div class="preview-item">
+                                    <div class="preview-item-info">
+                                        <h4>David Lee</h4>
+                                        <p>Veterinary Nurse</p>
+                                    </div>
+                                    <div class="preview-item-actions">
+                                        <button class="btn btn-outline edit-team"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-danger delete-team"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form class="editor-form" id="team-form">
+                            <div class="form-group">
+                                <label for="team-name">Full Name</label>
+                                <input type="text" id="team-name" placeholder="Enter full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="team-position">Position</label>
+                                <input type="text" id="team-position" placeholder="Enter position">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="team-bio">Bio/Description</label>
+                                <textarea id="team-bio" placeholder="Enter team member bio"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="team-email">Email</label>
+                                <input type="email" id="team-email" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="team-linkedin">LinkedIn (optional)</label>
+                                <input type="url" id="team-linkedin" placeholder="Enter LinkedIn URL">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="team-image">Profile Photo</label>
+                                <div class="image-upload" id="team-image-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <p>PNG, JPG, GIF up to 10MB</p>
+                                </div>
+                                <div class="image-preview" id="team-image-preview">
+                                    <!-- Image preview will appear here -->
+                                </div>
+                            </div>
+                            <div class="editor-actions">
+                                <button type="button" class="btn btn-outline" id="cancel-team">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Team Member</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Contact Info Editor -->
+                    <div class="editor-content" id="contact-editor">
+                        <form class="editor-form">
+                            <div class="form-group">
+                                <label for="clinic-name">Clinic Name</label>
+                                <input type="text" id="clinic-name" value="PDSA Veterinary Clinic">
+                            </div>
+                            <div class="form-group">
+                                <label for="clinic-address">Address</label>
+                                <input type="text" id="clinic-address" value="1188 Nancefield Moroka Road, Mfolo South, Soweto, 1868">
+                            </div>
+                            <div class="form-group">
+                                <label for="clinic-phone">Main Phone</label>
+                                <input type="text" id="clinic-phone" value="011 984 4340">
+                            </div>
+                            <div class="form-group">
+                                <label for="clinic-email">Email</label>
+                                <input type="email" id="clinic-email" value="info@pdsa.org.za">
+                            </div>
+                            <div class="form-group">
+                                <label for="clinic-hours-weekdays">Weekday Hours</label>
+                                <input type="text" id="clinic-hours-weekdays" value="8:00 AM - 7:00 PM">
+                            </div>
+                            <div class="form-group">
+                                <label for="clinic-hours-saturday">Saturday Hours</label>
+                                <input type="text" id="clinic-hours-saturday" value="9:00 AM - 4:00 PM">
+                            </div>
+                            <div class="form-group">
+                                <label for="clinic-hours-sunday">Sunday Hours</label>
+                                <input type="text" id="clinic-hours-sunday" value="Emergency only">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="google-maps-embed">Google Maps Embed Code</label>
+                                <textarea id="google-maps-embed" placeholder="Paste Google Maps embed code here">&lt;iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3576.340050682773!2d27.8589117764842!3d-26.31534437691821!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e95a6c8d3c5f1c5%3A0x7c3d5e5a5a5a5a5a!2sMfolo%2C%20Soweto%2C%201868!5e0!3m2!1sen!2sza!4v1686754321235!5m2!1sen!2sza" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"&gt;&lt;/iframe&gt;</textarea>
+                            </div>
+                            <div class="editor-actions">
+                                <button type="button" class="btn btn-outline">Cancel</button>
+                                <button type="button" class="btn btn-primary">Save Contact Info</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Footer Editor -->
+                    <div class="editor-content" id="footer-editor">
+                        <form class="editor-form">
+                            <div class="form-group full-width">
+                                <label for="footer-copyright">Copyright Text</label>
+                                <input type="text" id="footer-copyright" value="&copy; 2023 PDSA Veterinary Clinic. All rights reserved.">
+                            </div>
+                            <div class="form-group">
+                                <label for="footer-facebook">Facebook URL</label>
+                                <input type="url" id="footer-facebook" value="https://facebook.com/pdsavet">
+                            </div>
+                            <div class="form-group">
+                                <label for="footer-twitter">Twitter URL</label>
+                                <input type="url" id="footer-twitter" value="https://twitter.com/pdsavet">
+                            </div>
+                            <div class="form-group">
+                                <label for="footer-instagram">Instagram URL</label>
+                                <input type="url" id="footer-instagram" value="https://instagram.com/pdsavet">
+                            </div>
+                            <div class="form-group">
+                                <label for="footer-linkedin">LinkedIn URL</label>
+                                <input type="url" id="footer-linkedin" value="https://linkedin.com/company/pdsavet">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="footer-newsletter">Newsletter Text</label>
+                                <textarea id="footer-newsletter" placeholder="Enter newsletter text">Subscribe to our newsletter for pet care tips, clinic updates, and special offers.</textarea>
+                            </div>
+                            <div class="editor-actions">
+                                <button type="button" class="btn btn-outline">Cancel</button>
+                                <button type="button" class="btn btn-primary">Save Footer Settings</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- SEO Settings Editor -->
+                    <div class="editor-content" id="seo-editor">
+                        <form class="editor-form">
+                            <div class="form-group full-width">
+                                <label for="seo-title">Meta Title</label>
+                                <input type="text" id="seo-title" value="PDSA Veterinary Clinic - Quality Pet Care in Soweto">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="seo-description">Meta Description</label>
+                                <textarea id="seo-description">PDSA Veterinary Clinic provides quality veterinary services to pets in Mfolo, Soweto. Book appointments for vaccinations, surgeries, dental care, and more.</textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="seo-keywords">Meta Keywords</label>
+                                <input type="text" id="seo-keywords" value="veterinary clinic, pet care, animal hospital, vaccinations, pet surgery, Soweto, PDSA">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="seo-google-analytics">Google Analytics ID</label>
+                                <input type="text" id="seo-google-analytics" placeholder="UA-XXXXX-Y">
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="seo-verification">Google Search Console Verification</label>
+                                <input type="text" id="seo-verification" placeholder="Google site verification code">
+                            </div>
+                            <div class="editor-actions">
+                                <button type="button" class="btn btn-outline">Cancel</button>
+                                <button type="button" class="btn btn-primary">Save SEO Settings</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Live Preview Section -->
+                <div class="preview-panel">
+                    <div class="preview-header">
+                        <h3>Live Preview</h3>
+                        <button class="btn btn-primary" id="refresh-preview">
+                            <i class="fas fa-sync-alt"></i> Refresh Preview
+                        </button>
+                    </div>
+                    <div class="preview-content">
+                        <iframe src="index.html" frameborder="0" style="width: 100%; height: 400px;" id="website-preview"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="admin-footer">
+                <p>&copy; 2023 PDSA Veterinary Clinic Admin Dashboard. All rights reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        // Global variables
+        let currentEditingItem = null;
+        let websiteData = {};
+
+        // DOM Content Loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializePage();
+            loadWebsiteData();
+            setupEventListeners();
+        });
+
+        // Initialize page
+        function initializePage() {
+            // Set active menu item
+            document.querySelector('a[href="website-content.html"]').classList.add('active');
+            
+            // Show image preview for hero section
+            document.getElementById('hero-image-preview').style.display = 'block';
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Toggle sidebar
+            document.getElementById('toggle-sidebar').addEventListener('click', function() {
+                document.getElementById('admin-sidebar').classList.toggle('active');
+            });
+
+            // Editor tabs
+            document.querySelectorAll('.editor-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding editor
+                    document.querySelectorAll('.editor-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${tabId}-editor`).classList.add('active');
+                });
+            });
+
+            // Publish changes
+            document.getElementById('publish-changes').addEventListener('click', publishChanges);
+
+            // Refresh preview
+            document.getElementById('refresh-preview').addEventListener('click', function() {
+                document.getElementById('website-preview').src = document.getElementById('website-preview').src;
+            });
+
+            // Image upload handlers
+            setupImageUpload('hero-image-upload', 'hero-image-preview');
+            setupImageUpload('service-image-upload', 'service-image-preview');
+            setupImageUpload('product-image-upload', 'product-image-preview');
+            setupImageUpload('team-image-upload', 'team-image-preview');
+
+            // Add item buttons
+            document.getElementById('add-service').addEventListener('click', function() {
+                resetForm('service-form');
+                currentEditingItem = null;
+            });
+
+            document.getElementById('add-product').addEventListener('click', function() {
+                resetForm('product-form');
+                currentEditingItem = null;
+            });
+
+            document.getElementById('add-team-member').addEventListener('click', function() {
+                resetForm('team-form');
+                currentEditingItem = null;
+            });
+
+            // Cancel buttons
+            document.getElementById('cancel-service').addEventListener('click', function() {
+                resetForm('service-form');
+                currentEditingItem = null;
+            });
+
+            document.getElementById('cancel-product').addEventListener('click', function() {
+                resetForm('product-form');
+                currentEditingItem = null;
+            });
+
+            document.getElementById('cancel-team').addEventListener('click', function() {
+                resetForm('team-form');
+                currentEditingItem = null;
+            });
+
+            // Edit buttons
+            document.querySelectorAll('.edit-service').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    const itemDescription = itemElement.querySelector('p').textContent;
+                    
+                    document.getElementById('service-name').value = itemName;
+                    document.getElementById('service-price').value = itemDescription.split(' | ')[0];
+                    document.getElementById('service-duration').value = itemDescription.split(' | ')[1];
+                    document.getElementById('service-description').value = `Description for ${itemName}`;
+                    
+                    currentEditingItem = itemName;
+                    
+                    document.querySelector('.editor-form').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            document.querySelectorAll('.edit-product').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    const itemDescription = itemElement.querySelector('p').textContent;
+                    
+                    document.getElementById('product-name').value = itemName;
+                    document.getElementById('product-price').value = parseFloat(itemDescription.split(' | ')[0].replace('R', ''));
+                    document.getElementById('product-category').value = itemDescription.split(' | ')[1].toLowerCase();
+                    document.getElementById('product-description').value = `Description for ${itemName}`;
+                    
+                    currentEditingItem = itemName;
+                    
+                    document.querySelector('.editor-form').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            document.querySelectorAll('.edit-team').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    const itemDescription = itemElement.querySelector('p').textContent;
+                    
+                    document.getElementById('team-name').value = itemName;
+                    document.getElementById('team-position').value = itemDescription;
+                    document.getElementById('team-bio').value = `Bio for ${itemName}, ${itemDescription}`;
+                    document.getElementById('team-email').value = `${itemName.toLowerCase().replace(' ', '.')}@pdsa.org.za`;
+                    
+                    currentEditingItem = itemName;
+                    
+                    document.querySelector('.editor-form').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // Delete buttons
+            document.querySelectorAll('.delete-service').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    
+                    if (confirm(`Are you sure you want to delete the service "${itemName}"?`)) {
+                        itemElement.remove();
+                        showToast(`Service "${itemName}" has been deleted`, 'success');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.delete-product').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    
+                    if (confirm(`Are you sure you want to delete the product "${itemName}"?`)) {
+                        itemElement.remove();
+                        showToast(`Product "${itemName}" has been deleted`, 'success');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.delete-team').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    
+                    if (confirm(`Are you sure you want to delete the team member "${itemName}"?`)) {
+                        itemElement.remove();
+                        showToast(`Team member "${itemName}" has been deleted`, 'success');
+                    }
+                });
+            });
+
+            // Form submissions
+            document.getElementById('service-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveService();
+            });
+
+            document.getElementById('product-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProduct();
+            });
+
+            document.getElementById('team-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveTeamMember();
+            });
+        }
+
+        // Setup image upload
+        function setupImageUpload(uploadId, previewId) {
+            const uploadElement = document.getElementById(uploadId);
+            const previewElement = document.getElementById(previewId);
+            
+            uploadElement.addEventListener('click', function() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                
+                input.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            
+                            previewElement.innerHTML = '';
+                            previewElement.appendChild(img);
+                            previewElement.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+                
+                input.click();
+            });
+        }
+
+        // Load website data
+        function loadWebsiteData() {
+            // In a real app, this would fetch from a database
+            // For demo purposes, we'll use sample data
+            websiteData = {
+                hero: {
+                    title: "Compassionate Care for Your Pets",
+                    description: "PDSA provides quality veterinary services to pets in Mfolo, Soweto. Book an appointment today and give your pet the care they deserve.",
+                    button1: "Book Appointment",
+                    button2: "Learn More",
+                    emergency: "011 984 4340",
+                    image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80"
+                },
+                contact: {
+                    name: "PDSA Veterinary Clinic",
+                    address: "1188 Nancefield Moroka Road, Mfolo South, Soweto, 1868",
+                    phone: "011 984 4340",
+                    email: "info@pdsa.org.za",
+                    hours: {
+                        weekdays: "8:00 AM - 7:00 PM",
+                        saturday: "9:00 AM - 4:00 PM",
+                        sunday: "Emergency only"
+                    },
+                    map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3576.340050682773!2d27.8589117764842!3d-26.31534437691821!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e95a6c8d3c5f1c5%3A0x7c3d5e5a5a5a5a5a!2sMfolo%2C%20Soweto%2C%201868!5e0!3m2!1sen!2sza!4v1686754321235!5m2!1sen!2sza" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
+                }
+            };
+            
+            // Populate forms with data
+            document.getElementById('hero-title').value = websiteData.hero.title;
+            document.getElementById('hero-description').value = websiteData.hero.description;
+            document.getElementById('hero-button1-text').value = websiteData.hero.button1;
+            document.getElementById('hero-button2-text').value = websiteData.hero.button2;
+            document.getElementById('emergency-number').value = websiteData.hero.emergency;
+            
+            document.getElementById('clinic-name').value = websiteData.contact.name;
+            document.getElementById('clinic-address').value = websiteData.contact.address;
+            document.getElementById('clinic-phone').value = websiteData.contact.phone;
+            document.getElementById('clinic-email').value = websiteData.contact.email;
+            document.getElementById('clinic-hours-weekdays').value = websiteData.contact.hours.weekdays;
+            document.getElementById('clinic-hours-saturday').value = websiteData.contact.hours.saturday;
+            document.getElementById('clinic-hours-sunday').value = websiteData.contact.hours.sunday;
+            document.getElementById('google-maps-embed').value = websiteData.contact.map;
+        }
+
+        // Save service
+        function saveService() {
+            const name = document.getElementById('service-name').value;
+            const price = document.getElementById('service-price').value;
+            const duration = document.getElementById('service-duration').value;
+            const description = document.getElementById('service-description').value;
+            
+            if (!name || !price || !duration) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (currentEditingItem) {
+                // Update existing service
+                const serviceItem = Array.from(document.querySelectorAll('#services-editor .preview-item')).find(item => {
+                    return item.querySelector('h4').textContent === currentEditingItem;
+                });
+                
+                if (serviceItem) {
+                    serviceItem.querySelector('h4').textContent = name;
+                    serviceItem.querySelector('p').textContent = `${price} | ${duration}`;
+                }
+                
+                showToast(`Service "${name}" updated successfully`, 'success');
+            } else {
+                // Add new service
+                const servicesList = document.querySelector('#services-editor .preview-content');
+                const newService = document.createElement('div');
+                newService.className = 'preview-item';
+                newService.innerHTML = `
+                    <div class="preview-item-info">
+                        <h4>${name}</h4>
+                        <p>${price} | ${duration}</p>
+                    </div>
+                    <div class="preview-item-actions">
+                        <button class="btn btn-outline edit-service"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn btn-danger delete-service"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                `;
+                
+                servicesList.appendChild(newService);
+                
+                // Add event listeners to new buttons
+                newService.querySelector('.edit-service').addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    const itemDescription = itemElement.querySelector('p').textContent;
+                    
+                    document.getElementById('service-name').value = itemName;
+                    document.getElementById('service-price').value = itemDescription.split(' | ')[0];
+                    document.getElementById('service-duration').value = itemDescription.split(' | ')[1];
+                    document.getElementById('service-description').value = `Description for ${itemName}`;
+                    
+                    currentEditingItem = itemName;
+                    
+                    document.querySelector('.editor-form').scrollIntoView({ behavior: 'smooth' });
+                });
+                
+                newService.querySelector('.delete-service').addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    
+                    if (confirm(`Are you sure you want to delete the service "${itemName}"?`)) {
+                        itemElement.remove();
+                        showToast(`Service "${itemName}" has been deleted`, 'success');
+                    }
+                });
+                
+                showToast(`Service "${name}" added successfully`, 'success');
+            }
+            
+            resetForm('service-form');
+            currentEditingItem = null;
+        }
+
+        // Save product
+        function saveProduct() {
+            const name = document.getElementById('product-name').value;
+            const price = document.getElementById('product-price').value;
+            const category = document.getElementById('product-category').value;
+            const description = document.getElementById('product-description').value;
+            
+            if (!name || !price || !category) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (currentEditingItem) {
+                // Update existing product
+                const productItem = Array.from(document.querySelectorAll('#products-editor .preview-item')).find(item => {
+                    return item.querySelector('h4').textContent === currentEditingItem;
+                });
+                
+                if (productItem) {
+                    productItem.querySelector('h4').textContent = name;
+                    productItem.querySelector('p').textContent = `R${price} | ${category.charAt(0).toUpperCase() + category.slice(1)}`;
+                }
+                
+                showToast(`Product "${name}" updated successfully`, 'success');
+            } else {
+                // Add new product
+                const productsList = document.querySelector('#products-editor .preview-content');
+                const newProduct = document.createElement('div');
+                newProduct.className = 'preview-item';
+                newProduct.innerHTML = `
+                    <div class="preview-item-info">
+                        <h4>${name}</h4>
+                        <p>R${price} | ${category.charAt(0).toUpperCase() + category.slice(1)}</p>
+                    </div>
+                    <div class="preview-item-actions">
+                        <button class="btn btn-outline edit-product"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn btn-danger delete-product"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                `;
+                
+                productsList.appendChild(newProduct);
+                
+                // Add event listeners to new buttons
+                newProduct.querySelector('.edit-product').addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    const itemDescription = itemElement.querySelector('p').textContent;
+                    
+                    document.getElementById('product-name').value = itemName;
+                    document.getElementById('product-price').value = parseFloat(itemDescription.split(' | ')[0].replace('R', ''));
+                    document.getElementById('product-category').value = itemDescription.split(' | ')[1].toLowerCase();
+                    document.getElementById('product-description').value = `Description for ${itemName}`;
+                    
+                    currentEditingItem = itemName;
+                    
+                    document.querySelector('.editor-form').scrollIntoView({ behavior: 'smooth' });
+                });
+                
+                newProduct.querySelector('.delete-product').addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    
+                    if (confirm(`Are you sure you want to delete the product "${itemName}"?`)) {
+                        itemElement.remove();
+                        showToast(`Product "${itemName}" has been deleted`, 'success');
+                    }
+                });
+                
+                showToast(`Product "${name}" added successfully`, 'success');
+            }
+            
+            resetForm('product-form');
+            currentEditingItem = null;
+        }
+
+        // Save team member
+        function saveTeamMember() {
+            const name = document.getElementById('team-name').value;
+            const position = document.getElementById('team-position').value;
+            const bio = document.getElementById('team-bio').value;
+            const email = document.getElementById('team-email').value;
+            
+            if (!name || !position || !bio) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (currentEditingItem) {
+                // Update existing team member
+                const teamItem = Array.from(document.querySelectorAll('#team-editor .preview-item')).find(item => {
+                    return item.querySelector('h4').textContent === currentEditingItem;
+                });
+                
+                if (teamItem) {
+                    teamItem.querySelector('h4').textContent = name;
+                    teamItem.querySelector('p').textContent = position;
+                }
+                
+                showToast(`Team member "${name}" updated successfully`, 'success');
+            } else {
+                // Add new team member
+                const teamList = document.querySelector('#team-editor .preview-content');
+                const newMember = document.createElement('div');
+                newMember.className = 'preview-item';
+                newMember.innerHTML = `
+                    <div class="preview-item-info">
+                        <h4>${name}</h4>
+                        <p>${position}</p>
+                    </div>
+                    <div class="preview-item-actions">
+                        <button class="btn btn-outline edit-team"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn btn-danger delete-team"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                `;
+                
+                teamList.appendChild(newMember);
+                
+                // Add event listeners to new buttons
+                newMember.querySelector('.edit-team').addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    const itemDescription = itemElement.querySelector('p').textContent;
+                    
+                    document.getElementById('team-name').value = itemName;
+                    document.getElementById('team-position').value = itemDescription;
+                    document.getElementById('team-bio').value = `Bio for ${itemName}, ${itemDescription}`;
+                    document.getElementById('team-email').value = `${itemName.toLowerCase().replace(' ', '.')}@pdsa.org.za`;
+                    
+                    currentEditingItem = itemName;
+                    
+                    document.querySelector('.editor-form').scrollIntoView({ behavior: 'smooth' });
+                });
+                
+                newMember.querySelector('.delete-team').addEventListener('click', function() {
+                    const itemElement = this.closest('.preview-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    
+                    if (confirm(`Are you sure you want to delete the team member "${itemName}"?`)) {
+                        itemElement.remove();
+                        showToast(`Team member "${itemName}" has been deleted`, 'success');
+                    }
+                });
+                
+                showToast(`Team member "${name}" added successfully`, 'success');
+            }
+            
+            resetForm('team-form');
+            currentEditingItem = null;
+        }
+
+        // Publish changes
+        function publishChanges() {
+            // In a real app, this would deploy the changes to the live website
+            showToast('Changes published successfully! The website has been updated.', 'success');
+        }
+
+        // Reset form
+        function resetForm(formId) {
+            const form = document.getElementById(formId);
+            if (form) {
+                form.reset();
+            }
+            
+            const imagePreviews = document.querySelectorAll(`#${formId} .image-preview`);
+            imagePreviews.forEach(preview => {
+                preview.style.display = 'none';
+                preview.innerHTML = '';
+            });
+        }
+
+        // Show notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.getElementById('toast-container').appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

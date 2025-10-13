@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Care - PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Emergency Alert Bar */
+        .emergency-alert {
+            background-color: #e74c3c;
+            color: white;
+            padding: 0.8rem 0;
+            text-align: center;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { background-color: #e74c3c; }
+            50% { background-color: #c0392b; }
+            100% { background-color: #e74c3c; }
+        }
+        
+        .emergency-alert a {
+            color: white;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1577982787983-e07c8490b261?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 5rem 0;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 0.5rem;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+        }
+        
+        .btn-emergency {
+            background-color: #e74c3c;
+        }
+        
+        .btn-emergency:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Services Section */
+        .services {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: #3498db;
+        }
+        
+        .section-title p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        /* Sidebar Navigation */
+        .content-with-sidebar {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .sidebar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar h3 {
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+            font-size: 1.4rem;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #444;
+            text-decoration: none;
+            padding: 0.6rem 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #e1f0fa;
+            color: #3498db;
+        }
+        
+        .sidebar i {
+            width: 20px;
+            color: #3498db;
+        }
+        
+        /* Service Detail */
+        .service-detail {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-detail h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+            font-size: 2rem;
+        }
+        
+        .service-detail p {
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: #444;
+            font-size: 1.1rem;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .detail-card {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            transition: transform 0.3s;
+        }
+        
+        .detail-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .detail-card h4 {
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .detail-card p {
+            margin-bottom: 0;
+            color: #555;
+        }
+        
+        .emergency-card {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        /* Tabs for service pages */
+        .service-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .service-tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .service-tab.active {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .service-tab:hover {
+            color: #3498db;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Emergency Signs */
+        .emergency-signs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+        
+        .emergency-sign {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .emergency-sign h4 {
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Process Steps */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+        
+        .process-step {
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .process-step h4 {
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+        }
+        
+        /* First Aid Tips */
+        .first-aid {
+            background: #ffe6e6;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        
+        .first-aid h3 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .first-aid-tips {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .first-aid-tip {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .first-aid-tip i {
+            font-size: 2rem;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+        
+        /* Emergency Contact Box */
+        .emergency-contact {
+            background: #e74c3c;
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .emergency-contact h3 {
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .emergency-contact .phone {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            display: block;
+        }
+        
+        .emergency-contact p {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 3rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #3498db;
+        }
+        
+        .footer-col p {
+            margin-bottom: 1rem;
+            color: #bbb;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-col ul li a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-col ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bbb;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 900px) {
+            .content-with-sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2.2rem;
+            }
+            
+            .service-tabs {
+                flex-direction: column;
+            }
+            
+            .service-tab {
+                text-align: center;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            
+            .emergency-contact .phone {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+                    <h1>PDSA Veterinary Clinic</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#" class="active">Services</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Team</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Emergency Alert Bar -->
+    <div class="emergency-alert">
+        <div class="container">
+            <p><i class="fas fa-exclamation-circle"></i> <strong>EMERGENCY:</strong> If your pet is experiencing a life-threatening situation, call us immediately at <a href="tel:0119844340">011 984 4340</a> - Available 24/7</p>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Emergency Veterinary Care</h2>
+            <p>Immediate, life-saving care for your pet when every second counts. Our emergency team is available 24 hours a day, 7 days a week.</p>
+            <a href="tel:0119844340" class="btn btn-emergency"><i class="fas fa-phone"></i> Call Now: 011 984 4340</a>
+            <a href="#contact" class="btn"><i class="fas fa-map-marker-alt"></i> Get Directions</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services">
+        <div class="container">
+            <div class="content-with-sidebar">
+                <!-- Sidebar Navigation -->
+                <div class="sidebar">
+                    <h3>Our Services</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
+                        <li><a href="#" class="active"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Microchipping</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Service Detail -->
+                <div class="service-detail">
+                    <h2>Emergency Veterinary Services</h2>
+                    <p>When your pet experiences a medical emergency, time is critical. Our emergency veterinary team provides immediate, life-saving care 24 hours a day, 7 days a week. We're equipped to handle all types of pet emergencies with state-of-the-art equipment and a compassionate approach.</p>
+                    
+                    <div class="emergency-contact">
+                        <h3><i class="fas fa-phone-alt"></i> Emergency Hotline</h3>
+                        <span class="phone">011 984 4340</span>
+                        <p>Available 24 hours a day, 7 days a week</p>
+                        <p>1188 Nancefield Road, Mfolo, Soweto</p>
+                    </div>
+                    
+                    <div class="service-tabs">
+                        <div class="service-tab active" data-tab="overview">Emergency Signs</div>
+                        <div class="service-tab" data-tab="services">Our Services</div>
+                        <div class="service-tab" data-tab="firstaid">First Aid</div>
+                        <div class="tab-content" data-tab="whattoexpect">What to Expect</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="overview">
+                        <h3>Signs Your Pet Needs Emergency Care</h3>
+                        <p>If your pet is showing any of these signs, please contact us immediately. When in doubt, it's always better to be safe and have your pet evaluated by our emergency team.</p>
+                        
+                        <div class="emergency-signs">
+                            <div class="emergency-sign">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Difficulty Breathing</h4>
+                                <p>Rapid breathing, choking, gasping for air, or blue/grey gums</p>
+                            </div>
+                            <div class="emergency-sign">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Trauma</h4>
+                                <p>Hit by car, falls from height, animal attacks, or other injuries</p>
+                            </div>
+                            <div class="emergency-sign">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Poisoning</h4>
+                                <p>Ingestion of toxic foods, plants, medications, or chemicals</p>
+                            </div>
+                            <div class="emergency-sign">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Seizures</h4>
+                                <p>Convulsions, tremors, or loss of consciousness</p>
+                            </div>
+                            <div class="emergency-sign">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Bleeding</h4>
+                                <p>Uncontrolled bleeding from any part of the body</p>
+                            </div>
+                            <div class="emergency-sign">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Collapse</h4>
+                                <p>Sudden inability to stand or loss of consciousness</p>
+                            </div>
+                            <div class="emergency-sign">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Pain</h4>
+                                <p>Whining, trembling, reluctance to move, or aggression when touched</p>
+                            </div>
+                            <div class="emergency-sign">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Distended Abdomen</h4>
+                                <p>Swollen, hard belly that may indicate bloat (GDV)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="services">
+                        <h3>Our Emergency Services</h3>
+                        <p>Our emergency department is equipped with advanced technology and staffed by experienced veterinarians and technicians trained in emergency and critical care medicine.</p>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-card emergency-card">
+                                <h4><i class="fas fa-tachometer-alt"></i> Critical Care</h4>
+                                <p>24/7 monitoring and treatment for critically ill pets with dedicated ICU facilities.</p>
+                            </div>
+                            <div class="detail-card emergency-card">
+                                <h4><i class="fas fa-procedures"></i> Emergency Surgery</h4>
+                                <p>Immediate surgical intervention for life-threatening conditions.</p>
+                            </div>
+                            <div class="detail-card emergency-card">
+                                <h4><i class="fas fa-tint"></i> Blood Transfusions</h4>
+                                <p>Full blood bank services for pets requiring transfusions.</p>
+                            </div>
+                            <div class="detail-card emergency-card">
+                                <h4><i class="fas fa-lungs"></i> Oxygen Therapy</h4>
+                                <p>Oxygen cages and support for pets with respiratory distress.</p>
+                            </div>
+                            <div class="detail-card emergency-card">
+                                <h4><i class="fas fa-vial"></i> Laboratory Services</h4>
+                                <p>In-house laboratory for immediate test results during emergencies.</p>
+                            </div>
+                            <div class="detail-card emergency-card">
+                                <h4><i class="fas fa-x-ray"></i> Digital Imaging</h4>
+                                <p>X-ray and ultrasound available 24/7 for rapid diagnosis.</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Our Emergency Process</h3>
+                        <div class="process-steps">
+                            <div class="process-step">
+                                <div class="step-number">1</div>
+                                <h4>Call Ahead</h4>
+                                <p>If possible, call us en route so we can prepare for your arrival</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">2</div>
+                                <h4>Triage</h4>
+                                <p>Immediate assessment by our veterinary team upon arrival</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">3</div>
+                                <h4>Stabilization</h4>
+                                <p>Life-saving treatment to stabilize your pet's condition</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">4</div>
+                                <h4>Treatment Plan</h4>
+                                <p>Discussion of diagnosis and treatment options with you</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="firstaid">
+                        <h3>Pet First Aid Tips</h3>
+                        <p>While you should always seek veterinary care for emergencies, these first aid tips may help stabilize your pet before you can reach our clinic.</p>
+                        
+                        <div class="first-aid">
+                            <h3><i class="fas fa-first-aid"></i> Emergency First Aid</h3>
+                            <div class="first-aid-tips">
+                                <div class="first-aid-tip">
+                                    <i class="fas fa-band-aid"></i>
+                                    <h4>Bleeding</h4>
+                                    <p>Apply direct pressure with a clean cloth. Do not remove soaked cloths - add more layers.</p>
+                                </div>
+                                <div class="first-aid-tip">
+                                    <i class="fas fa-fire-extinguisher"></i>
+                                    <h4>Burns</h4>
+                                    <p>Flush with cool water for 5-10 minutes. Do not apply ice or ointments.</p>
+                                </div>
+                                <div class="first-aid-tip">
+                                    <i class="fas fa-skull"></i>
+                                    <h4>Choking</h4>
+                                    <p>If conscious, try to remove obstruction with pliers or tweezers. Be careful not to push further.</p>
+                                </div>
+                                <div class="first-aid-tip">
+                                    <i class="fas fa-temperature-high"></i>
+                                    <h4>Heat Stroke</h4>
+                                    <p>Move to cool area, apply cool (not cold) water to body, and offer small amounts of water.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-card">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Important First Aid Notes</h4>
+                            <p>First aid is not a substitute for veterinary care. Always contact us or your nearest emergency clinic after administering first aid. Never give human medications to pets unless specifically directed by a veterinarian. When transporting an injured pet, use a flat surface as a stretcher and muzzle animals in pain (unless vomiting or having breathing difficulties).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="whattoexpect">
+                        <h3>What to Expect During an Emergency Visit</h3>
+                        <p>We understand that bringing your pet to the emergency clinic can be stressful. Here's what you can expect during your visit:</p>
+                        
+                        <div class="process-steps">
+                            <div class="process-step">
+                                <div class="step-number">1</div>
+                                <h4>Immediate Triage</h4>
+                                <p>Your pet will be assessed immediately upon arrival to determine the severity of their condition</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">2</div>
+                                <h4>Stabilization</h4>
+                                <p>Life-saving measures will be taken to stabilize your pet before diagnostics</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">3</div>
+                                <h4>Diagnostics</h4>
+                                <p>We may perform blood tests, x-rays, or ultrasounds to diagnose the problem</p>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-number">4</div>
+                                <h4>Treatment Plan</h4>
+                                <p>We'll discuss findings and recommend a treatment plan with cost estimates</p>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-card">
+                            <h4><i class="fas fa-credit-card"></i> Financial Considerations</h4>
+                            <p>Emergency care often requires immediate payment. We require a deposit for hospitalized pets. We accept cash, credit cards, and pet insurance. If financial concerns are an issue, please discuss this with our team—we may be able to suggest payment plans or other options.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Preparedness -->
+    <div class="container">
+        <div class="detail-card" style="text-align: center; background-color: #e8f4fc;">
+            <h3><i class="fas fa-kit-medical"></i> Be Prepared for Pet Emergencies</h3>
+            <p>Create a pet first aid kit with gauze, non-stick bandages, adhesive tape, digital thermometer, hydrogen peroxide, antibiotic ointment, and our emergency contact information. Keep it easily accessible in your home.</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>About PDSA</h3>
+                    <p>Providing quality veterinary care to pets in need since 2010. Our mission is to ensure every pet receives the care they deserve.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Services</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Emergency Services</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Critical Care</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Emergency Surgery</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Poison Control</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Trauma Care</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> 24/7 Monitoring</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 1188 Nancefield Road, Mfolo, Soweto</p>
+                    <p><i class="fas fa-phone"></i> 011 984 4340 (Emergency)</p>
+                    <p><i class="fas fa-phone"></i> 011 984 4339 (General)</p>
+                    <p><i class="fas fa-envelope"></i> emergency@pdsa.org.za</p>
+                    <p><i class="fas fa-clock"></i> Emergency Services: 24/7</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab functionality for service pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.service-tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab content
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Make emergency phone number clickable
+            const phoneElements = document.querySelectorAll('.phone, .emergency-alert a');
+            phoneElements.forEach(element => {
+                element.addEventListener('click', function() {
+                    window.location.href = 'tel:0119844340';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
