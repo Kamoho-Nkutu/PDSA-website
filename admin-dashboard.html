@@ -3,40 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | PDSA Veterinary Clinic</title>
+    <title>PDSA Veterinary Clinic - Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --gray: #95a5a6;
-            --white: #ffffff;
-            --sidebar-width: 250px;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
+            --secondary: #10b981;
+            --secondary-dark: #059669;
+            --accent: #ef4444;
+            --accent-dark: #dc2626;
+            --warning: #f59e0b;
+            --warning-dark: #d97706;
+            --success: #10b981;
+            --success-dark: #059669;
+            --info: #3b82f6;
+            --info-dark: #2563eb;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --sidebar-width: 280px;
+            --sidebar-collapsed: 80px;
             --header-height: 70px;
-            --transition: all 0.3s ease;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 8px;
+            --radius-lg: 12px;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f5f7fa;
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gray-50);
+            color: var(--gray-800);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Admin Layout */
+        /* Layout */
         .admin-container {
             display: flex;
             min-height: 100vh;
@@ -45,33 +69,76 @@
         /* Sidebar */
         .admin-sidebar {
             width: var(--sidebar-width);
-            background-color: var(--primary);
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             position: fixed;
             height: 100vh;
             transition: var(--transition);
             z-index: 1000;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-lg);
+            overflow-y: auto;
+        }
+
+        .admin-sidebar.collapsed {
+            width: var(--sidebar-collapsed);
         }
 
         .sidebar-header {
-            padding: 1.5rem 1rem;
+            padding: 1.5rem 1.25rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            transition: var(--transition);
+        }
+
+        .admin-sidebar.collapsed .sidebar-header {
+            justify-content: center;
+            padding: 1.5rem 0.5rem;
         }
 
         .sidebar-header img {
             height: 40px;
+            transition: var(--transition);
+        }
+
+        .admin-sidebar.collapsed .sidebar-header img {
+            height: 35px;
         }
 
         .sidebar-header h2 {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: var(--transition);
+            opacity: 1;
+        }
+
+        .admin-sidebar.collapsed .sidebar-header h2 {
+            opacity: 0;
+            width: 0;
         }
 
         .sidebar-menu {
-            padding: 1rem 0;
+            padding: 1.5rem 0;
+        }
+
+        .menu-label {
+            margin: 1rem 1.5rem 0.75rem;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0.5px;
+            font-weight: 500;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .admin-sidebar.collapsed .menu-label {
+            opacity: 0;
+            height: 0;
+            margin: 0;
+            overflow: hidden;
         }
 
         .menu-item {
@@ -79,29 +146,55 @@
             align-items: center;
             gap: 12px;
             padding: 0.9rem 1.5rem;
-            color: #bbb;
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: var(--transition);
             border-left: 4px solid transparent;
+            position: relative;
+            white-space: nowrap;
         }
 
-        .menu-item:hover, .menu-item.active {
+        .menu-item:hover {
             background-color: rgba(255, 255, 255, 0.05);
             color: white;
-            border-left-color: var(--secondary);
+            border-left-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left-color: white;
         }
 
         .menu-item i {
             width: 20px;
             text-align: center;
+            font-size: 1.1rem;
+            transition: var(--transition);
         }
 
-        .menu-label {
-            margin: 1rem 1.5rem 0.5rem;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            color: #777;
-            letter-spacing: 1px;
+        .admin-sidebar.collapsed .menu-item {
+            padding: 0.9rem 1rem;
+            justify-content: center;
+        }
+
+        .admin-sidebar.collapsed .menu-item span {
+            opacity: 0;
+            width: 0;
+            position: absolute;
+            left: 100%;
+            background: var(--dark);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            white-space: nowrap;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .admin-sidebar.collapsed .menu-item:hover span {
+            opacity: 1;
+            width: auto;
         }
 
         /* Main Content */
@@ -111,15 +204,19 @@
             transition: var(--transition);
         }
 
+        .admin-main.expanded {
+            margin-left: var(--sidebar-collapsed);
+        }
+
         /* Header */
         .admin-header {
-            background-color: var(--white);
+            background-color: white;
             height: var(--header-height);
             padding: 0 1.5rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -135,9 +232,20 @@
             border: none;
             font-size: 1.2rem;
             cursor: pointer;
-            color: var(--dark);
+            color: var(--gray-600);
             margin-right: 1rem;
-            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .toggle-sidebar:hover {
+            background-color: var(--gray-100);
+            color: var(--primary);
         }
 
         .search-box {
@@ -145,43 +253,58 @@
         }
 
         .search-box input {
-            padding: 0.6rem 1rem 0.6rem 2.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 250px;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 50px;
+            width: 320px;
             transition: var(--transition);
+            font-size: 0.9rem;
+            background-color: var(--gray-50);
         }
 
         .search-box input:focus {
             outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background-color: white;
         }
 
         .search-box i {
             position: absolute;
-            left: 10px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--gray);
+            color: var(--gray-400);
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
         .header-action {
             position: relative;
             cursor: pointer;
-            color: var(--dark);
+            color: var(--gray-600);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .header-action:hover {
+            background-color: var(--gray-100);
+            color: var(--primary);
         }
 
         .notification-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: 2px;
+            right: 2px;
             background-color: var(--accent);
             color: white;
             font-size: 0.7rem;
@@ -191,6 +314,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 600;
         }
 
         .user-profile {
@@ -198,6 +322,13 @@
             align-items: center;
             gap: 10px;
             cursor: pointer;
+            padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background-color: var(--gray-100);
         }
 
         .user-profile img {
@@ -205,7 +336,22 @@
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--secondary);
+            border: 2px solid var(--primary-light);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--gray-500);
         }
 
         /* Dashboard Content */
@@ -221,23 +367,30 @@
         }
 
         .page-title h1 {
-            color: var(--primary);
+            color: var(--gray-800);
             display: flex;
             align-items: center;
             gap: 10px;
+            font-weight: 700;
+            font-size: 1.75rem;
         }
 
         .breadcrumb {
             display: flex;
             align-items: center;
             gap: 5px;
-            color: var(--gray);
+            color: var(--gray-500);
             font-size: 0.9rem;
         }
 
         .breadcrumb a {
-            color: var(--secondary);
+            color: var(--primary);
             text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-dark);
         }
 
         /* Stats Grid */
@@ -249,19 +402,42 @@
         }
 
         .stat-card {
-            background-color: var(--white);
-            border-radius: 8px;
+            background-color: white;
+            border-radius: var(--radius-lg);
             padding: 1.5rem;
             box-shadow: var(--shadow);
             display: flex;
             align-items: center;
             gap: 1rem;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--gray-100);
         }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .stat-card:nth-child(1)::before { background: linear-gradient(to bottom, var(--primary), var(--primary-dark)); }
+        .stat-card:nth-child(2)::before { background: linear-gradient(to bottom, var(--success), var(--success-dark)); }
+        .stat-card:nth-child(3)::before { background: linear-gradient(to bottom, var(--accent), var(--accent-dark)); }
+        .stat-card:nth-child(4)::before { background: linear-gradient(to bottom, var(--warning), var(--warning-dark)); }
 
         .stat-icon {
             width: 60px;
             height: 60px;
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -269,47 +445,64 @@
         }
 
         .stat-icon.appointments {
-            background-color: rgba(52, 152, 219, 0.1);
-            color: var(--secondary);
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
         }
 
         .stat-icon.revenue {
-            background-color: rgba(46, 204, 113, 0.1);
+            background-color: rgba(16, 185, 129, 0.1);
             color: var(--success);
         }
 
         .stat-icon.patients {
-            background-color: rgba(231, 76, 60, 0.1);
+            background-color: rgba(239, 68, 68, 0.1);
             color: var(--accent);
         }
 
         .stat-icon.products {
-            background-color: rgba(243, 156, 18, 0.1);
+            background-color: rgba(245, 158, 11, 0.1);
             color: var(--warning);
         }
 
+        .stat-info {
+            flex: 1;
+        }
+
         .stat-info h3 {
-            font-size: 1.8rem;
+            font-size: 1.75rem;
             margin-bottom: 0.25rem;
-            color: var(--dark);
+            color: var(--gray-800);
+            font-weight: 700;
         }
 
         .stat-info p {
-            color: var(--gray);
+            color: var(--gray-500);
             font-size: 0.9rem;
+            font-weight: 500;
         }
 
         .stat-trend {
-            margin-left: auto;
             text-align: right;
         }
 
         .trend-up {
             color: var(--success);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            font-size: 0.9rem;
         }
 
         .trend-down {
             color: var(--accent);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            font-size: 0.9rem;
         }
 
         /* Charts and Graphs */
@@ -321,10 +514,11 @@
         }
 
         .chart-card {
-            background-color: var(--white);
-            border-radius: 8px;
+            background-color: white;
+            border-radius: var(--radius-lg);
             padding: 1.5rem;
             box-shadow: var(--shadow);
+            border: 1px solid var(--gray-100);
         }
 
         .chart-header {
@@ -335,24 +529,22 @@
         }
 
         .chart-header h3 {
-            color: var(--primary);
+            color: var(--gray-800);
+            font-weight: 600;
         }
 
         .chart-filter select {
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: var(--white);
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            background-color: white;
+            font-size: 0.9rem;
+            color: var(--gray-700);
         }
 
-        .chart-placeholder {
+        .chart-container {
             height: 300px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gray);
+            position: relative;
         }
 
         /* Recent Activity */
@@ -364,10 +556,11 @@
         }
 
         .activity-card {
-            background-color: var(--white);
-            border-radius: 8px;
+            background-color: white;
+            border-radius: var(--radius-lg);
             padding: 1.5rem;
             box-shadow: var(--shadow);
+            border: 1px solid var(--gray-100);
         }
 
         .activity-header {
@@ -375,24 +568,40 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #eee;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--gray-100);
         }
 
         .activity-header h3 {
-            color: var(--primary);
+            color: var(--gray-800);
+            font-weight: 600;
             font-size: 1.2rem;
+        }
+
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .view-all:hover {
+            color: var(--primary-dark);
         }
 
         .activity-list {
             list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
         .activity-item {
             display: flex;
             gap: 1rem;
             padding: 1rem 0;
-            border-bottom: 1px solid #f5f5f5;
+            border-bottom: 1px solid var(--gray-100);
+            animation: fadeIn 0.5s ease;
         }
 
         .activity-item:last-child {
@@ -400,27 +609,28 @@
         }
 
         .activity-icon {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            font-size: 1.1rem;
         }
 
         .activity-icon.appointment {
-            background-color: rgba(52, 152, 219, 0.1);
-            color: var(--secondary);
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
         }
 
         .activity-icon.payment {
-            background-color: rgba(46, 204, 113, 0.1);
+            background-color: rgba(16, 185, 129, 0.1);
             color: var(--success);
         }
 
         .activity-icon.registration {
-            background-color: rgba(243, 156, 18, 0.1);
+            background-color: rgba(245, 158, 11, 0.1);
             color: var(--warning);
         }
 
@@ -430,32 +640,72 @@
 
         .activity-content p {
             margin-bottom: 0.25rem;
+            font-weight: 500;
         }
 
         .activity-content .time {
             font-size: 0.8rem;
-            color: var(--gray);
+            color: var(--gray-500);
         }
 
         /* Tables */
         .table-card {
-            background-color: var(--white);
-            border-radius: 8px;
+            background-color: white;
+            border-radius: var(--radius-lg);
             padding: 1.5rem;
             box-shadow: var(--shadow);
             margin-bottom: 1.5rem;
             overflow-x: auto;
+            border: 1px solid var(--gray-100);
         }
 
         .table-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .table-header h3 {
-            color: var(--primary);
+            color: var(--gray-800);
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 0.6rem 1.25rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--gray-300);
+            color: var(--gray-700);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--gray-50);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
         }
 
         table {
@@ -464,159 +714,180 @@
         }
 
         table th, table td {
-            padding: 0.75rem 1rem;
+            padding: 0.875rem 1rem;
             text-align: left;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--gray-100);
         }
 
         table th {
-            background-color: #f8f9fa;
+            background-color: var(--gray-50);
             font-weight: 600;
-            color: var(--dark);
+            color: var(--gray-700);
+            font-size: 0.9rem;
+        }
+
+        table tr {
+            transition: var(--transition);
         }
 
         table tr:hover {
-            background-color: #f8f9fa;
+            background-color: var(--gray-50);
+        }
+
+        table tr.new-item {
+            background-color: rgba(37, 99, 235, 0.03);
+            animation: highlight 2s ease;
         }
 
         .status {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 600;
             display: inline-block;
         }
 
         .status.confirmed {
-            background-color: rgba(46, 204, 113, 0.1);
+            background-color: rgba(16, 185, 129, 0.1);
             color: var(--success);
         }
 
         .status.pending {
-            background-color: rgba(243, 156, 18, 0.1);
+            background-color: rgba(245, 158, 11, 0.1);
             color: var(--warning);
         }
 
         .status.cancelled {
-            background-color: rgba(231, 76, 60, 0.1);
+            background-color: rgba(239, 68, 68, 0.1);
             color: var(--accent);
         }
 
+        .status.active {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status.inactive {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--accent);
+        }
+
+        .status.shipped, .status.delivered {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status.processing {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
         .action-btn {
-            padding: 0.25rem 0.5rem;
+            padding: 0.4rem;
             border: none;
-            border-radius: 4px;
+            border-radius: var(--radius);
             cursor: pointer;
             font-size: 0.8rem;
             transition: var(--transition);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .action-btn.view {
-            background-color: rgba(52, 152, 219, 0.1);
-            color: var(--secondary);
+            background-color: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
         }
 
         .action-btn.edit {
-            background-color: rgba(46, 204, 113, 0.1);
+            background-color: rgba(16, 185, 129, 0.1);
             color: var(--success);
         }
 
         .action-btn.delete {
-            background-color: rgba(231, 76, 60, 0.1);
+            background-color: rgba(239, 68, 68, 0.1);
             color: var(--accent);
         }
 
         .action-btn:hover {
-            opacity: 0.8;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         /* Footer */
         .admin-footer {
-            background-color: var(--white);
-            padding: 1rem 1.5rem;
-            border-top: 1px solid #eee;
-            color: var(--gray);
+            background-color: white;
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            color: var(--gray-500);
             font-size: 0.9rem;
             text-align: center;
         }
 
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            .charts-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .activity-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .search-box input {
-                width: 180px;
-            }
+        /* Real-time Indicator */
+        .real-time-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--success);
+            margin-left: 10px;
+            font-weight: 500;
         }
 
-        @media (max-width: 768px) {
-            .admin-sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .admin-sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .admin-main {
-                margin-left: 0;
-            }
-            
-            .toggle-sidebar {
-                display: block;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .search-box {
-                display: none;
-            }
+        .pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
         }
 
-        /* Firebase Integration Placeholder */
-        .firebase-placeholder {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 1rem;
-            margin: 1.5rem 0;
-            border-radius: 4px;
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
-        .firebase-placeholder h4 {
-            color: #856404;
-            margin-bottom: 0.5rem;
+        /* Refresh button */
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: var(--gray-500);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
         }
 
-        .firebase-placeholder p {
-            color: #856404;
-            font-size: 0.9rem;
-        }
-
-        .firebase-code {
-            background-color: #f8f9fa;
-            padding: 1rem;
-            border-radius: 4px;
-            margin-top: 1rem;
-            font-family: monospace;
-            font-size: 0.8rem;
-            overflow-x: auto;
+        .refresh-btn:hover {
+            background-color: var(--gray-100);
+            color: var(--primary);
+            transform: rotate(180deg);
         }
 
         /* Animation */
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes highlight {
+            0% { background-color: rgba(37, 99, 235, 0.1); }
+            100% { background-color: transparent; }
         }
 
         .fade-in {
@@ -628,16 +899,17 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 15px 20px;
-            border-radius: 4px;
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius);
             color: white;
             z-index: 10000;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
             transform: translateX(100%);
             transition: transform 0.3s ease;
+            max-width: 350px;
         }
 
         .toast.show {
@@ -653,7 +925,11 @@
         }
 
         .toast.info {
-            background-color: var(--secondary);
+            background-color: var(--info);
+        }
+
+        .toast.warning {
+            background-color: var(--warning);
         }
 
         .loading {
@@ -670,83 +946,138 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Website Editor Styles */
-        .website-editor {
-            background-color: var(--white);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
+        /* User dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 0.75rem 0;
+            min-width: 220px;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+            border: 1px solid var(--gray-200);
         }
 
-        .editor-header {
+        .user-dropdown a, .user-dropdown button {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .editor-header h3 {
-            color: var(--primary);
-        }
-
-        .editor-tabs {
-            display: flex;
             gap: 10px;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .editor-tab {
-            padding: 0.75rem 1.5rem;
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1.25rem;
+            color: var(--gray-700);
+            text-decoration: none;
             background: none;
             border: none;
             cursor: pointer;
-            color: var(--gray);
-            border-bottom: 2px solid transparent;
+            font-size: 0.9rem;
             transition: var(--transition);
         }
 
-        .editor-tab.active {
-            color: var(--secondary);
-            border-bottom-color: var(--secondary);
+        .user-dropdown a:hover, .user-dropdown button:hover {
+            background-color: var(--gray-50);
+            color: var(--primary);
         }
 
-        .editor-content {
+        .user-dropdown hr {
+            margin: 0.5rem 0;
+            border: none;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
             display: none;
+            justify-content: center;
+            align-items: center;
         }
 
-        .editor-content.active {
-            display: block;
+        .modal-overlay.active {
+            display: flex;
         }
 
-        .editor-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
+        .modal-dialog {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: var(--shadow-lg);
         }
 
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: color 0.3s;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+            background-color: var(--gray-100);
+        }
+
+        /* Form Styles */
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: var(--dark);
+            color: var(--gray-700);
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-size: 0.95rem;
             transition: var(--transition);
         }
 
@@ -754,131 +1085,19 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
 
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .editor-actions {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 1rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background-color: var(--secondary);
-            color: white;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--secondary);
-            color: var(--secondary);
-        }
-
-        .btn-danger {
-            background-color: var(--accent);
-            color: white;
-        }
-
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #2980b9;
-        }
-
-        .btn-outline:hover {
-            background-color: rgba(52, 152, 219, 0.1);
-        }
-
-        .btn-danger:hover {
-            background-color: #c0392b;
-        }
-
-        .btn-success:hover {
-            background-color: #27ae60;
-        }
-
-        /* Preview Panel */
-        .preview-panel {
-            background-color: var(--white);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
-        }
-
-        .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .preview-header h3 {
-            color: var(--primary);
-        }
-
-        .preview-content {
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 1rem;
-            min-height: 300px;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .preview-item {
-            padding: 1rem;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .preview-item:last-child {
-            border-bottom: none;
-        }
-
-        .preview-item-info h4 {
-            color: var(--primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .preview-item-info p {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        /* Image Upload */
         .image-upload {
-            border: 2px dashed #ddd;
-            border-radius: 8px;
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius);
             padding: 2rem;
             text-align: center;
             cursor: pointer;
@@ -886,29 +1105,98 @@
         }
 
         .image-upload:hover {
-            border-color: var(--secondary);
-        }
-
-        .image-upload i {
-            font-size: 2rem;
-            color: var(--gray);
-            margin-bottom: 1rem;
-        }
-
-        .image-upload p {
-            color: var(--gray);
-            margin-bottom: 1rem;
+            border-color: var(--primary);
+            background-color: var(--primary-light);
         }
 
         .image-preview {
-            margin-top: 1rem;
-            display: none;
+            max-width: 200px;
+            max-height: 200px;
+            margin: 0 auto 1rem;
+            border-radius: var(--radius);
+            overflow: hidden;
         }
 
         .image-preview img {
-            max-width: 100%;
-            max-height: 200px;
-            border-radius: 4px;
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Page Content */
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .activity-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-box input {
+                width: 240px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .admin-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .admin-main.expanded {
+                margin-left: 0;
+            }
+            
+            .toggle-sidebar {
+                display: flex;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .search-box {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-content {
+                padding: 1rem;
+            }
+            
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .user-info {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -917,59 +1205,59 @@
         <!-- Sidebar -->
         <aside class="admin-sidebar" id="admin-sidebar">
             <div class="sidebar-header">
-                <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+                <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo" id="logo-image">
                 <h2>PDSA Admin</h2>
             </div>
             
             <nav class="sidebar-menu">
                 <div class="menu-label">Main</div>
-                <a href="admin-dashboard.html" class="menu-item active">
+                <a href="#" class="menu-item active" data-page="dashboard">
                     <i class="fas fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
                 
                 <div class="menu-label">Management</div>
-                <a href="appointments.html" class="menu-item">
+                <a href="#" class="menu-item" data-page="appointments">
                     <i class="fas fa-calendar-alt"></i>
                     <span>Appointments</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" data-page="patients">
                     <i class="fas fa-users"></i>
                     <span>Patients</span>
                 </a>
-                <a href="veterinaryclinic.html" class="menu-item">
+                <a href="#" class="menu-item" data-page="team">
                     <i class="fas fa-user-md"></i>
-                    <span>Veterinarians</span>
+                    <span>Team Management</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" data-page="products">
                     <i class="fas fa-shopping-cart"></i>
                     <span>Products</span>
                 </a>
-                <a href="payment-history.html" class="menu-item">
+                <a href="#" class="menu-item" data-page="payments">
                     <i class="fas fa-file-invoice-dollar"></i>
                     <span>Payments</span>
                 </a>
                 
                 <div class="menu-label">Website Management</div>
-                <a href="website-content.html" class="menu-item">
+                <a href="#" class="menu-item" data-page="website-content">
                     <i class="fas fa-edit"></i>
                     <span>Website Content</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" data-page="media">
                     <i class="fas fa-images"></i>
                     <span>Media Gallery</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" data-page="settings">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
                 
                 <div class="menu-label">System</div>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" data-page="backups">
                     <i class="fas fa-database"></i>
                     <span>Backups</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" data-page="reports">
                     <i class="fas fa-chart-bar"></i>
                     <span>Reports</span>
                 </a>
@@ -977,7 +1265,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="admin-main">
+        <main class="admin-main" id="admin-main">
             <!-- Header -->
             <header class="admin-header">
                 <div class="header-left">
@@ -986,479 +1274,305 @@
                     </button>
                     <div class="search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search..." id="global-search">
+                        <input type="text" placeholder="Search patients, appointments, orders..." id="global-search">
                     </div>
                 </div>
                 
                 <div class="header-right">
-                    <div class="header-action">
+                    <div class="header-action" id="notifications-btn">
                         <i class="far fa-bell"></i>
-                        <span class="notification-badge">5</span>
+                        <span class="notification-badge" id="notification-count">5</span>
                     </div>
-                    <div class="header-action">
+                    <div class="header-action" id="messages-btn">
                         <i class="far fa-envelope"></i>
-                        <span class="notification-badge">3</span>
+                        <span class="notification-badge" id="message-count">3</span>
                     </div>
-                    <div class="user-profile">
+                    <div class="user-profile" id="user-profile">
                         <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&q=80" alt="Admin User">
-                        <span>Admin User</span>
+                        <div class="user-info">
+                            <span class="user-name" id="user-name">Dr. Sarah Johnson</span>
+                            <span class="user-role">Administrator</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
                     </div>
                 </div>
             </header>
 
             <!-- Content -->
             <div class="admin-content">
-                <div class="page-title">
-                    <h1><i class="fas fa-edit"></i> Website Content Editor</h1>
-                    <div class="breadcrumb">
-                        <a href="admin-dashboard.html">Dashboard</a> / <span>Website Content</span>
+                <!-- Dashboard Page -->
+                <div id="dashboard-page" class="page-content active">
+                    <div class="page-title">
+                        <h1><i class="fas fa-tachometer-alt"></i> Dashboard 
+                            <span class="real-time-indicator">
+                                <span class="pulse"></span>
+                                Live
+                            </span>
+                        </h1>
+                        <div class="breadcrumb">
+                            <a href="#">Dashboard</a>
+                            <button class="refresh-btn" id="refresh-data" title="Refresh Data">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="stats-grid" id="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon appointments">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="today-appointments">24</h3>
+                                <p>Today's Appointments</p>
+                            </div>
+                            <div class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i> <span id="appointments-trend">12%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon revenue">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="monthly-revenue">R12,458</h3>
+                                <p>Monthly Revenue</p>
+                            </div>
+                            <div class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i> <span id="revenue-trend">8%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon patients">
+                                <i class="fas fa-paw"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="active-patients">156</h3>
+                                <p>Active Patients</p>
+                            </div>
+                            <div class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i> <span id="patients-trend">5%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon products">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="low-stock">42</h3>
+                                <p>Low Stock Items</p>
+                            </div>
+                            <div class="stat-trend trend-down">
+                                <i class="fas fa-arrow-down"></i> <span id="stock-trend">3%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts and Graphs -->
+                    <div class="charts-container">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Appointment Trends</h3>
+                                <div class="chart-filter">
+                                    <select id="chart-period">
+                                        <option value="week">This Week</option>
+                                        <option value="month" selected>This Month</option>
+                                        <option value="quarter">This Quarter</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="appointments-chart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Service Distribution</h3>
+                                <div class="chart-filter">
+                                    <select id="service-category">
+                                        <option value="all" selected>All Services</option>
+                                        <option value="medical">Medical</option>
+                                        <option value="surgical">Surgical</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="services-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="activity-container">
+                        <div class="activity-card">
+                            <div class="activity-header">
+                                <h3>Recent Appointments</h3>
+                                <a href="#" class="view-all">View All</a>
+                            </div>
+                            <ul class="activity-list" id="recent-appointments">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                        
+                        <div class="activity-card">
+                            <div class="activity-header">
+                                <h3>Recent Payments</h3>
+                                <a href="#" class="view-all">View All</a>
+                            </div>
+                            <ul class="activity-list" id="recent-payments">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Appointments Table -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>Upcoming Appointments</h3>
+                            <button class="btn btn-primary" id="add-appointment">
+                                <i class="fas fa-plus"></i> Add Appointment
+                            </button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Service</th>
+                                    <th>Date & Time</th>
+                                    <th>Veterinarian</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointments-table-body">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Recent Orders Table -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>Recent Product Orders</h3>
+                            <button class="btn btn-primary" id="view-all-orders">
+                                <i class="fas fa-list"></i> View All Orders
+                            </button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Products</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders-table-body">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <!-- Firebase Integration Status -->
-                <div class="firebase-placeholder" id="firebase-status">
-                    <h4><i class="fas fa-database"></i> Firebase Integration Status: <span id="connection-status">Connected</span></h4>
-                    <p id="connection-message">Successfully connected to Firebase backend. All changes will be saved in real-time.</p>
-                    <div class="firebase-code">
-                        Connection to: pdsa-database-default-rtdb.firebaseio.com<br>
-                         API Server: http://localhost:5000/api
+                <!-- Team Management Page -->
+                <div id="team-page" class="page-content">
+                    <div class="page-title">
+                        <h1><i class="fas fa-user-md"></i> Team Management</h1>
+                        <div class="breadcrumb">
+                            <a href="#">Dashboard</a> / <span>Team Management</span>
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>Veterinary Team</h3>
+                            <button class="btn btn-primary" id="add-team-member">
+                                <i class="fas fa-plus"></i> Add Team Member
+                            </button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Photo</th>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>Specialization</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="team-table-body">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <!-- Website Editor -->
-                <div class="website-editor">
-                    <div class="editor-header">
-                        <h3>Edit Website Content</h3>
-                        <button class="btn btn-success" id="publish-changes">
-                            <i class="fas fa-cloud-upload-alt"></i> Publish Changes
-                        </button>
+                <!-- Website Content Page -->
+                <div id="website-content-page" class="page-content">
+                    <div class="page-title">
+                        <h1><i class="fas fa-edit"></i> Website Content Management</h1>
+                        <div class="breadcrumb">
+                            <a href="#">Dashboard</a> / <span>Website Content</span>
+                        </div>
                     </div>
 
-                    <div class="editor-tabs">
-                        <button class="editor-tab active" data-tab="hero">Hero Section</button>
-                        <button class="editor-tab" data-tab="services">Services</button>
-                        <button class="editor-tab" data-tab="products">Products</button>
-                        <button class="editor-tab" data-tab="team">Team</button>
-                        <button class="editor-tab" data-tab="contact">Contact Info</button>
-                    </div>
-
-                    <!-- Hero Section Editor -->
-                    <div class="editor-content active" id="hero-editor">
-                        <form class="editor-form">
-                            <div class="form-group full-width">
-                                <label for="hero-title">Hero Title</label>
-                                <input type="text" id="hero-title" value="Compassionate Care for Your Pets">
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="hero-description">Hero Description</label>
-                                <textarea id="hero-description">PDSA provides quality veterinary services to pets in Mfolo, Soweto. Book an appointment today and give your pet the care they deserve.</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="hero-button1-text">Primary Button Text</label>
-                                <input type="text" id="hero-button1-text" value="Book Appointment">
-                            </div>
-                            <div class="form-group">
-                                <label for="hero-button2-text">Secondary Button Text</label>
-                                <input type="text" id="hero-button2-text" value="Learn More">
-                            </div>
-                            <div class="form-group">
-                                <label for="emergency-number">Emergency Number</label>
-                                <input type="text" id="emergency-number" value="011 984 4340">
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="hero-image">Hero Background Image</label>
-                                <div class="image-upload" id="hero-image-upload">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    <p>Click to upload or drag and drop</p>
-                                    <p>PNG, JPG, GIF up to 10MB</p>
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>Website Sections</h3>
+                            <button class="btn btn-primary" id="save-website-content">
+                                <i class="fas fa-save"></i> Save All Changes
+                            </button>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clinic-logo">Clinic Logo</label>
+                            <div class="image-upload" id="logo-upload">
+                                <div class="image-preview">
+                                    <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="Current Logo" id="logo-preview">
                                 </div>
-                                <div class="image-preview" id="hero-image-preview">
-                                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" alt="Hero Background">
-                                </div>
-                            </div>
-                            <div class="editor-actions">
-                                <button type="button" class="btn btn-outline">Cancel</button>
-                                <button type="button" class="btn btn-primary">Save Changes</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Services Editor -->
-                    <div class="editor-content" id="services-editor">
-                        <div class="preview-panel">
-                            <div class="preview-header">
-                                <h3>Current Services</h3>
-                                <button class="btn btn-primary" id="add-service">
-                                    <i class="fas fa-plus"></i> Add Service
-                                </button>
-                            </div>
-                            <div class="preview-content">
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Vaccinations</h4>
-                                        <p>From R250 | 30 mins</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Surgical Procedures</h4>
-                                        <p>From R800 | 1-3 hours</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Dental Care</h4>
-                                        <p>From R450 | 45 mins</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Microchipping</h4>
-                                        <p>R350 | 15 mins</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Nutrition Counseling</h4>
-                                        <p>From R300 | 45 mins</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Professional Grooming</h4>
-                                        <p>From R250 | 1-2 hours</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
+                                <p>Click to upload new logo</p>
+                                <input type="file" id="clinic-logo" accept="image/*" style="display: none;">
                             </div>
                         </div>
-
-                        <form class="editor-form">
-                            <div class="form-group">
-                                <label for="service-name">Service Name</label>
-                                <input type="text" id="service-name" placeholder="Enter service name">
-                            </div>
-                            <div class="form-group">
-                                <label for="service-price">Price</label>
-                                <input type="text" id="service-price" placeholder="e.g., From R250">
-                            </div>
-                            <div class="form-group">
-                                <label for="service-duration">Duration</label>
-                                <input type="text" id="service-duration" placeholder="e.g., 30 mins">
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="service-description">Description</label>
-                                <textarea id="service-description" placeholder="Enter service description"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="service-image">Service Image</label>
-                                <div class="image-upload" id="service-image-upload">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    <p>Click to upload or drag and drop</p>
-                                    <p>PNG, JPG, GIF up to 10MB</p>
-                                </div>
-                                <div class="image-preview" id="service-image-preview">
-                                    <!-- Image preview will appear here -->
-                                </div>
-                            </div>
-                            <div class="editor-actions">
-                                <button type="button" class="btn btn-outline">Cancel</button>
-                                <button type="button" class="btn btn-primary">Save Service</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Products Editor -->
-                    <div class="editor-content" id="products-editor">
-                        <div class="preview-panel">
-                            <div class="preview-header">
-                                <h3>Current Products</h3>
-                                <button class="btn btn-primary" id="add-product">
-                                    <i class="fas fa-plus"></i> Add Product
-                                </button>
-                            </div>
-                            <div class="preview-content">
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Premium Dog Food</h4>
-                                        <p>R249.99 | Food & Treats</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Interactive Cat Toy</h4>
-                                        <p>R89.99 | Toys</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Flea & Tick Treatment</h4>
-                                        <p>R179.99 | Health & Wellness</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Designer Dog Collar</h4>
-                                        <p>R149.99 | Accessories</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Grain-Free Cat Food</h4>
-                                        <p>R199.99 | Food & Treats</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Joint Supplement</h4>
-                                        <p>R289.99 | Health & Wellness</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                            </div>
+                        
+                        <div class="form-group">
+                            <label for="clinic-name">Clinic Name</label>
+                            <input type="text" id="clinic-name" value="PDSA Veterinary Clinic">
                         </div>
-
-                        <form class="editor-form">
-                            <div class="form-group">
-                                <label for="product-name">Product Name</label>
-                                <input type="text" id="product-name" placeholder="Enter product name">
-                            </div>
-                            <div class="form-group">
-                                <label for="product-price">Price (R)</label>
-                                <input type="number" id="product-price" step="0.01" min="0" placeholder="Enter price">
-                            </div>
-                            <div class="form-group">
-                                <label for="product-category">Category</label>
-                                <select id="product-category">
-                                    <option value="food">Food & Treats</option>
-                                    <option value="toys">Toys</option>
-                                    <option value="health">Health & Wellness</option>
-                                    <option value="accessories">Accessories</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="product-rating">Rating</label>
-                                <select id="product-rating">
-                                    <option value="5">5 Stars</option>
-                                    <option value="4">4 Stars</option>
-                                    <option value="3">3 Stars</option>
-                                    <option value="2">2 Stars</option>
-                                    <option value="1">1 Star</option>
-                                </select>
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="product-description">Description</label>
-                                <textarea id="product-description" placeholder="Enter product description"></textarea>
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="product-image">Product Image</label>
-                                <div class="image-upload" id="product-image-upload">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    <p>Click to upload or drag and drop</p>
-                                    <p>PNG, JPG, GIF up to 10MB</p>
-                                </div>
-                                <div class="image-preview" id="product-image-preview">
-                                    <!-- Image preview will appear here -->
-                                </div>
-                            </div>
-                            <div class="editor-actions">
-                                <button type="button" class="btn btn-outline">Cancel</button>
-                                <button type="button" class="btn btn-primary">Save Product</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Team Editor -->
-                    <div class="editor-content" id="team-editor">
-                        <div class="preview-panel">
-                            <div class="preview-header">
-                                <h3>Current Team Members</h3>
-                                <button class="btn btn-primary" id="add-team-member">
-                                    <i class="fas fa-plus"></i> Add Team Member
-                                </button>
-                            </div>
-                            <div class="preview-content">
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Dr. Sarah Johnson</h4>
-                                        <p>Head Veterinarian</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Dr. Michael Brown</h4>
-                                        <p>Senior Veterinarian</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>Dr. Emma Wilson</h4>
-                                        <p>Emergency Veterinarian</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="preview-item">
-                                    <div class="preview-item-info">
-                                        <h4>David Lee</h4>
-                                        <p>Veterinary Nurse</p>
-                                    </div>
-                                    <div class="preview-item-actions">
-                                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                            </div>
+                        
+                        <div class="form-group">
+                            <label for="hero-title">Hero Section Title</label>
+                            <input type="text" id="hero-title" value="Compassionate Care for Your Pets">
                         </div>
-
-                        <form class="editor-form">
-                            <div class="form-group">
-                                <label for="team-name">Full Name</label>
-                                <input type="text" id="team-name" placeholder="Enter full name">
-                            </div>
-                            <div class="form-group">
-                                <label for="team-position">Position</label>
-                                <input type="text" id="team-position" placeholder="Enter position">
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="team-bio">Bio/Description</label>
-                                <textarea id="team-bio" placeholder="Enter team member bio"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="team-email">Email</label>
-                                <input type="email" id="team-email" placeholder="Enter email">
-                            </div>
-                            <div class="form-group">
-                                <label for="team-linkedin">LinkedIn (optional)</label>
-                                <input type="url" id="team-linkedin" placeholder="Enter LinkedIn URL">
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="team-image">Profile Photo</label>
-                                <div class="image-upload" id="team-image-upload">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    <p>Click to upload or drag and drop</p>
-                                    <p>PNG, JPG, GIF up to 10MB</p>
-                                </div>
-                                <div class="image-preview" id="team-image-preview">
-                                    <!-- Image preview will appear here -->
-                                </div>
-                            </div>
-                            <div class="editor-actions">
-                                <button type="button" class="btn btn-outline">Cancel</button>
-                                <button type="button" class="btn btn-primary">Save Team Member</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Contact Info Editor -->
-                    <div class="editor-content" id="contact-editor">
-                        <form class="editor-form">
-                            <div class="form-group">
-                                <label for="clinic-name">Clinic Name</label>
-                                <input type="text" id="clinic-name" value="PDSA Veterinary Clinic">
-                            </div>
-                            <div class="form-group">
-                                <label for="clinic-address">Address</label>
-                                <input type="text" id="clinic-address" value="1188 Nancefield Moroka Road, Mfolo South, Soweto, 1868">
-                            </div>
-                            <div class="form-group">
-                                <label for="clinic-phone">Main Phone</label>
-                                <input type="text" id="clinic-phone" value="011 984 4340">
-                            </div>
-                            <div class="form-group">
-                                <label for="clinic-email">Email</label>
-                                <input type="email" id="clinic-email" value="info@pdsa.org.za">
-                            </div>
-                            <div class="form-group">
-                                <label for="clinic-hours-weekdays">Weekday Hours</label>
-                                <input type="text" id="clinic-hours-weekdays" value="8:00 AM - 7:00 PM">
-                            </div>
-                            <div class="form-group">
-                                <label for="clinic-hours-saturday">Saturday Hours</label>
-                                <input type="text" id="clinic-hours-saturday" value="9:00 AM - 4:00 PM">
-                            </div>
-                            <div class="form-group">
-                                <label for="clinic-hours-sunday">Sunday Hours</label>
-                                <input type="text" id="clinic-hours-sunday" value="Emergency only">
-                            </div>
-                            <div class="form-group full-width">
-                                <label for="google-maps-embed">Google Maps Embed Code</label>
-                                <textarea id="google-maps-embed" placeholder="Paste Google Maps embed code here">&lt;iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3576.340050682773!2d27.8589117764842!3d-26.31534437691821!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e95a6c8d3c5f1c5%3A0x7c3d5e5a5a5a5a5a!2sMfolo%2C%20Soweto%2C%201868!5e0!3m2!1sen!2sza!4v1686754321235!5m2!1sen!2sza" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"&gt;&lt;/iframe&gt;</textarea>
-                            </div>
-                            <div class="editor-actions">
-                                <button type="button" class="btn btn-outline">Cancel</button>
-                                <button type="button" class="btn btn-primary">Save Contact Info</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Live Preview Section -->
-                <div class="preview-panel">
-                    <div class="preview-header">
-                        <h3>Live Preview</h3>
-                        <button class="btn btn-primary" id="refresh-preview">
-                            <i class="fas fa-sync-alt"></i> Refresh Preview
-                        </button>
-                    </div>
-                    <div class="preview-content">
-                        <iframe src="index.html" frameborder="0" style="width: 100%; height: 400px;" id="website-preview"></iframe>
+                        
+                        <div class="form-group">
+                            <label for="hero-description">Hero Section Description</label>
+                            <textarea id="hero-description" rows="3">PDSA provides quality veterinary services to pets in Mfolo, Soweto. Book an appointment today and give your pet the care they deserve.</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="emergency-number">Emergency Number</label>
+                            <input type="text" id="emergency-number" value="011 984 4340">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clinic-address">Clinic Address</label>
+                            <textarea id="clinic-address" rows="2">1188 Nancefield Moroka Road, Mfolo South, Soweto, 1868</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contact-email">Contact Email</label>
+                            <input type="email" id="contact-email" value="info@pdsa.org.za">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1470,530 +1584,852 @@
         </main>
     </div>
 
+    <!-- Team Member Modal -->
+    <div class="modal-overlay" id="team-modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2 id="team-modal-title">Add Team Member</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="team-form">
+                    <div class="form-group">
+                        <label for="team-photo">Photo</label>
+                        <div class="image-upload" id="team-photo-upload">
+                            <div class="image-preview">
+                                <img src="" alt="Team Member Photo" id="team-photo-preview">
+                            </div>
+                            <p>Click to upload photo</p>
+                            <input type="file" id="team-photo" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="team-name">Full Name</label>
+                            <input type="text" id="team-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="team-position">Position</label>
+                            <input type="text" id="team-position" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="team-specialization">Specialization</label>
+                        <input type="text" id="team-specialization">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="team-description">Description/Bio</label>
+                        <textarea id="team-description" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="team-email">Email</label>
+                            <input type="email" id="team-email">
+                        </div>
+                        <div class="form-group">
+                            <label for="team-status">Status</label>
+                            <select id="team-status">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-team">Cancel</button>
+                <button class="btn btn-primary" id="save-team">Save Team Member</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification Container -->
     <div id="toast-container"></div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "pdsa-database.firebaseapp.com",
-            databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
-            projectId: "pdsa-database",
-            storageBucket: "pdsa-database.appspot.com",
-            messagingSenderId: "1041468794677",
-            appId: "YOUR_APP_ID"
+        // Dashboard Data and State Management
+        const dashboardState = {
+            currentPage: 'dashboard',
+            appointments: [],
+            orders: [],
+            teamMembers: [
+                {
+                    id: 1,
+                    name: 'Dr. Sarah Johnson',
+                    position: 'Head Veterinarian',
+                    specialization: 'Small Animal Surgery',
+                    description: 'Specializes in small animal surgery with 15 years of experience.',
+                    email: 'sarah.johnson@pdsa.org.za',
+                    photo: 'https://randomuser.me/api/portraits/women/65.jpg',
+                    status: 'active'
+                },
+                {
+                    id: 2,
+                    name: 'Dr. Michael Brown',
+                    position: 'Senior Veterinarian',
+                    specialization: 'Internal Medicine',
+                    description: 'Expert in internal medicine and chronic conditions.',
+                    email: 'michael.brown@pdsa.org.za',
+                    photo: 'https://randomuser.me/api/portraits/men/32.jpg',
+                    status: 'active'
+                },
+                {
+                    id: 3,
+                    name: 'Dr. Emma Wilson',
+                    position: 'Emergency Veterinarian',
+                    specialization: 'Emergency Care',
+                    description: 'Available 24/7 for critical and emergency cases.',
+                    email: 'emma.wilson@pdsa.org.za',
+                    photo: 'https://randomuser.me/api/portraits/women/44.jpg',
+                    status: 'active'
+                },
+                {
+                    id: 4,
+                    name: 'David Lee',
+                    position: 'Veterinary Nurse',
+                    specialization: 'Postoperative Care',
+                    description: 'Specialized in postoperative care and rehabilitation.',
+                    email: 'david.lee@pdsa.org.za',
+                    photo: 'https://randomuser.me/api/portraits/men/75.jpg',
+                    status: 'active'
+                }
+            ],
+            websiteContent: {
+                clinicName: 'PDSA Veterinary Clinic',
+                heroTitle: 'Compassionate Care for Your Pets',
+                heroDescription: 'PDSA provides quality veterinary services to pets in Mfolo, Soweto. Book an appointment today and give your pet the care they deserve.',
+                emergencyNumber: '011 984 4340',
+                clinicAddress: '1188 Nancefield Moroka Road, Mfolo South, Soweto, 1868',
+                contactEmail: 'info@pdsa.org.za',
+                logo: 'https://www.pdsa.org.uk/media/12121/pdsa-logo.png'
+            },
+            stats: {
+                appointments: 24,
+                revenue: 12458,
+                patients: 156,
+                lowStock: 42
+            },
+            charts: {
+                appointments: null,
+                services: null
+            },
+            realTimeUpdates: true,
+            lastUpdate: new Date(),
+            editingTeamMember: null
         };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-        
-        // Global variables
-        let currentEditingItem = null;
-        let websiteData = {};
 
         // DOM Content Loaded
         document.addEventListener('DOMContentLoaded', function() {
-            initializePage();
-            loadWebsiteData();
+            initializeDashboard();
             setupEventListeners();
+            loadDashboardData();
+            initializeCharts();
+            loadTeamMembers();
+            loadWebsiteContent();
+            simulateRealTimeUpdates();
         });
 
-        // Initialize page
-        function initializePage() {
+        // Initialize Dashboard
+        function initializeDashboard() {
             // Set active menu item
-            document.querySelector('a[href="website-content.html"]').classList.add('active');
+            document.querySelector('a[data-page="dashboard"]').classList.add('active');
             
-            // Show image preview for hero section
-            document.getElementById('hero-image-preview').style.display = 'block';
+            // Load initial data
+            loadInitialData();
+            
+            // Update last update time
+            updateLastUpdateTime();
         }
 
-        // Setup event listeners
+        // Setup Event Listeners
         function setupEventListeners() {
             // Toggle sidebar
             document.getElementById('toggle-sidebar').addEventListener('click', function() {
-                document.getElementById('admin-sidebar').classList.toggle('active');
+                document.getElementById('admin-sidebar').classList.toggle('collapsed');
+                document.getElementById('admin-main').classList.toggle('expanded');
             });
 
-            // Editor tabs
-            document.querySelectorAll('.editor-tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    
-                    // Update active tab
-                    document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show corresponding editor
-                    document.querySelectorAll('.editor-content').forEach(content => {
-                        content.classList.remove('active');
-                    });
-                    document.getElementById(`${tabId}-editor`).classList.add('active');
-                });
+            // Global search
+            document.getElementById('global-search').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                filterDashboardData(searchTerm);
             });
 
-            // Publish changes
-            document.getElementById('publish-changes').addEventListener('click', publishChanges);
-
-            // Refresh preview
-            document.getElementById('refresh-preview').addEventListener('click', function() {
-                document.getElementById('website-preview').src = document.getElementById('website-preview').src;
+            // Refresh data button
+            document.getElementById('refresh-data').addEventListener('click', function() {
+                loadDashboardData(true);
             });
 
-            // Image upload handlers
-            setupImageUpload('hero-image-upload', 'hero-image-preview');
-            setupImageUpload('service-image-upload', 'service-image-preview');
-            setupImageUpload('product-image-upload', 'product-image-preview');
-            setupImageUpload('team-image-upload', 'team-image-preview');
-
-            // Add item buttons
-            document.getElementById('add-service').addEventListener('click', function() {
-                resetForm('services-editor');
-                currentEditingItem = null;
+            // Add appointment button
+            document.getElementById('add-appointment').addEventListener('click', function() {
+                showToast('Redirecting to appointments page...', 'info');
             });
 
-            document.getElementById('add-product').addEventListener('click', function() {
-                resetForm('products-editor');
-                currentEditingItem = null;
+            // View all orders button
+            document.getElementById('view-all-orders').addEventListener('click', function() {
+                showToast('Redirecting to orders page...', 'info');
             });
 
-            document.getElementById('add-team-member').addEventListener('click', function() {
-                resetForm('team-editor');
-                currentEditingItem = null;
+            // User profile dropdown
+            document.getElementById('user-profile').addEventListener('click', function() {
+                showUserMenu();
             });
 
-            // Edit buttons
-            document.querySelectorAll('.action-btn.edit').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const itemElement = this.closest('.preview-item');
-                    const itemName = itemElement.querySelector('h4').textContent;
-                    const itemDescription = itemElement.querySelector('p').textContent;
-                    
-                    // In a real app, this would load the actual item data from Firebase
-                    // For demo purposes, we'll just populate the form with sample data
-                    if (itemElement.closest('#services-editor')) {
-                        document.getElementById('service-name').value = itemName;
-                        document.getElementById('service-price').value = itemDescription.split(' | ')[0];
-                        document.getElementById('service-duration').value = itemDescription.split(' | ')[1];
-                        document.getElementById('service-description').value = `Description for ${itemName}`;
-                    } else if (itemElement.closest('#products-editor')) {
-                        document.getElementById('product-name').value = itemName;
-                        document.getElementById('product-price').value = parseFloat(itemDescription.split(' | ')[0].replace('R', ''));
-                        document.getElementById('product-category').value = itemDescription.split(' | ')[1].toLowerCase();
-                        document.getElementById('product-description').value = `Description for ${itemName}`;
-                    } else if (itemElement.closest('#team-editor')) {
-                        document.getElementById('team-name').value = itemName;
-                        document.getElementById('team-position').value = itemDescription;
-                        document.getElementById('team-bio').value = `Bio for ${itemName}, ${itemDescription}`;
-                        document.getElementById('team-email').value = `${itemName.toLowerCase().replace(' ', '.')}@pdsa.org.za`;
-                    }
-                    
-                    currentEditingItem = itemName;
-                    
-                    // Scroll to form
-                    document.querySelector('.editor-form').scrollIntoView({ behavior: 'smooth' });
-                });
+            // Notifications button
+            document.getElementById('notifications-btn').addEventListener('click', function() {
+                showNotifications();
             });
 
-            // Delete buttons
-            document.querySelectorAll('.action-btn.delete').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const itemElement = this.closest('.preview-item');
-                    const itemName = itemElement.querySelector('h4').textContent;
-                    
-                    if (confirm(`Are you sure you want to delete "${itemName}"?`)) {
-                        // In a real app, this would delete from Firebase
-                        itemElement.remove();
-                        showToast(`"${itemName}" has been deleted`, 'success');
-                    }
-                });
+            // Messages button
+            document.getElementById('messages-btn').addEventListener('click', function() {
+                showMessages();
             });
 
-            // Form save buttons
-            document.querySelectorAll('.editor-form .btn-primary').forEach(btn => {
-                btn.addEventListener('click', function(e) {
+            // Chart filters
+            document.getElementById('chart-period').addEventListener('change', function() {
+                updateAppointmentsChart(this.value);
+            });
+
+            document.getElementById('service-category').addEventListener('change', function() {
+                updateServicesChart(this.value);
+            });
+
+            // Navigation menu
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const form = this.closest('.editor-form');
-                    const editorId = this.closest('.editor-content').id;
+                    const page = this.getAttribute('data-page');
+                    navigateToPage(page);
+                });
+            });
+
+            // Team management
+            document.getElementById('add-team-member').addEventListener('click', function() {
+                showTeamModal();
+            });
+
+            document.getElementById('cancel-team').addEventListener('click', function() {
+                hideModal('team-modal');
+            });
+
+            document.getElementById('save-team').addEventListener('click', function() {
+                saveTeamMember();
+            });
+
+            // Website content
+            document.getElementById('save-website-content').addEventListener('click', function() {
+                saveWebsiteContent();
+            });
+
+            // Logo upload
+            document.getElementById('logo-upload').addEventListener('click', function() {
+                document.getElementById('clinic-logo').click();
+            });
+
+            document.getElementById('clinic-logo').addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.getElementById('logo-preview').src = event.target.result;
+                        document.getElementById('logo-image').src = event.target.result;
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+
+            // Team photo upload
+            document.getElementById('team-photo-upload').addEventListener('click', function() {
+                document.getElementById('team-photo').click();
+            });
+
+            document.getElementById('team-photo').addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.getElementById('team-photo-preview').src = event.target.result;
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+
+            // Close modals when clicking outside
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+
+            // Close modals with close button
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.modal-overlay').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                });
+            });
+        }
+
+        // Navigation between pages
+        function navigateToPage(page) {
+            // Update active menu item
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-page="${page}"]`).classList.add('active');
+
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(`${page}-page`).classList.add('active');
+
+            // Update dashboard state
+            dashboardState.currentPage = page;
+        }
+
+        // Load Initial Data
+        function loadInitialData() {
+            // Sample data for demonstration
+            dashboardState.appointments = [
+                { id: 1, petName: 'Max (Golden Retriever)', service: 'Annual Checkup', date: new Date(), time: '10:30 AM', vet: 'Dr. Sarah Johnson', status: 'confirmed' },
+                { id: 2, petName: 'Whiskers (Siamese Cat)', service: 'Vaccination', date: new Date(), time: '11:15 AM', vet: 'Dr. Michael Brown', status: 'confirmed' },
+                { id: 3, petName: 'Buddy (Labrador)', service: 'Dental Cleaning', date: new Date(), time: '2:00 PM', vet: 'Dr. Emma Wilson', status: 'pending' },
+                { id: 4, petName: 'Luna (Maine Coon)', service: 'Follow-up', date: new Date(), time: '3:45 PM', vet: 'Dr. Sarah Johnson', status: 'confirmed' },
+                { id: 5, petName: 'Rocky (German Shepherd)', service: 'Surgery Consultation', date: new Date(Date.now() + 86400000), time: '9:00 AM', vet: 'Dr. Michael Brown', status: 'pending' }
+            ];
+
+            dashboardState.orders = [
+                { id: 'ORD-00124', customer: { name: 'Lisa Chen' }, items: [{ name: 'Premium Dog Food' }, { name: 'Dental Chews' }], total: 499.98, status: 'shipped', orderDate: new Date() },
+                { id: 'ORD-00123', customer: { name: 'John Smith' }, items: [{ name: 'Flea Treatment' }, { name: 'Dog Collar' }], total: 329.98, status: 'processing', orderDate: new Date() },
+                { id: 'ORD-00122', customer: { name: 'Maria Garcia' }, items: [{ name: 'Cat Toy' }, { name: 'Joint Supplement' }], total: 379.98, status: 'delivered', orderDate: new Date(Date.now() - 86400000) },
+                { id: 'ORD-00121', customer: { name: 'David Wilson' }, items: [{ name: 'Grain-Free Cat Food' }], total: 599.97, status: 'shipped', orderDate: new Date(Date.now() - 172800000) }
+            ];
+
+            // Update UI with initial data
+            updateAppointmentsUI();
+            updateOrdersUI();
+            updateStatsUI(dashboardState.stats);
+        }
+
+        // Load Dashboard Data (Simulated API Call)
+        function loadDashboardData(forceRefresh = false) {
+            if (forceRefresh) {
+                showToast('Refreshing data...', 'info');
+                
+                // Simulate API delay
+                setTimeout(() => {
+                    // In a real app, this would fetch from Firebase/API
+                    dashboardState.stats.appointments = Math.floor(Math.random() * 10) + 20;
+                    dashboardState.stats.revenue = Math.floor(Math.random() * 2000) + 11000;
+                    dashboardState.stats.patients = Math.floor(Math.random() * 20) + 140;
+                    dashboardState.stats.lowStock = Math.floor(Math.random() * 10) + 35;
                     
-                    if (editorId === 'services-editor') {
-                        saveService();
-                    } else if (editorId === 'products-editor') {
-                        saveProduct();
-                    } else if (editorId === 'team-editor') {
-                        saveTeamMember();
-                    } else if (editorId === 'hero-editor' || editorId === 'contact-editor') {
-                        saveGeneralSettings(editorId);
-                    }
-                });
-            });
+                    updateStatsUI(dashboardState.stats);
+                    updateLastUpdateTime();
+                    showToast('Data refreshed successfully', 'success');
+                }, 1500);
+            }
         }
 
-        // Setup image upload
-        function setupImageUpload(uploadId, previewId) {
-            const uploadElement = document.getElementById(uploadId);
-            const previewElement = document.getElementById(previewId);
-            
-            uploadElement.addEventListener('click', function() {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
+        // Load Team Members
+        function loadTeamMembers() {
+            const teamTable = document.getElementById('team-table-body');
+            if (teamTable) {
+                teamTable.innerHTML = dashboardState.teamMembers.map(member => `
+                    <tr>
+                        <td>
+                            <img src="${member.photo}" alt="${member.name}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                        </td>
+                        <td>${member.name}</td>
+                        <td>${member.position}</td>
+                        <td>${member.specialization}</td>
+                        <td><span class="status ${member.status}">${member.status.charAt(0).toUpperCase() + member.status.slice(1)}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit" data-id="${member.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete" data-id="${member.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
                 
-                input.addEventListener('change', function() {
-                    const file = this.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            
-                            previewElement.innerHTML = '';
-                            previewElement.appendChild(img);
-                            previewElement.style.display = 'block';
-                            
-                            // In a real app, you would upload to Firebase Storage here
-                        };
-                        reader.readAsDataURL(file);
-                    }
+                // Add event listeners to action buttons
+                document.querySelectorAll('.action-btn.edit').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const memberId = this.getAttribute('data-id');
+                        editTeamMember(memberId);
+                    });
                 });
                 
-                input.click();
-            });
+                document.querySelectorAll('.action-btn.delete').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const memberId = this.getAttribute('data-id');
+                        deleteTeamMember(memberId);
+                    });
+                });
+            }
         }
 
-        // Load website data from Firebase
-        function loadWebsiteData() {
-            // In a real app, this would fetch from Firebase
-            // For demo purposes, we'll use sample data
-            websiteData = {
-                hero: {
-                    title: "Compassionate Care for Your Pets",
-                    description: "PDSA provides quality veterinary services to pets in Mfolo, Soweto. Book an appointment today and give your pet the care they deserve.",
-                    button1: "Book Appointment",
-                    button2: "Learn More",
-                    emergency: "011 984 4340",
-                    image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80"
+        // Load Website Content
+        function loadWebsiteContent() {
+            document.getElementById('clinic-name').value = dashboardState.websiteContent.clinicName;
+            document.getElementById('hero-title').value = dashboardState.websiteContent.heroTitle;
+            document.getElementById('hero-description').value = dashboardState.websiteContent.heroDescription;
+            document.getElementById('emergency-number').value = dashboardState.websiteContent.emergencyNumber;
+            document.getElementById('clinic-address').value = dashboardState.websiteContent.clinicAddress;
+            document.getElementById('contact-email').value = dashboardState.websiteContent.contactEmail;
+            document.getElementById('logo-preview').src = dashboardState.websiteContent.logo;
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Appointments Chart
+            const appointmentsCtx = document.getElementById('appointments-chart').getContext('2d');
+            dashboardState.charts.appointments = new Chart(appointmentsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Appointments',
+                        data: [12, 19, 15, 17, 24, 18, 10],
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
                 },
-                contact: {
-                    name: "PDSA Veterinary Clinic",
-                    address: "1188 Nancefield Moroka Road, Mfolo South, Soweto, 1868",
-                    phone: "011 984 4340",
-                    email: "info@pdsa.org.za",
-                    hours: {
-                        weekdays: "8:00 AM - 7:00 PM",
-                        saturday: "9:00 AM - 4:00 PM",
-                        sunday: "Emergency only"
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
                     },
-                    map: '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3576.340050682773!2d27.8589117764842!3d-26.31534437691821!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e95a6c8d3c5f1c5%3A0x7c3d5e5a5a5a5a5a!2sMfolo%2C%20Soweto%2C%201868!5e0!3m2!1sen!2sza!4v1686754321235!5m2!1sen!2sza" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
-                }
-            };
-            
-            // Populate forms with data
-            document.getElementById('hero-title').value = websiteData.hero.title;
-            document.getElementById('hero-description').value = websiteData.hero.description;
-            document.getElementById('hero-button1-text').value = websiteData.hero.button1;
-            document.getElementById('hero-button2-text').value = websiteData.hero.button2;
-            document.getElementById('emergency-number').value = websiteData.hero.emergency;
-            
-            document.getElementById('clinic-name').value = websiteData.contact.name;
-            document.getElementById('clinic-address').value = websiteData.contact.address;
-            document.getElementById('clinic-phone').value = websiteData.contact.phone;
-            document.getElementById('clinic-email').value = websiteData.contact.email;
-            document.getElementById('clinic-hours-weekdays').value = websiteData.contact.hours.weekdays;
-            document.getElementById('clinic-hours-saturday').value = websiteData.contact.hours.saturday;
-            document.getElementById('clinic-hours-sunday').value = websiteData.contact.hours.sunday;
-            document.getElementById('google-maps-embed').value = websiteData.contact.map;
-        }
-
-        // Save service
-        function saveService() {
-            const name = document.getElementById('service-name').value;
-            const price = document.getElementById('service-price').value;
-            const duration = document.getElementById('service-duration').value;
-            const description = document.getElementById('service-description').value;
-            
-            if (!name || !price || !duration) {
-                showToast('Please fill in all required fields', 'error');
-                return;
-            }
-            
-            // In a real app, this would save to Firebase
-            if (currentEditingItem) {
-                // Update existing service
-                const serviceItem = Array.from(document.querySelectorAll('#services-editor .preview-item')).find(item => {
-                    return item.querySelector('h4').textContent === currentEditingItem;
-                });
-                
-                if (serviceItem) {
-                    serviceItem.querySelector('h4').textContent = name;
-                    serviceItem.querySelector('p').textContent = `${price} | ${duration}`;
-                }
-                
-                showToast(`Service "${name}" updated successfully`, 'success');
-            } else {
-                // Add new service
-                const servicesList = document.querySelector('#services-editor .preview-content');
-                const newService = document.createElement('div');
-                newService.className = 'preview-item';
-                newService.innerHTML = `
-                    <div class="preview-item-info">
-                        <h4>${name}</h4>
-                        <p>${price} | ${duration}</p>
-                    </div>
-                    <div class="preview-item-actions">
-                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-                
-                servicesList.appendChild(newService);
-                
-                // Add event listeners to new buttons
-                newService.querySelector('.action-btn.edit').addEventListener('click', function() {
-                    const itemElement = this.closest('.preview-item');
-                    const itemName = itemElement.querySelector('h4').textContent;
-                    const itemDescription = itemElement.querySelector('p').textContent;
-                    
-                    document.getElementById('service-name').value = itemName;
-                    document.getElementById('service-price').value = itemDescription.split(' | ')[0];
-                    document.getElementById('service-duration').value = itemDescription.split(' | ')[1];
-                    document.getElementById('service-description').value = `Description for ${itemName}`;
-                    
-                    currentEditingItem = itemName;
-                    
-                    document.querySelector('.editor-form').scrollIntoView({ behavior: 'smooth' });
-                });
-                
-                newService.querySelector('.action-btn.delete').addEventListener('click', function() {
-                    const itemElement = this.closest('.preview-item');
-                    const itemName = itemElement.querySelector('h4').textContent;
-                    
-                    if (confirm(`Are you sure you want to delete "${itemName}"?`)) {
-                        itemElement.remove();
-                        showToast(`"${itemName}" has been deleted`, 'success');
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
                     }
-                });
-                
-                showToast(`Service "${name}" added successfully`, 'success');
-            }
-            
-            resetForm('services-editor');
-            currentEditingItem = null;
-        }
-
-        // Save product
-        function saveProduct() {
-            const name = document.getElementById('product-name').value;
-            const price = document.getElementById('product-price').value;
-            const category = document.getElementById('product-category').value;
-            const description = document.getElementById('product-description').value;
-            
-            if (!name || !price || !category) {
-                showToast('Please fill in all required fields', 'error');
-                return;
-            }
-            
-            // In a real app, this would save to Firebase
-            if (currentEditingItem) {
-                // Update existing product
-                const productItem = Array.from(document.querySelectorAll('#products-editor .preview-item')).find(item => {
-                    return item.querySelector('h4').textContent === currentEditingItem;
-                });
-                
-                if (productItem) {
-                    productItem.querySelector('h4').textContent = name;
-                    productItem.querySelector('p').textContent = `R${price} | ${category.charAt(0).toUpperCase() + category.slice(1)}`;
                 }
-                
-                showToast(`Product "${name}" updated successfully`, 'success');
-            } else {
-                // Add new product
-                const productsList = document.querySelector('#products-editor .preview-content');
-                const newProduct = document.createElement('div');
-                newProduct.className = 'preview-item';
-                newProduct.innerHTML = `
-                    <div class="preview-item-info">
-                        <h4>${name}</h4>
-                        <p>R${price} | ${category.charAt(0).toUpperCase() + category.slice(1)}</p>
-                    </div>
-                    <div class="preview-item-actions">
-                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-                
-                productsList.appendChild(newProduct);
-                
-                // Add event listeners to new buttons
-                newProduct.querySelector('.action-btn.edit').addEventListener('click', function() {
-                    const itemElement = this.closest('.preview-item');
-                    const itemName = itemElement.querySelector('h4').textContent;
-                    const itemDescription = itemElement.querySelector('p').textContent;
-                    
-                    document.getElementById('product-name').value = itemName;
-                    document.getElementById('product-price').value = parseFloat(itemDescription.split(' | ')[0].replace('R', ''));
-                    document.getElementById('product-category').value = itemDescription.split(' | ')[1].toLowerCase();
-                    document.getElementById('product-description').value = `Description for ${itemName}`;
-                    
-                    currentEditingItem = itemName;
-                    
-                    document.querySelector('.editor-form').scrollIntoView({ behavior: 'smooth' });
-                });
-                
-                newProduct.querySelector('.action-btn.delete').addEventListener('click', function() {
-                    const itemElement = this.closest('.preview-item');
-                    const itemName = itemElement.querySelector('h4').textContent;
-                    
-                    if (confirm(`Are you sure you want to delete "${itemName}"?`)) {
-                        itemElement.remove();
-                        showToast(`"${itemName}" has been deleted`, 'success');
+            });
+
+            // Services Chart
+            const servicesCtx = document.getElementById('services-chart').getContext('2d');
+            dashboardState.charts.services = new Chart(servicesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Checkups', 'Vaccinations', 'Dental', 'Surgery', 'Emergency'],
+                    datasets: [{
+                        data: [35, 25, 15, 10, 15],
+                        backgroundColor: [
+                            '#2563eb',
+                            '#10b981',
+                            '#f59e0b',
+                            '#ef4444',
+                            '#8b5cf6'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
-                });
-                
-                showToast(`Product "${name}" added successfully`, 'success');
-            }
-            
-            resetForm('products-editor');
-            currentEditingItem = null;
+                }
+            });
         }
 
-        // Save team member
+        // Update Appointments Chart
+        function updateAppointmentsChart(period) {
+            // In a real app, this would fetch new data based on the period
+            let data;
+            
+            switch(period) {
+                case 'week':
+                    data = [12, 19, 15, 17, 24, 18, 10];
+                    break;
+                case 'month':
+                    data = [45, 52, 48, 61, 58, 65, 60, 71, 69, 73, 68, 75, 72, 78, 75, 80, 77, 82, 79, 85, 82, 88, 85, 90, 87, 92, 89, 95, 92, 98];
+                    dashboardState.charts.appointments.data.labels = Array.from({length: 30}, (_, i) => i + 1);
+                    break;
+                case 'quarter':
+                    data = [120, 135, 150, 145, 160, 175, 190, 185, 200, 215, 230, 225];
+                    dashboardState.charts.appointments.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    break;
+            }
+            
+            dashboardState.charts.appointments.data.datasets[0].data = data;
+            dashboardState.charts.appointments.update();
+        }
+
+        // Update Services Chart
+        function updateServicesChart(category) {
+            // In a real app, this would fetch new data based on the category
+            let data;
+            
+            switch(category) {
+                case 'all':
+                    data = [35, 25, 15, 10, 15];
+                    break;
+                case 'medical':
+                    data = [40, 30, 20, 10];
+                    dashboardState.charts.services.data.labels = ['Consultations', 'Vaccinations', 'Medications', 'Tests'];
+                    break;
+                case 'surgical':
+                    data = [30, 25, 20, 15, 10];
+                    dashboardState.charts.services.data.labels = ['Spay/Neuter', 'Dental', 'Orthopedic', 'Soft Tissue', 'Emergency'];
+                    break;
+            }
+            
+            dashboardState.charts.services.data.datasets[0].data = data;
+            dashboardState.charts.services.update();
+        }
+
+        // Update Appointments UI
+        function updateAppointmentsUI() {
+            // Update recent appointments activity
+            const activityList = document.getElementById('recent-appointments');
+            if (activityList) {
+                activityList.innerHTML = dashboardState.appointments.slice(0, 4).map(appointment => `
+                    <li class="activity-item">
+                        <div class="activity-icon appointment">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>${appointment.petName}</strong> - ${appointment.service}</p>
+                            <p class="time">${formatDate(appointment.date)} ${appointment.time} | ${appointment.vet}</p>
+                        </div>
+                    </li>
+                `).join('');
+            }
+            
+            // Update appointments table
+            const appointmentsTable = document.getElementById('appointments-table-body');
+            if (appointmentsTable) {
+                appointmentsTable.innerHTML = dashboardState.appointments.map(appointment => `
+                    <tr>
+                        <td>${appointment.petName}</td>
+                        <td>${appointment.service}</td>
+                        <td>${formatDate(appointment.date)} ${appointment.time}</td>
+                        <td>${appointment.vet}</td>
+                        <td><span class="status ${appointment.status}">${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn view" data-id="${appointment.id}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn edit" data-id="${appointment.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.action-btn.view').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const appointmentId = this.getAttribute('data-id');
+                        showToast(`Viewing appointment details for ID: ${appointmentId}`, 'info');
+                    });
+                });
+                
+                document.querySelectorAll('.action-btn.edit').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const appointmentId = this.getAttribute('data-id');
+                        showToast(`Editing appointment for ID: ${appointmentId}`, 'info');
+                    });
+                });
+            }
+        }
+
+        // Update Orders UI
+        function updateOrdersUI() {
+            const ordersTable = document.getElementById('orders-table-body');
+            if (ordersTable) {
+                ordersTable.innerHTML = dashboardState.orders.map(order => `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${order.customer.name}</td>
+                        <td>${order.items.map(item => item.name).join(', ')}</td>
+                        <td>R${order.total.toFixed(2)}</td>
+                        <td><span class="status ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
+                        <td>${formatDate(order.orderDate)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn view" data-id="${order.id}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn edit" data-id="${order.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.action-btn.view').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const orderId = this.getAttribute('data-id');
+                        showToast(`Viewing order details for ID: ${orderId}`, 'info');
+                    });
+                });
+                
+                document.querySelectorAll('.action-btn.edit').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const orderId = this.getAttribute('data-id');
+                        showToast(`Editing order for ID: ${orderId}`, 'info');
+                    });
+                });
+            }
+            
+            // Update recent payments activity
+            const paymentsList = document.getElementById('recent-payments');
+            if (paymentsList) {
+                paymentsList.innerHTML = dashboardState.orders.slice(0, 3).map(order => `
+                    <li class="activity-item">
+                        <div class="activity-icon payment">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>${order.customer.name}</strong> - R${order.total.toFixed(2)}</p>
+                            <p class="time">${formatDate(order.orderDate)} | ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</p>
+                        </div>
+                    </li>
+                `).join('');
+                
+                // Add a registration activity
+                paymentsList.innerHTML += `
+                    <li class="activity-item">
+                        <div class="activity-icon registration">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>New Patient Registered</strong></p>
+                            <p class="time">Today, 1:30 PM | Bailey (Rabbit)</p>
+                        </div>
+                    </li>
+                `;
+            }
+        }
+
+        // Update Stats UI
+        function updateStatsUI(stats) {
+            document.getElementById('today-appointments').textContent = stats.appointments;
+            document.getElementById('monthly-revenue').textContent = `R${stats.revenue.toLocaleString()}`;
+            document.getElementById('active-patients').textContent = stats.patients;
+            document.getElementById('low-stock').textContent = stats.lowStock;
+        }
+
+        // Team Management Functions
+        function showTeamModal(member = null) {
+            const modal = document.getElementById('team-modal');
+            const title = document.getElementById('team-modal-title');
+            const form = document.getElementById('team-form');
+            
+            if (member) {
+                // Editing existing member
+                title.textContent = 'Edit Team Member';
+                document.getElementById('team-name').value = member.name;
+                document.getElementById('team-position').value = member.position;
+                document.getElementById('team-specialization').value = member.specialization;
+                document.getElementById('team-description').value = member.description;
+                document.getElementById('team-email').value = member.email;
+                document.getElementById('team-status').value = member.status;
+                document.getElementById('team-photo-preview').src = member.photo;
+                dashboardState.editingTeamMember = member.id;
+            } else {
+                // Adding new member
+                title.textContent = 'Add Team Member';
+                form.reset();
+                document.getElementById('team-photo-preview').src = '';
+                dashboardState.editingTeamMember = null;
+            }
+            
+            modal.classList.add('active');
+        }
+
         function saveTeamMember() {
             const name = document.getElementById('team-name').value;
             const position = document.getElementById('team-position').value;
-            const bio = document.getElementById('team-bio').value;
+            const specialization = document.getElementById('team-specialization').value;
+            const description = document.getElementById('team-description').value;
             const email = document.getElementById('team-email').value;
+            const status = document.getElementById('team-status').value;
+            const photo = document.getElementById('team-photo-preview').src || 'https://via.placeholder.com/150';
             
-            if (!name || !position || !bio) {
+            if (!name || !position) {
                 showToast('Please fill in all required fields', 'error');
                 return;
             }
             
-            // In a real app, this would save to Firebase
-            if (currentEditingItem) {
-                // Update existing team member
-                const teamItem = Array.from(document.querySelectorAll('#team-editor .preview-item')).find(item => {
-                    return item.querySelector('h4').textContent === currentEditingItem;
-                });
-                
-                if (teamItem) {
-                    teamItem.querySelector('h4').textContent = name;
-                    teamItem.querySelector('p').textContent = position;
+            if (dashboardState.editingTeamMember) {
+                // Update existing member
+                const index = dashboardState.teamMembers.findIndex(m => m.id === dashboardState.editingTeamMember);
+                if (index !== -1) {
+                    dashboardState.teamMembers[index] = {
+                        ...dashboardState.teamMembers[index],
+                        name,
+                        position,
+                        specialization,
+                        description,
+                        email,
+                        status,
+                        photo
+                    };
                 }
-                
-                showToast(`Team member "${name}" updated successfully`, 'success');
+                showToast('Team member updated successfully', 'success');
             } else {
-                // Add new team member
-                const teamList = document.querySelector('#team-editor .preview-content');
-                const newMember = document.createElement('div');
-                newMember.className = 'preview-item';
-                newMember.innerHTML = `
-                    <div class="preview-item-info">
-                        <h4>${name}</h4>
-                        <p>${position}</p>
-                    </div>
-                    <div class="preview-item-actions">
-                        <button class="action-btn edit"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-                
-                teamList.appendChild(newMember);
-                
-                // Add event listeners to new buttons
-                newMember.querySelector('.action-btn.edit').addEventListener('click', function() {
-                    const itemElement = this.closest('.preview-item');
-                    const itemName = itemElement.querySelector('h4').textContent;
-                    const itemDescription = itemElement.querySelector('p').textContent;
-                    
-                    document.getElementById('team-name').value = itemName;
-                    document.getElementById('team-position').value = itemDescription;
-                    document.getElementById('team-bio').value = `Bio for ${itemName}, ${itemDescription}`;
-                    document.getElementById('team-email').value = `${itemName.toLowerCase().replace(' ', '.')}@pdsa.org.za`;
-                    
-                    currentEditingItem = itemName;
-                    
-                    document.querySelector('.editor-form').scrollIntoView({ behavior: 'smooth' });
-                });
-                
-                newMember.querySelector('.action-btn.delete').addEventListener('click', function() {
-                    const itemElement = this.closest('.preview-item');
-                    const itemName = itemElement.querySelector('h4').textContent;
-                    
-                    if (confirm(`Are you sure you want to delete "${itemName}"?`)) {
-                        itemElement.remove();
-                        showToast(`"${itemName}" has been deleted`, 'success');
-                    }
-                });
-                
-                showToast(`Team member "${name}" added successfully`, 'success');
+                // Add new member
+                const newMember = {
+                    id: Date.now(),
+                    name,
+                    position,
+                    specialization,
+                    description,
+                    email,
+                    status,
+                    photo
+                };
+                dashboardState.teamMembers.push(newMember);
+                showToast('Team member added successfully', 'success');
             }
             
-            resetForm('team-editor');
-            currentEditingItem = null;
+            hideModal('team-modal');
+            loadTeamMembers();
         }
 
-        // Save general settings
-        function saveGeneralSettings(editorId) {
-            if (editorId === 'hero-editor') {
-                websiteData.hero.title = document.getElementById('hero-title').value;
-                websiteData.hero.description = document.getElementById('hero-description').value;
-                websiteData.hero.button1 = document.getElementById('hero-button1-text').value;
-                websiteData.hero.button2 = document.getElementById('hero-button2-text').value;
-                websiteData.hero.emergency = document.getElementById('emergency-number').value;
-                
-                showToast('Hero section updated successfully', 'success');
-            } else if (editorId === 'contact-editor') {
-                websiteData.contact.name = document.getElementById('clinic-name').value;
-                websiteData.contact.address = document.getElementById('clinic-address').value;
-                websiteData.contact.phone = document.getElementById('clinic-phone').value;
-                websiteData.contact.email = document.getElementById('clinic-email').value;
-                websiteData.contact.hours.weekdays = document.getElementById('clinic-hours-weekdays').value;
-                websiteData.contact.hours.saturday = document.getElementById('clinic-hours-saturday').value;
-                websiteData.contact.hours.sunday = document.getElementById('clinic-hours-sunday').value;
-                websiteData.contact.map = document.getElementById('google-maps-embed').value;
-                
-                showToast('Contact information updated successfully', 'success');
+        function editTeamMember(id) {
+            const member = dashboardState.teamMembers.find(m => m.id === parseInt(id));
+            if (member) {
+                showTeamModal(member);
             }
-            
-            // In a real app, this would save to Firebase
-            console.log('Updated website data:', websiteData);
         }
 
-        // Publish changes
-        function publishChanges() {
-            // In a real app, this would deploy the changes to the live website
-            showToast('Changes published successfully! The website has been updated.', 'success');
-        }
-
-        // Reset form
-        function resetForm(editorId) {
-            const form = document.querySelector(`#${editorId} .editor-form`);
-            if (form) {
-                form.reset();
+        function deleteTeamMember(id) {
+            if (confirm('Are you sure you want to delete this team member?')) {
+                dashboardState.teamMembers = dashboardState.teamMembers.filter(m => m.id !== parseInt(id));
+                loadTeamMembers();
+                showToast('Team member deleted successfully', 'success');
             }
+        }
+
+        // Website Content Management
+        function saveWebsiteContent() {
+            dashboardState.websiteContent.clinicName = document.getElementById('clinic-name').value;
+            dashboardState.websiteContent.heroTitle = document.getElementById('hero-title').value;
+            dashboardState.websiteContent.heroDescription = document.getElementById('hero-description').value;
+            dashboardState.websiteContent.emergencyNumber = document.getElementById('emergency-number').value;
+            dashboardState.websiteContent.clinicAddress = document.getElementById('clinic-address').value;
+            dashboardState.websiteContent.contactEmail = document.getElementById('contact-email').value;
+            dashboardState.websiteContent.logo = document.getElementById('logo-preview').src;
             
-            const imagePreviews = document.querySelectorAll(`#${editorId} .image-preview`);
-            imagePreviews.forEach(preview => {
-                preview.style.display = 'none';
-                preview.innerHTML = '';
+            showToast('Website content saved successfully', 'success');
+        }
+
+        // Utility Functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function formatDate(date) {
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            };
+            return new Date(date).toLocaleDateString('en-US', options);
+        }
+
+        function updateLastUpdateTime() {
+            dashboardState.lastUpdate = new Date();
+        }
+
+        function showUserMenu() {
+            // Remove existing dropdown if any
+            const existingDropdown = document.querySelector('.user-dropdown');
+            if (existingDropdown) {
+                existingDropdown.remove();
+                return;
+            }
+
+            // Create dropdown menu
+            const dropdown = document.createElement('div');
+            dropdown.className = 'user-dropdown';
+            
+            dropdown.innerHTML = `
+                <a href="#"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#"><i class="fas fa-cog"></i> Account Settings</a>
+                <a href="#"><i class="fas fa-bell"></i> Notification Preferences</a>
+                <hr>
+                <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            `;
+            
+            document.body.appendChild(dropdown);
+            
+            // Add logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                showToast('Logging out...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'admin-login.html';
+                }, 1000);
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!dropdown.contains(e.target) && e.target !== document.getElementById('user-profile')) {
+                    dropdown.remove();
+                    document.removeEventListener('click', closeDropdown);
+                }
             });
         }
 
-        // Show notification
+        function showNotifications() {
+            showToast('Notifications panel would open here', 'info');
+        }
+
+        function showMessages() {
+            showToast('Messages panel would open here', 'info');
+        }
+
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
                 <span>${message}</span>
             `;
             document.getElementById('toast-container').appendChild(toast);
@@ -2003,6 +2439,163 @@
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 300);
             }, 5000);
+        }
+
+        // Simulate Real-time Updates
+        function simulateRealTimeUpdates() {
+            setInterval(() => {
+                if (!dashboardState.realTimeUpdates) return;
+                
+                // Randomly update notification counts
+                const notificationCount = Math.floor(Math.random() * 10);
+                const messageCount = Math.floor(Math.random() * 5);
+                
+                document.getElementById('notification-count').textContent = notificationCount;
+                document.getElementById('message-count').textContent = messageCount;
+                
+                // Occasionally add a new appointment or order
+                if (Math.random() > 0.7) {
+                    const newAppointment = {
+                        id: Date.now(),
+                        petName: 'New Patient',
+                        service: 'Checkup',
+                        date: new Date(Date.now() + 86400000),
+                        time: '10:00 AM',
+                        vet: 'Available Vet',
+                        status: 'pending'
+                    };
+                    
+                    dashboardState.appointments.unshift(newAppointment);
+                    updateAppointmentsUI();
+                    
+                    // Highlight the new row
+                    const newRow = document.querySelector(`[data-id="${newAppointment.id}"]`).closest('tr');
+                    if (newRow) newRow.classList.add('new-item');
+                    
+                    showToast(`New appointment scheduled for ${newAppointment.petName}`, 'info');
+                }
+                
+                if (Math.random() > 0.8) {
+                    const newOrder = {
+                        id: `ORD-${Date.now()}`,
+                        customer: { name: 'New Customer' },
+                        items: [{ name: 'Pet Supplies' }],
+                        total: Math.floor(Math.random() * 500) + 50,
+                        status: 'processing',
+                        orderDate: new Date()
+                    };
+                    
+                    dashboardState.orders.unshift(newOrder);
+                    updateOrdersUI();
+                    
+                    // Highlight the new row
+                    const newRow = document.querySelector(`[data-id="${newOrder.id}"]`).closest('tr');
+                    if (newRow) newRow.classList.add('new-item');
+                    
+                    showToast(`New order received: ${newOrder.id}`, 'info');
+                }
+                
+                // Update stats occasionally
+                if (Math.random() > 0.9) {
+                    dashboardState.stats.appointments += Math.floor(Math.random() * 3) - 1;
+                    dashboardState.stats.revenue += Math.floor(Math.random() * 200) - 100;
+                    dashboardState.stats.patients += Math.floor(Math.random() * 2);
+                    dashboardState.stats.lowStock += Math.floor(Math.random() * 3) - 1;
+                    
+                    // Ensure stats don't go negative
+                    dashboardState.stats.appointments = Math.max(0, dashboardState.stats.appointments);
+                    dashboardState.stats.revenue = Math.max(0, dashboardState.stats.revenue);
+                    dashboardState.stats.patients = Math.max(0, dashboardState.stats.patients);
+                    dashboardState.stats.lowStock = Math.max(0, dashboardState.stats.lowStock);
+                    
+                    updateStatsUI(dashboardState.stats);
+                }
+            }, 10000); // Update every 10 seconds
+        }
+
+        // Filter Dashboard Data
+        function filterDashboardData(searchTerm) {
+            if (searchTerm.length < 2) {
+                // Reset to original data if search term is too short
+                updateAppointmentsUI();
+                updateOrdersUI();
+                return;
+            }
+            
+            // Filter appointments
+            const filteredAppointments = dashboardState.appointments.filter(appointment => 
+                appointment.petName.toLowerCase().includes(searchTerm) ||
+                appointment.service.toLowerCase().includes(searchTerm) ||
+                appointment.vet.toLowerCase().includes(searchTerm)
+            );
+            
+            // Filter orders
+            const filteredOrders = dashboardState.orders.filter(order => 
+                order.customer.name.toLowerCase().includes(searchTerm) ||
+                order.id.toLowerCase().includes(searchTerm) ||
+                order.items.some(item => item.name.toLowerCase().includes(searchTerm))
+            );
+            
+            // Update UI with filtered data
+            updateFilteredAppointmentsUI(filteredAppointments);
+            updateFilteredOrdersUI(filteredOrders);
+            
+            if (filteredAppointments.length === 0 && filteredOrders.length === 0) {
+                showToast('No results found for your search', 'info');
+            }
+        }
+
+        // Update Filtered Appointments UI
+        function updateFilteredAppointmentsUI(filteredAppointments) {
+            const appointmentsTable = document.getElementById('appointments-table-body');
+            if (appointmentsTable) {
+                appointmentsTable.innerHTML = filteredAppointments.map(appointment => `
+                    <tr>
+                        <td>${appointment.petName}</td>
+                        <td>${appointment.service}</td>
+                        <td>${formatDate(appointment.date)} ${appointment.time}</td>
+                        <td>${appointment.vet}</td>
+                        <td><span class="status ${appointment.status}">${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn view" data-id="${appointment.id}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn edit" data-id="${appointment.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Update Filtered Orders UI
+        function updateFilteredOrdersUI(filteredOrders) {
+            const ordersTable = document.getElementById('orders-table-body');
+            if (ordersTable) {
+                ordersTable.innerHTML = filteredOrders.map(order => `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${order.customer.name}</td>
+                        <td>${order.items.map(item => item.name).join(', ')}</td>
+                        <td>R${order.total.toFixed(2)}</td>
+                        <td><span class="status ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
+                        <td>${formatDate(order.orderDate)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn view" data-id="${order.id}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn edit" data-id="${order.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
         }
     </script>
 </body>

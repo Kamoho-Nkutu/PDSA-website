@@ -30,6 +30,7 @@
             background-color: #f5f7fa;
             color: #333;
             line-height: 1.6;
+            overflow-x: hidden;
         }
         
         /* Header Styles */
@@ -60,10 +61,21 @@
             font-size: 1.5rem;
         }
         
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
         nav ul {
             display: flex;
             list-style: none;
-            gap: 20px;
+            gap: 5px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav li {
+            position: relative;
         }
         
         nav a {
@@ -161,6 +173,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            text-decoration: none;
         }
         
         .btn-primary {
@@ -209,25 +222,25 @@
             background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80');
             background-size: cover;
             background-position: center;
-            height: 70vh;
+            min-height: 70vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             color: white;
-            padding: 0 2rem;
+            padding: 2rem;
             position: relative;
         }
         
         .hero h2 {
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
             margin-bottom: 1rem;
             animation: fadeInDown 1s ease;
         }
         
         .hero p {
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 2vw, 1.2rem);
             margin-bottom: 2rem;
             max-width: 700px;
             animation: fadeInUp 1s ease;
@@ -237,6 +250,8 @@
             display: flex;
             gap: 15px;
             animation: fadeIn 1.5s ease;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
         .emergency-banner {
@@ -251,6 +266,14 @@
             align-items: center;
             gap: 8px;
             animation: pulse 2s infinite;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .emergency-banner:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
         }
         
         /* Services Section */
@@ -265,7 +288,7 @@
         }
         
         .section-title h2 {
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 3vw, 2rem);
             color: var(--primary);
             margin-bottom: 1rem;
             position: relative;
@@ -650,347 +673,6 @@
             gap: 10px;
         }
         
-        /* Checkout Styles */
-        .checkout-container {
-            padding: 1rem;
-        }
-        
-        .checkout-steps {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-        
-        .checkout-steps::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: #eee;
-            z-index: 1;
-        }
-        
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .step-number {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #eee;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-        
-        .step.active .step-number {
-            background-color: var(--secondary);
-            color: white;
-        }
-        
-        .step.completed .step-number {
-            background-color: var(--success);
-            color: white;
-        }
-        
-        .step-label {
-            font-size: 0.8rem;
-            color: #666;
-        }
-        
-        .step.active .step-label {
-            color: var(--primary);
-            font-weight: bold;
-        }
-        
-        .checkout-step {
-            display: none;
-        }
-        
-        .checkout-step.active {
-            display: block;
-        }
-        
-        .checkout-items {
-            margin-bottom: 1.5rem;
-        }
-        
-        .checkout-item {
-            display: flex;
-            gap: 10px;
-            padding: 1rem 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .checkout-item-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .checkout-item-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .checkout-item-details {
-            flex: 1;
-        }
-        
-        .checkout-item-details h4 {
-            margin-bottom: 0.25rem;
-            font-size: 0.9rem;
-        }
-        
-        .checkout-item-price {
-            color: var(--secondary);
-            font-size: 0.9rem;
-        }
-        
-        .checkout-item-total {
-            font-weight: bold;
-        }
-        
-        .checkout-summary {
-            background-color: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-        
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-        
-        .summary-total {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid #ddd;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        
-        .checkout-actions {
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .payment-methods {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 1.5rem;
-        }
-        
-        .payment-method {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .payment-method:hover, .payment-method.selected {
-            border-color: var(--secondary);
-            background-color: rgba(52, 152, 219, 0.05);
-        }
-        
-        .payment-method i {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
-        }
-        
-        .payment-form {
-            display: none;
-            margin-bottom: 1.5rem;
-        }
-        
-        .payment-form.active {
-            display: block;
-        }
-        
-        .bank-details {
-            background-color: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-        
-        .bank-details p {
-            margin-bottom: 0.5rem;
-        }
-        
-        .order-confirmation {
-            text-align: center;
-            padding: 2rem 0;
-        }
-        
-        .confirmation-icon {
-            font-size: 4rem;
-            color: var(--success);
-            margin-bottom: 1rem;
-        }
-        
-        .order-summary {
-            text-align: left;
-            margin: 2rem 0;
-            padding: 1rem;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-        }
-        
-        .order-summary h4 {
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-        
-        .order-summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-        
-        .order-total {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid #ddd;
-            font-weight: bold;
-        }
-        
-        .confirmation-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-        
-        /* Appointment Section */
-        .appointment {
-            padding: 4rem 2rem;
-            background-color: var(--light);
-        }
-        
-        .appointment-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-        
-        .appointment-info {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .appointment-info h2 {
-            font-size: 2rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-        
-        .appointment-info p {
-            margin-bottom: 1.5rem;
-            color: #666;
-        }
-        
-        .appointment-features {
-            margin-bottom: 2rem;
-        }
-        
-        .feature-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 1rem;
-        }
-        
-        .feature-icon {
-            background-color: var(--secondary);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        
-        .appointment-form {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .form-title {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: var(--primary);
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--dark);
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--secondary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
-        
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
         /* About Section */
         .about {
             padding: 4rem 2rem;
@@ -1019,7 +701,7 @@
         }
         
         .about-content h2 {
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 3vw, 2rem);
             color: var(--primary);
             margin-bottom: 1.5rem;
         }
@@ -1308,7 +990,7 @@
         }
         
         .contact-info h2 {
-            font-size: 2rem;
+            font-size: clamp(1.5rem, 3vw, 2rem);
             color: var(--primary);
             margin-bottom: 1.5rem;
         }
@@ -1476,41 +1158,51 @@
         }
         
         /* Modal Styles */
-        .modal {
-            display: none;
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 1000;
+            display: none;
             justify-content: center;
             align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s;
         }
         
-        .modal.active {
+        .modal-overlay.active {
             display: flex;
-            opacity: 1;
         }
         
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
+        .modal-dialog {
+            background: white;
             border-radius: 8px;
             width: 90%;
             max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
-            transform: translateY(-20px);
-            transition: transform 0.3s;
         }
         
-        .modal.active .modal-content {
-            transform: translateY(0);
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
         }
         
         .close-modal {
@@ -1525,12 +1217,6 @@
         
         .close-modal:hover {
             color: var(--danger);
-        }
-        
-        .modal h2 {
-            margin-bottom: 1.5rem;
-            color: var(--primary);
-            text-align: center;
         }
         
         .form-footer {
@@ -1595,32 +1281,324 @@
             font-size: 1.2rem;
         }
         
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        /* Additional styles for user authentication */
+        .auth-required {
+            position: relative;
+        }
+        
+        .auth-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            z-index: 10;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .auth-overlay h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .auth-overlay p {
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+        
+        .login-prompt {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 0.5rem 0;
+            min-width: 150px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--dark);
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .user-dropdown a:hover {
+            background-color: var(--light);
+        }
+        
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+        
+        /* Appointment Modal Styles */
+        .appointment-modal .modal-dialog {
+            max-width: 700px;
+        }
+        
+        .appointment-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .appointment-form .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .appointment-form .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .appointment-calendar {
+            margin-bottom: 1.5rem;
+        }
+        
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .time-slot {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .time-slot:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .time-slot.selected {
+            background-color: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+        
+        .time-slot.unavailable {
+            background-color: #f8f8f8;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        /* User Dashboard */
+        .dashboard {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-section {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .dashboard-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .dashboard-card {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .dashboard-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-card p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-card .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-confirmed { background: #d1ecf1; color: #0c5460; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        
+        /* Admin specific styles */
+        .admin-panel {
+            background: #f8f9fa;
+            border-left: 4px solid var(--danger);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary);
+            display: block;
+        }
+        
+        .stat-card .label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner i {
+            font-size: 2rem;
+            color: var(--secondary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Stock Status */
+        .stock-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+        
+        .in-stock {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .low-stock {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .out-of-stock {
+            background-color: var(--danger);
+            color: white;
+        }
+        
         /* Responsive Styles */
-        @media (max-width: 1200px) {
-            .pet-profile {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 992px) {
-            .about-container,
-            .contact-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .contact-map {
-                min-height: 400px;
-                order: -1;
-            }
-        }
-        
         @media (max-width: 768px) {
-            .appointment-container {
-                grid-template-columns: 1fr;
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
             }
             
             nav ul {
                 display: none;
+            }
+            
+            .hero {
+                min-height: 60vh;
+                padding: 1rem;
             }
             
             .hero h2 {
@@ -1631,15 +1609,25 @@
                 font-size: 1rem;
             }
             
-            .detail-grid {
+            .about-container,
+            .contact-container {
                 grid-template-columns: 1fr;
+            }
+            
+            .contact-map {
+                min-height: 400px;
+                order: -1;
+            }
+            
+            .appointment-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .time-slots {
+                grid-template-columns: repeat(3, 1fr);
             }
             
             .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .payment-methods {
                 grid-template-columns: 1fr;
             }
             
@@ -1648,16 +1636,20 @@
                 right: -100%;
             }
             
-            .confirmation-actions {
-                flex-direction: column;
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .services, .products, .about, .team, .testimonials, .faq, .contact {
+                padding: 2rem 1rem;
             }
         }
         
         @media (max-width: 576px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .hero-buttons {
                 flex-direction: column;
                 width: 100%;
@@ -1677,6 +1669,23 @@
             
             .product-actions {
                 flex-direction: column;
+            }
+            
+            .time-slots {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-dialog {
+                width: 95%;
+                margin: 1rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -1759,17 +1768,31 @@
                 <button class="btn btn-primary" id="register-btn">
                     <i class="fas fa-user-plus"></i> Register
                 </button>
-                <a href="admin-login.html" class="admin-link">
+                <a href="admin-login.html" class="admin-link" id="admin-link" style="display: none;">
                     <i class="fas fa-cog"></i> Admin
                 </a>
+                <div id="user-menu" style="display: none;">
+                    <div class="user-profile">
+                        <span id="user-name"></span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="#" id="user-dashboard-link">Dashboard</a>
+                            <a href="#" id="user-profile-link">My Profile</a>
+                            <a href="#" id="my-pets-link">My Pets</a>
+                            <a href="#" id="my-appointments-link">Appointments</a>
+                            <a href="#" id="my-orders-link">Orders</a>
+                            <a href="#" id="logout-link">Logout</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
         <section class="hero" id="home">
-            <div class="emergency-banner">
+            <a href="tel:10111" class="emergency-banner" id="emergency-banner">
                 <i class="fas fa-phone-alt"></i>
-                <span>Emergency: 011 984 4340</span>
-            </div>
+                <span>Emergency: 10111</span>
+            </a>
             <h2>Compassionate Care for Your Pets</h2>
             <p>PDSA provides quality veterinary services to pets in Mfolo, Soweto. Book an appointment today and give your pet the care they deserve.</p>
             <div class="hero-buttons">
@@ -1841,7 +1864,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-img">
-                        <img src="https://images.unsplash.com/photo-1553284965-e2815db2e5a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=c crop&w=2070&q=80" alt="Microchipping">
+                        <img src="https://images.unsplash.com/photo-1553284965-e2815db2e5a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Microchipping">
                     </div>
                     <div class="service-content">
                         <h3>Microchipping</h3>
@@ -1909,7 +1932,14 @@
             
             <div class="products-grid">
                 <!-- Product 1 -->
-                <div class="product-card" data-category="food">
+                <div class="product-card auth-required" data-category="food">
+                    <div class="auth-overlay" id="product-auth-overlay-1">
+                        <h3>Login Required</h3>
+                        <p>Please login to add products to your cart</p>
+                        <button class="btn btn-primary" id="login-from-product">
+                            <i class="fas fa-sign-in-alt"></i> Login Now
+                        </button>
+                    </div>
                     <div class="product-img">
                         <img src="https://images.unsplash.com/photo-1589923188937-cb64779f4abe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80" alt="Premium Dog Food">
                         <div class="product-badge">Bestseller</div>
@@ -1939,7 +1969,14 @@
                 </div>
                 
                 <!-- Product 2 -->
-                <div class="product-card" data-category="toys">
+                <div class="product-card auth-required" data-category="toys">
+                    <div class="auth-overlay" id="product-auth-overlay-2">
+                        <h3>Login Required</h3>
+                        <p>Please login to add products to your cart</p>
+                        <button class="btn btn-primary" id="login-from-product">
+                            <i class="fas fa-sign-in-alt"></i> Login Now
+                        </button>
+                    </div>
                     <div class="product-img">
                         <img src="https://images.unsplash.com/photo-1550747534-8c5da7c08b71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80" alt="Interactive Cat Toy">
                     </div>
@@ -1968,7 +2005,14 @@
                 </div>
                 
                 <!-- Product 3 -->
-                <div class="product-card" data-category="health">
+                <div class="product-card auth-required" data-category="health">
+                    <div class="auth-overlay" id="product-auth-overlay-3">
+                        <h3>Login Required</h3>
+                        <p>Please login to add products to your cart</p>
+                        <button class="btn btn-primary" id="login-from-product">
+                            <i class="fas fa-sign-in-alt"></i> Login Now
+                        </button>
+                    </div>
                     <div class="product-img">
                         <img src="https://images.unsplash.com/photo-1597484661643-3adc745bbd4a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Flea & Tick Treatment">
                         <div class="product-badge">Sale</div>
@@ -1998,7 +2042,14 @@
                 </div>
                 
                 <!-- Product 4 -->
-                <div class="product-card" data-category="accessories">
+                <div class="product-card auth-required" data-category="accessories">
+                    <div class="auth-overlay" id="product-auth-overlay-4">
+                        <h3>Login Required</h3>
+                        <p>Please login to add products to your cart</p>
+                        <button class="btn btn-primary" id="login-from-product">
+                            <i class="fas fa-sign-in-alt"></i> Login Now
+                        </button>
+                    </div>
                     <div class="product-img">
                         <img src="https://images.unsplash.com/photo-1551290464-4a2e098d03a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2076&q=80" alt="Designer Dog Collar">
                     </div>
@@ -2027,7 +2078,14 @@
                 </div>
                 
                 <!-- Product 5 -->
-                <div class="product-card" data-category="food">
+                <div class="product-card auth-required" data-category="food">
+                    <div class="auth-overlay" id="product-auth-overlay-5">
+                        <h3>Login Required</h3>
+                        <p>Please login to add products to your cart</p>
+                        <button class="btn btn-primary" id="login-from-product">
+                            <i class="fas fa-sign-in-alt"></i> Login Now
+                        </button>
+                    </div>
                     <div class="product-img">
                         <img src="https://images.unsplash.com/photo-1597848212620-4f5f3d3b3db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80" alt="Grain-Free Cat Food">
                     </div>
@@ -2056,7 +2114,14 @@
                 </div>
                 
                 <!-- Product 6 -->
-                <div class="product-card" data-category="health">
+                <div class="product-card auth-required" data-category="health">
+                    <div class="auth-overlay" id="product-auth-overlay-6">
+                        <h3>Login Required</h3>
+                        <p>Please login to add products to your cart</p>
+                        <button class="btn btn-primary" id="login-from-product">
+                            <i class="fas fa-sign-in-alt"></i> Login Now
+                        </button>
+                    </div>
                     <div class="product-img">
                         <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" alt="Joint Supplement">
                     </div>
@@ -2082,109 +2147,6 @@
                             <button class="btn btn-primary add-to-cart" data-product-id="prod6" data-product-name="Joint Supplement" data-product-price="289.99"><i class="fas fa-cart-plus"></i> Add to Cart</button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="appointment" id="appointment">
-            <div class="appointment-container">
-                <div class="appointment-info">
-                    <h2>Book an Appointment</h2>
-                    <p>Schedule a visit with our experienced veterinarians. We offer flexible appointment times to suit your schedule.</p>
-                    <p>Emergency cases will always be seen as soon as possible.</p>
-                    
-                    <div class="appointment-features">
-                        <div class="feature-item">
-                            <div class="feature-icon">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <p>Same-day appointments available for urgent cases</p>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <p>Evening and weekend appointments</p>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <p>Reminder notifications via email and SMS</p>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">
-                            <i class="fas fa-phone-alt"></i>
-                        </div>
-                        <p><strong>Emergency Hotline:</strong> 011 984 4340 (24/7)</p>
-                    </div>
-                </div>
-                <div class="appointment-form">
-                    <h3 class="form-title">Schedule Your Visit</h3>
-                    <form id="booking-form">
-                        <div class="form-group">
-                            <label for="name">Your Name</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone Number</label>
-                                <input type="tel" id="phone" name="phone" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="pet">Pet Type</label>
-                            <select id="pet" name="pet" required>
-                                <option value="">Select Pet Type</option>
-                                <option value="dog">Dog</option>
-                                <option value="cat">Cat</option>
-                                <option value="rabbit">Rabbit</option>
-                                <option value="bird">Bird</option>
-                                <option value="reptile">Reptile</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="service">Service Required</label>
-                            <select id="service" name="service" required>
-                                <option value="">Select Service</option>
-                                <option value="consultation">General Consultation (R250)</option>
-                                <option value="vaccination">Vaccination (R250-R350)</option>
-                                <option value="surgery">Surgery (Price varies)</option>
-                                <option value="dental">Dental Care (R450-R800)</option>
-                                <option value="emergency">Emergency Consultation (R500)</option>
-                                <option value="microchip">Microchipping (R350)</option>
-                                <option value="grooming">Grooming (R250+)</option>
-                                <option value="other">Other Service</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="date">Preferred Date</label>
-                                <input type="text" id="date" name="date" class="datepicker" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="time">Preferred Time</label>
-                                <select id="time" name="time" required>
-                                    <option value="">Select Time</option>
-                                    <!-- Times will be populated by JavaScript -->
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="notes">Additional Notes</label>
-                            <textarea id="notes" name="notes" placeholder="Tell us about your pet's condition or any special requirements"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            <i class="fas fa-calendar-check"></i> Book Appointment
-                        </button>
-                    </form>
                 </div>
             </div>
         </section>
@@ -2481,16 +2443,16 @@
                         <li><a href="#about"><i class="fas fa-chevron-right"></i> About Us</a></li>
                         <li><a href="#team"><i class="fas fa-chevron-right"></i> Our Team</a></li>
                         <li><a href="#contact"><i class="fas fa-chevron-right"></i> Contact</a></li>
-                        <li><a href="#appointment"><i class="fas fa-chevron-right"></i> Book Appointment</a></li>
+                        <li><a href="#" id="footer-book-appointment"><i class="fas fa-chevron-right"></i> Book Appointment</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
                     <h3>Services</h3>
                     <ul>
-                        <li><a href="veterinaryclinic.html"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
-                        <li><a href="Surgical-Procedures.html"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
-                        <li><a href="dental-care.html"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
-                        <li><a href="emergency-care.html"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Microchipping</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
                     </ul>
@@ -2518,7 +2480,6 @@
             <button class="close-cart" id="close-cart">&times;</button>
         </div>
         <div class="cart-items" id="cart-items">
-            <!-- Cart items will be dynamically added here -->
             <div class="empty-cart-message" id="empty-cart-message">
                 <i class="fas fa-shopping-cart"></i>
                 <p>Your cart is empty</p>
@@ -2537,197 +2498,175 @@
         </div>
     </div>
 
-    <!-- Checkout Modal -->
-    <div class="modal" id="checkout-modal">
-        <div class="modal-content" style="max-width: 800px;">
-            <span class="close-modal">&times;</span>
-            <h2>Checkout</h2>
-            
-            <div class="checkout-container">
-                <div class="checkout-steps">
-                    <div class="step active" data-step="1">
-                        <div class="step-number">1</div>
-                        <div class="step-label">Cart</div>
+    <!-- Enhanced Modals -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2>Login to Your Account</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email Address</label>
+                        <input type="email" id="login-email" name="email" required>
                     </div>
-                    <div class="step" data-step="2">
-                        <div class="step-number">2</div>
-                        <div class="step-label">Information</div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required>
                     </div>
-                    <div class="step" data-step="3">
-                        <div class="step-number">3</div>
-                        <div class="step-label">Payment</div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
                     </div>
-                    <div class="step" data-step="4">
-                        <div class="step-number">4</div>
-                        <div class="step-label">Confirmation</div>
+                    <div class="form-footer">
+                        <p>Don't have an account? <a href="#" id="show-register">Register here</a></p>
                     </div>
-                </div>
-                
-                <div class="checkout-content">
-                    <!-- Step 1: Cart Review -->
-                    <div class="checkout-step active" id="step-1">
-                        <h3>Review Your Order</h3>
-                        <div class="checkout-items" id="checkout-items">
-                            <!-- Items will be populated by JavaScript -->
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="register-modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2>Create New Account</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="register-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="register-firstname">First Name</label>
+                            <input type="text" id="register-firstname" name="firstname" required>
                         </div>
-                        <div class="checkout-summary">
-                            <div class="summary-item">
-                                <span>Subtotal</span>
-                                <span id="checkout-subtotal">R0.00</span>
-                            </div>
-                            <div class="summary-item">
-                                <span>Shipping</span>
-                                <span id="checkout-shipping">R49.99</span>
-                            </div>
-                            <div class="summary-item">
-                                <span>Tax</span>
-                                <span id="checkout-tax">R0.00</span>
-                            </div>
-                            <div class="summary-total">
-                                <span>Total</span>
-                                <span id="checkout-total">R0.00</span>
-                            </div>
-                        </div>
-                        <div class="checkout-actions">
-                            <button class="btn btn-outline" id="back-to-cart">Back to Cart</button>
-                            <button class="btn btn-primary" id="step-1-continue">Continue to Information</button>
+                        <div class="form-group">
+                            <label for="register-lastname">Last Name</label>
+                            <input type="text" id="register-lastname" name="lastname" required>
                         </div>
                     </div>
-                    
-                    <!-- Step 2: Customer Information -->
-                    <div class="checkout-step" id="step-2">
-                        <h3>Shipping Information</h3>
-                        <form id="shipping-form">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="shipping-first-name">First Name</label>
-                                    <input type="text" id="shipping-first-name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="shipping-last-name">Last Name</label>
-                                    <input type="text" id="shipping-last-name" required>
-                                </div>
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input type="email" id="register-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-phone">Phone Number</label>
+                        <input type="tel" id="register-phone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-address">Address</label>
+                        <textarea id="register-address" name="address" rows="2"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="register-password">Password</label>
+                            <input type="password" id="register-password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-confirm-password">Confirm Password</label>
+                            <input type="password" id="register-confirm-password" name="confirmPassword" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </div>
+                    <div class="form-footer">
+                        <p>Already have an account? <a href="#" id="show-login">Login here</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Appointment Modal -->
+    <div class="modal-overlay" id="appointment-modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2>Book an Appointment</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="appointment-step-1">
+                    <form id="appointment-form">
+                        <div class="form-group">
+                            <label for="appointment-pet">Select Pet</label>
+                            <select id="appointment-pet" required>
+                                <option value="">Select a pet</option>
+                            </select>
+                            <small><a href="#" id="add-pet-link">Add new pet</a></small>
+                        </div>
+                        <div class="form-group">
+                            <label for="appointment-service">Service Type</label>
+                            <select id="appointment-service" required>
+                                <option value="">Select a service</option>
+                                <option value="1">General Checkup - R250</option>
+                                <option value="2">Vaccination - R200</option>
+                                <option value="3">Dental Cleaning - R450</option>
+                                <option value="4">Spaying/Neutering - R800</option>
+                                <option value="5">Microchipping - R350</option>
+                                <option value="6">Grooming Service - R250</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="appointment-date">Preferred Date</label>
+                                <input type="date" id="appointment-date" required min="">
                             </div>
                             <div class="form-group">
-                                <label for="shipping-email">Email Address</label>
-                                <input type="email" id="shipping-email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="shipping-phone">Phone Number</label>
-                                <input type="tel" id="shipping-phone" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="shipping-address">Address</label>
-                                <input type="text" id="shipping-address" required>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="shipping-city">City</label>
-                                    <input type="text" id="shipping-city" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="shipping-postal-code">Postal Code</label>
-                                    <input type="text" id="shipping-postal-code" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="shipping-method">Shipping Method</label>
-                                <select id="shipping-method" required>
-                                    <option value="standard">Standard Delivery (3-5 business days) - R49.99</option>
-                                    <option value="express">Express Delivery (1-2 business days) - R99.99</option>
+                                <label for="appointment-time">Preferred Time</label>
+                                <select id="appointment-time" required>
+                                    <option value="">Select a time</option>
+                                    <option value="09:00">09:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="14:00">02:00 PM</option>
+                                    <option value="15:00">03:00 PM</option>
+                                    <option value="16:00">04:00 PM</option>
                                 </select>
                             </div>
-                        </form>
-                        <div class="checkout-actions">
-                            <button class="btn btn-outline" id="step-2-back">Back</button>
-                            <button class="btn btn-primary" id="step-2-continue">Continue to Payment</button>
                         </div>
-                    </div>
-                    
-                    <!-- Step 3: Payment -->
-                    <div class="checkout-step" id="step-3">
-                        <h3>Payment Method</h3>
-                        <div class="payment-methods">
-                            <div class="payment-method" data-method="credit-card">
-                                <i class="fas fa-credit-card"></i>
-                                <span>Credit Card</span>
-                            </div>
-                            <div class="payment-method" data-method="paypal">
-                                <i class="fab fa-paypal"></i>
-                                <span>PayPal</span>
-                            </div>
-                            <div class="payment-method" data-method="bank-transfer">
-                                <i class="fas fa-university"></i>
-                                <span>Bank Transfer</span>
-                            </div>
+                        <div class="form-group">
+                            <label for="appointment-reason">Reason for Visit</label>
+                            <textarea id="appointment-reason" rows="3" placeholder="Please describe the reason for your visit"></textarea>
                         </div>
-                        
-                        <div class="payment-form credit-card-form active" id="credit-card-form">
-                            <div class="form-group">
-                                <label for="card-number">Card Number</label>
-                                <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-calendar-check"></i> Book Appointment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div id="appointment-step-2" style="display: none;">
+                    <div class="appointment-confirmation">
+                        <h3>Appointment Confirmation</h3>
+                        <div class="confirmation-details">
+                            <div class="confirmation-item">
+                                <span class="confirmation-label">Pet:</span>
+                                <span class="confirmation-value" id="confirm-pet"></span>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="card-expiry">Expiry Date</label>
-                                    <input type="text" id="card-expiry" placeholder="MM/YY" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="card-cvc">CVC</label>
-                                    <input type="text" id="card-cvc" placeholder="123" required>
-                                </div>
+                            <div class="confirmation-item">
+                                <span class="confirmation-label">Service:</span>
+                                <span class="confirmation-value" id="confirm-service"></span>
                             </div>
-                            <div class="form-group">
-                                <label for="card-name">Name on Card</label>
-                                <input type="text" id="card-name" required>
+                            <div class="confirmation-item">
+                                <span class="confirmation-label">Date:</span>
+                                <span class="confirmation-value" id="confirm-date"></span>
+                            </div>
+                            <div class="confirmation-item">
+                                <span class="confirmation-label">Time:</span>
+                                <span class="confirmation-value" id="confirm-time"></span>
+                            </div>
+                            <div class="confirmation-item full-width">
+                                <span class="confirmation-label">Reason:</span>
+                                <span class="confirmation-value" id="confirm-reason"></span>
                             </div>
                         </div>
-                        
-                        <div class="payment-form" id="paypal-form">
-                            <p>You will be redirected to PayPal to complete your payment.</p>
-                        </div>
-                        
-                        <div class="payment-form" id="bank-transfer-form">
-                            <p>Please use the following bank details to complete your transfer:</p>
-                            <div class="bank-details">
-                                <p><strong>Bank:</strong> Standard Bank</p>
-                                <p><strong>Account Name:</strong> PDSA Veterinary Clinic</p>
-                                <p><strong>Account Number:</strong> 0123456789</p>
-                                <p><strong>Branch Code:</strong> 012345</p>
-                                <p><strong>Reference:</strong> Your Order #<span id="order-reference"></span></p>
-                            </div>
-                        </div>
-                        
-                        <div class="checkout-actions">
-                            <button class="btn btn-outline" id="step-3-back">Back</button>
-                            <button class="btn btn-primary" id="step-3-continue">Complete Purchase</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Step 4: Confirmation -->
-                    <div class="checkout-step" id="step-4">
-                        <div class="order-confirmation">
-                            <div class="confirmation-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <h3>Thank You for Your Order!</h3>
-                            <p>Your order <strong>#<span id="order-number"></span></strong> has been placed successfully.</p>
-                            <p>A confirmation email has been sent to <strong id="confirm-email"></strong>.</p>
-                            
-                            <div class="order-summary">
-                                <h4>Order Summary</h4>
-                                <div id="order-summary-items">
-                                    <!-- Order items will be populated here -->
-                                </div>
-                                <div class="order-total">
-                                    <strong>Total: <span id="order-total-amount"></span></strong>
-                                </div>
-                            </div>
-                            
-                            <div class="confirmation-actions">
-                                <button class="btn btn-outline" id="print-receipt">Print Receipt</button>
-                                <button class="btn btn-primary" id="continue-shopping-btn">Continue Shopping</button>
-                            </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-outline" id="edit-appointment">Edit Details</button>
+                            <button class="btn btn-primary" id="confirm-appointment">Confirm Booking</button>
                         </div>
                     </div>
                 </div>
@@ -2735,252 +2674,313 @@
         </div>
     </div>
 
-    <!-- Login Modal -->
-    <div class="modal" id="login-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Login to Your Account</h2>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="login-email">Email</label>
-                    <input type="email" id="login-email" name="email" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
-                </div>
-                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <input type="checkbox" id="remember-me" name="remember">
-                        <label for="remember-me">Remember me</label>
-                    </div>
-                    <a href="#" style="font-size: 0.9rem;">Forgot password?</a>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-                <div class="form-footer">
-                    Don't have an account? <a href="#" id="switch-to-register">Register here</a>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Register Modal -->
-    <div class="modal" id="register-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Create an Account</h2>
-            <form id="register-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="first-name">First Name</label>
-                        <input type="text" id="first-name" name="first_name" placeholder="First name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="last-name">Last Name</label>
-                        <input type="text" id="last-name" name="last_name" placeholder="Last name" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="register-email">Email</label>
-                    <input type="email" id="register-email" name="email" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label for="register-phone">Phone Number</label>
-                    <input type="tel" id="register-phone" name="phone" placeholder="Enter your phone number" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="register-password">Password</label>
-                        <input type="password" id="register-password" name="password" placeholder="Create password" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="register-confirm-password">Confirm Password</label>
-                        <input type="password" id="register-confirm-password" name="confirm_password" placeholder="Confirm password" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" id="terms" name="terms" required>
-                    <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">
-                    <i class="fas fa-user-plus"></i> Register
-                </button>
-                <div class="form-footer">
-                    Already have an account? <a href="#Login" id="switch-to-login">Login here</a>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Booking Confirmation Modal -->
-    <div class="modal" id="booking-confirmation-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="text-center">
-                <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--success); margin-bottom: 1rem;"></i>
-                <h2>Appointment Booked Successfully!</h2>
-                <p class="mb-3">Thank you for choosing PDSA Veterinary Clinic. We've sent a confirmation to your email.</p>
+    <!-- Add Pet Modal -->
+    <div class="modal-overlay" id="add-pet-modal">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2>Add New Pet</h2>
+                <button class="close-modal">&times;</button>
             </div>
-            <div id="booking-details" style="margin: 1.5rem 0; background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
-                <h3 style="margin-bottom: 1rem; color: var(--primary);">Appointment Details</h3>
-                <div class="detail-grid">
-                    <div class="detail-row">
-                        <h4>Reference Number</h4>
-                        <p>#APT78901</p>
+            <div class="modal-body">
+                <form id="add-pet-form" class="pet-form">
+                    <div class="form-group">
+                        <label for="pet-name">Pet Name</label>
+                        <input type="text" id="pet-name" name="name" required>
                     </div>
-                    <div class="detail-row">
-                        <h4>Date & Time</h4>
-                        <p>Monday, 15 May 2023 at 10:30 AM</p>
+                    <div class="form-group">
+                        <label for="pet-species">Species</label>
+                        <select id="pet-species" name="species" required>
+                            <option value="">Select species</option>
+                            <option value="Dog">Dog</option>
+                            <option value="Cat">Cat</option>
+                            <option value="Bird">Bird</option>
+                            <option value="Rabbit">Rabbit</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
-                    <div class="detail-row">
-                        <h4>Pet</h4>
-                        <p>Max (Dog)</p>
+                    <div class="form-group">
+                        <label for="pet-breed">Breed</label>
+                        <input type="text" id="pet-breed" name="breed">
                     </div>
-                    <div class="detail-row">
-                        <h4>Service</h4>
-                        <p>Annual Vaccination</p>
+                    <div class="form-group">
+                        <label for="pet-dob">Date of Birth</label>
+                        <input type="date" id="pet-dob" name="dateOfBirth">
                     </div>
-                    <div class="detail-row">
-                        <h4>Veterinarian</h4>
-                        <p>Dr. Sarah Johnson</p>
+                    <div class="form-group">
+                        <label for="pet-gender">Gender</label>
+                        <select id="pet-gender" name="gender">
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Unknown">Unknown</option>
+                        </select>
                     </div>
-                    <div class="detail-row">
-                        <h4>Location</h4>
-                        <p>PDSA Clinic, 1188 Nancefield Moroka Road, Mfolo South, Soweto</p>
+                    <div class="form-group">
+                        <label for="pet-color">Color</label>
+                        <input type="text" id="pet-color" name="color">
                     </div>
-                </div>
-                <div class="detail-row mt-2">
-                    <h4>Notes</h4>
-                    <p>Please arrive 10 minutes early for your appointment and bring any previous vaccination records.</p>
-                </div>
-            </div>
-            <button class="btn btn-primary" id="close-booking-modal" style="width: 100%;">
-                <i class="fas fa-check"></i> Got it!
-            </button>
-            <div class="text-center mt-2">
-                <p>Need to make changes? Call us at 011 984 4340</p>
+                    <div class="form-group">
+                        <label for="pet-weight">Weight (kg)</label>
+                        <input type="number" id="pet-weight" name="weight" step="0.1" min="0">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="pet-medical-notes">Medical Notes</label>
+                        <textarea id="pet-medical-notes" name="medicalNotes" rows="3" placeholder="Any existing medical conditions or allergies"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="pet-microchip">Microchip Number</label>
+                        <input type="text" id="pet-microchip" name="microchipNumber">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline" id="cancel-add-pet">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Pet</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- User Dashboard Modal -->
+    <div class="modal-overlay" id="dashboard-modal">
+        <div class="modal-dialog" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>My Dashboard</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="dashboard">
+                    <div class="dashboard-section">
+                        <h3>Quick Actions</h3>
+                        <div class="dashboard-grid">
+                            <div class="dashboard-card">
+                                <h4>Book Appointment</h4>
+                                <p>Schedule a new veterinary appointment</p>
+                                <button class="btn btn-primary btn-sm" onclick="showAppointmentModal()">Book Now</button>
+                            </div>
+                            <div class="dashboard-card">
+                                <h4>Add Pet</h4>
+                                <p>Register a new pet</p>
+                                <button class="btn btn-primary btn-sm" onclick="showAddPetModal()">Add Pet</button>
+                            </div>
+                            <div class="dashboard-card">
+                                <h4>Shop Products</h4>
+                                <p>Browse our pet products</p>
+                                <button class="btn btn-primary btn-sm" onclick="scrollToProducts()">Shop Now</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h3>My Pets</h3>
+                        <div id="user-pets-list">
+                            <div class="loading-spinner">
+                                <i class="fas fa-spinner"></i>
+                                <p>Loading pets...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h3>Upcoming Appointments</h3>
+                        <div id="user-appointments-list">
+                            <div class="loading-spinner">
+                                <i class="fas fa-spinner"></i>
+                                <p>Loading appointments...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h3>Recent Orders</h3>
+                        <div id="user-orders-list">
+                            <div class="loading-spinner">
+                                <i class="fas fa-spinner"></i>
+                                <p>Loading orders...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Admin Panel (only visible to admins) -->
+                    <div class="dashboard-section admin-panel" id="admin-panel" style="display: none;">
+                        <h3><i class="fas fa-cog"></i> Admin Panel</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <span class="number" id="stat-appointments">0</span>
+                                <span class="label">Today's Appointments</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="number" id="stat-orders">0</span>
+                                <span class="label">Pending Orders</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="number" id="stat-low-stock">0</span>
+                                <span class="label">Low Stock Items</span>
+                            </div>
+                            <div class="stat-card">
+                                <span class="number" id="stat-revenue">R0</span>
+                                <span class="label">Today's Revenue</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn btn-danger" onclick="showAdminPanel()">Full Admin Dashboard</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notification-container"></div>
+
     <script>
-        // Cart functionality
-        let cart = [];
-        const cartBtn = document.getElementById('cart-btn');
-        const cartContainer = document.getElementById('cart-container');
-        const cartOverlay = document.getElementById('cart-overlay');
-        const closeCart = document.getElementById('close-cart');
-        const cartItems = document.getElementById('cart-items');
-        const emptyCartMessage = document.getElementById('empty-cart-message');
-        const cartTotalAmount = document.getElementById('cart-total-amount');
-        const checkoutBtn = document.getElementById('checkout-btn');
-        const continueShopping = document.getElementById('continue-shopping');
-        const cartCount = document.querySelector('.cart-count');
-        
-        // Checkout elements
-        const checkoutModal = document.getElementById('checkout-modal');
-        const checkoutSteps = document.querySelectorAll('.checkout-step');
-        const stepIndicators = document.querySelectorAll('.step');
-        const backToCart = document.getElementById('back-to-cart');
-        const step1Continue = document.getElementById('step-1-continue');
-        const step2Back = document.getElementById('step-2-back');
-        const step2Continue = document.getElementById('step-2-continue');
-        const step3Back = document.getElementById('step-3-back');
-        const step3Continue = document.getElementById('step-3-continue');
-        const continueShoppingBtn = document.getElementById('continue-shopping-btn');
-        
-        // Product filter functionality
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const productCards = document.querySelectorAll('.product-card');
-        
-        // Initialize cart from localStorage if available
+        // Application State
+        const AppState = {
+            currentUser: null,
+            cart: [],
+            userPets: [],
+            userAppointments: [],
+            userOrders: [],
+            isAdmin: false,
+            services: [
+                { id: 1, name: "General Checkup", price: 250 },
+                { id: 2, name: "Vaccination", price: 200 },
+                { id: 3, name: "Dental Cleaning", price: 450 },
+                { id: 4, name: "Spaying/Neutering", price: 800 },
+                { id: 5, name: "Microchipping", price: 350 },
+                { id: 6, name: "Grooming Service", price: 250 }
+            ]
+        };
+
+        // DOM Elements
+        const DOM = {
+            modals: {
+                login: document.getElementById('login-modal'),
+                register: document.getElementById('register-modal'),
+                appointment: document.getElementById('appointment-modal'),
+                addPet: document.getElementById('add-pet-modal'),
+                dashboard: document.getElementById('dashboard-modal')
+            },
+            cart: {
+                overlay: document.getElementById('cart-overlay'),
+                container: document.getElementById('cart-container'),
+                items: document.getElementById('cart-items'),
+                total: document.getElementById('cart-total-amount'),
+                checkoutBtn: document.getElementById('checkout-btn')
+            },
+            auth: {
+                loginBtn: document.getElementById('login-btn'),
+                registerBtn: document.getElementById('register-btn'),
+                userMenu: document.getElementById('user-menu'),
+                userName: document.getElementById('user-name'),
+                adminLink: document.getElementById('admin-link')
+            }
+        };
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initApplication();
+        });
+
+        // Application Initialization
+        function initApplication() {
+            initCart();
+            setupEventListeners();
+            setupAppointmentBooking();
+            setupModals();
+            setupDateRestrictions();
+            updateAuthUI();
+            showNotification('Welcome to PDSA Veterinary Clinic!', 'info');
+        }
+
+        // Cart Management
         function initCart() {
             const savedCart = localStorage.getItem('pdsaCart');
             if (savedCart) {
-                cart = JSON.parse(savedCart);
+                AppState.cart = JSON.parse(savedCart);
                 updateCartUI();
             }
         }
-        
-        // Save cart to localStorage
-        function saveCart() {
-            localStorage.setItem('pdsaCart', JSON.stringify(cart));
-        }
-        
-        // Update cart UI
+
         function updateCartUI() {
-            // Update cart count
-            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-            cartCount.textContent = totalItems;
-            
-            // Update cart items
-            cartItems.innerHTML = '';
-            
-            if (cart.length === 0) {
-                emptyCartMessage.style.display = 'block';
-                checkoutBtn.disabled = true;
-            } else {
-                emptyCartMessage.style.display = 'none';
-                checkoutBtn.disabled = false;
+            try {
+                const cartCountElement = document.querySelector('.cart-count');
+                if (cartCountElement) {
+                    const totalItems = AppState.cart.reduce((total, item) => total + item.quantity, 0);
+                    cartCountElement.textContent = totalItems;
+                }
                 
-                cart.forEach(item => {
-                    const cartItem = document.createElement('div');
-                    cartItem.className = 'cart-item';
-                    cartItem.innerHTML = `
-                        <div class="cart-item-img">
-                            <img src="${item.image}" alt="${item.name}">
-                        </div>
-                        <div class="cart-item-details">
-                            <h4>${item.name}</h4>
-                            <div class="cart-item-price">R${item.price}</div>
-                            <div class="cart-item-quantity">
-                                <button class="quantity-btn" data-action="decrease" data-id="${item.id}">-</button>
-                                <span>${item.quantity}</span>
-                                <button class="quantity-btn" data-action="increase" data-id="${item.id}">+</button>
+                const cartItems = DOM.cart.items;
+                if (!cartItems) return;
+                
+                cartItems.innerHTML = '';
+                
+                if (AppState.cart.length === 0) {
+                    document.getElementById('empty-cart-message').style.display = 'block';
+                    DOM.cart.checkoutBtn.disabled = true;
+                } else {
+                    document.getElementById('empty-cart-message').style.display = 'none';
+                    DOM.cart.checkoutBtn.disabled = false;
+                    
+                    AppState.cart.forEach(item => {
+                        const cartItem = document.createElement('div');
+                        cartItem.className = 'cart-item';
+                        cartItem.innerHTML = `
+                            <div class="cart-item-img">
+                                <img src="${item.image || 'https://via.placeholder.com/80'}" alt="${item.name}">
                             </div>
-                        </div>
-                        <button class="cart-item-remove" data-id="${item.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    `;
-                    cartItems.appendChild(cartItem);
+                            <div class="cart-item-details">
+                                <h4>${item.name}</h4>
+                                <div class="cart-item-price">R${item.price}</div>
+                                <div class="cart-item-quantity">
+                                    <button class="quantity-btn" data-action="decrease" data-id="${item.id}">-</button>
+                                    <span>${item.quantity}</span>
+                                    <button class="quantity-btn" data-action="increase" data-id="${item.id}">+</button>
+                                </div>
+                            </div>
+                            <button class="cart-item-remove" data-id="${item.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        `;
+                        cartItems.appendChild(cartItem);
+                    });
+                }
+                
+                const cartTotalElement = DOM.cart.total;
+                if (cartTotalElement) {
+                    const total = AppState.cart.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
+                    cartTotalElement.textContent = `R${total.toFixed(2)}`;
+                }
+                
+                // Add event listeners to cart buttons
+                document.querySelectorAll('.cart-item-remove').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const productId = this.getAttribute('data-id');
+                        removeFromCart(productId);
+                    });
                 });
+                
+                document.querySelectorAll('.cart-item .quantity-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const action = this.getAttribute('data-action');
+                        const productId = this.getAttribute('data-id');
+                        updateCartQuantity(productId, action);
+                    });
+                });
+                
+                saveCart();
+            } catch (error) {
+                console.error('Error updating cart UI:', error);
             }
-            
-            // Update cart total
-            const total = cart.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
-            cartTotalAmount.textContent = `R${total.toFixed(2)}`;
-            
-            // Add event listeners to cart items
-            document.querySelectorAll('.cart-item-remove').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const productId = this.getAttribute('data-id');
-                    removeFromCart(productId);
-                });
-            });
-            
-            document.querySelectorAll('.cart-item .quantity-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const action = this.getAttribute('data-action');
-                    const productId = this.getAttribute('data-id');
-                    updateCartQuantity(productId, action);
-                });
-            });
-            
-            saveCart();
         }
-        
-        // Add to cart
+
         function addToCart(productId, productName, productPrice, productImage, quantity) {
-            const existingItem = cart.find(item => item.id === productId);
+            const existingItem = AppState.cart.find(item => item.id === productId);
             
             if (existingItem) {
                 existingItem.quantity += quantity;
             } else {
-                cart.push({
+                AppState.cart.push({
                     id: productId,
                     name: productName,
                     price: productPrice,
@@ -2992,17 +2992,15 @@
             updateCartUI();
             showNotification(`${productName} added to cart!`, 'success');
         }
-        
-        // Remove from cart
+
         function removeFromCart(productId) {
-            cart = cart.filter(item => item.id !== productId);
+            AppState.cart = AppState.cart.filter(item => item.id !== productId);
             updateCartUI();
             showNotification('Item removed from cart', 'info');
         }
-        
-        // Update cart quantity
+
         function updateCartQuantity(productId, action) {
-            const item = cart.find(item => item.id === productId);
+            const item = AppState.cart.find(item => item.id === productId);
             
             if (item) {
                 if (action === 'increase') {
@@ -3014,573 +3012,760 @@
                 updateCartUI();
             }
         }
-        
-        // Product filter functionality
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const filter = this.getAttribute('data-filter');
+
+        function saveCart() {
+            localStorage.setItem('pdsaCart', JSON.stringify(AppState.cart));
+        }
+
+        function checkout() {
+            if (!AppState.currentUser) {
+                showNotification('Please log in to checkout', 'warning');
+                showModal('login-modal');
+                return;
+            }
+            
+            if (AppState.cart.length === 0) {
+                showNotification('Your cart is empty', 'warning');
+                return;
+            }
+            
+            // Process checkout
+            showNotification('Processing your order...', 'info');
+            
+            try {
+                const orderId = 'ORD-' + Date.now();
+                const order = {
+                    id: orderId,
+                    userId: AppState.currentUser.uid,
+                    items: [...AppState.cart],
+                    total: AppState.cart.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0),
+                    date: new Date().toISOString(),
+                    status: 'confirmed'
+                };
                 
-                // Update active button
-                filterBtns.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
+                // Save order to localStorage
+                const orders = JSON.parse(localStorage.getItem('pdsaOrders') || '[]');
+                orders.push(order);
+                localStorage.setItem('pdsaOrders', JSON.stringify(orders));
                 
-                // Filter products
+                AppState.userOrders.unshift(order);
+                
+                // Clear cart
+                AppState.cart = [];
+                saveCart();
+                updateCartUI();
+                closeCart();
+                
+                showNotification(`Order #${orderId} placed successfully!`, 'success');
+            } catch (error) {
+                console.error('Error during checkout:', error);
+                showNotification('Error processing your order. Please try again.', 'error');
+            }
+        }
+
+        // Authentication Management
+        function updateAuthUI() {
+            const loginBtn = DOM.auth.loginBtn;
+            const registerBtn = DOM.auth.registerBtn;
+            const userMenu = DOM.auth.userMenu;
+            const authOverlays = document.querySelectorAll('.auth-overlay');
+            const bookAppointmentBtn = document.getElementById('book-appointment-btn');
+            const footerBookAppointment = document.getElementById('footer-book-appointment');
+            const productCards = document.querySelectorAll('.product-card.auth-required');
+            
+            if (AppState.currentUser) {
+                // User is logged in
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                userMenu.style.display = 'block';
+                
+                // Hide auth overlays on products
+                authOverlays.forEach(overlay => {
+                    overlay.style.display = 'none';
+                });
+                
+                // Enable product interactions
                 productCards.forEach(card => {
-                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
+                    card.classList.remove('auth-required');
                 });
-            });
-        });
-        
-        // Quantity controls
-        document.querySelectorAll('.quantity-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const action = this.getAttribute('data-action');
-                const input = this.parentElement.querySelector('.quantity-input');
-                let value = parseInt(input.value);
                 
-                if (action === 'increase' && value < 10) {
-                    input.value = value + 1;
-                } else if (action === 'decrease' && value > 1) {
-                    input.value = value - 1;
+                if (AppState.cart.length > 0) {
+                    DOM.cart.checkoutBtn.disabled = false;
                 }
-            });
-        });
-        
-        // Add to cart buttons
-        document.querySelectorAll('.add-to-cart').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const productId = this.getAttribute('data-product-id');
-                const productName = this.getAttribute('data-product-name');
-                const productPrice = this.getAttribute('data-product-price');
-                const productImage = this.closest('.product-card').querySelector('.product-img img').src;
-                const quantity = parseInt(this.closest('.product-card').querySelector('.quantity-input').value);
                 
-                addToCart(productId, productName, productPrice, productImage, quantity);
+                // Enable appointment booking
+                if (bookAppointmentBtn) {
+                    bookAppointmentBtn.onclick = function() {
+                        showModal('appointment-modal');
+                    };
+                }
                 
-                // Reset quantity
-                this.closest('.product-card').querySelector('.quantity-input').value = 1;
-            });
-        });
-        
-        // Cart toggle
-        cartBtn.addEventListener('click', function() {
-            cartContainer.classList.add('open');
-            cartOverlay.classList.add('open');
-        });
-        
-        closeCart.addEventListener('click', function() {
-            cartContainer.classList.remove('open');
-            cartOverlay.classList.remove('open');
-        });
-        
-        cartOverlay.addEventListener('click', function() {
-            cartContainer.classList.remove('open');
-            cartOverlay.classList.remove('open');
-        });
-        
-        continueShopping.addEventListener('click', function() {
-            cartContainer.classList.remove('open');
-            cartOverlay.classList.remove('open');
-        });
-        
-        // Checkout functionality
-        checkoutBtn.addEventListener('click', function() {
-            cartContainer.classList.remove('open');
-            cartOverlay.classList.remove('open');
-            checkoutModal.classList.add('active');
-            updateCheckoutStep(1);
-        });
-        
-        backToCart.addEventListener('click', function() {
-            checkoutModal.classList.remove('active');
-        });
-        
-        // Step navigation
-        step1Continue.addEventListener('click', function() {
-            updateCheckoutStep(2);
-        });
-        
-        step2Back.addEventListener('click', function() {
-            updateCheckoutStep(1);
-        });
-        
-        step2Continue.addEventListener('click', function() {
-            // Validate shipping form
-            const shippingForm = document.getElementById('shipping-form');
-            if (shippingForm.checkValidity()) {
-                updateCheckoutStep(3);
+                if (footerBookAppointment) {
+                    footerBookAppointment.onclick = function(e) {
+                        e.preventDefault();
+                        showModal('appointment-modal');
+                    };
+                }
+                
+                // Enable add to cart buttons
+                document.querySelectorAll('.add-to-cart').forEach(btn => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                });
+                
             } else {
-                shippingForm.reportValidity();
-            }
-        });
-        
-        step3Back.addEventListener('click', function() {
-            updateCheckoutStep(2);
-        });
-        
-        step3Continue.addEventListener('click', function() {
-            // Validate payment form based on selected method
-            const selectedMethod = document.querySelector('.payment-method.selected').getAttribute('data-method');
-            let isValid = true;
-            
-            if (selectedMethod === 'credit-card') {
-                const cardForm = document.getElementById('credit-card-form');
-                if (!cardForm.checkValidity()) {
-                    cardForm.reportValidity();
-                    isValid = false;
+                // User is not logged in
+                loginBtn.style.display = 'inline-flex';
+                registerBtn.style.display = 'inline-flex';
+                userMenu.style.display = 'none';
+                
+                // Show auth overlays on products
+                authOverlays.forEach(overlay => {
+                    overlay.style.display = 'flex';
+                });
+                
+                // Disable product interactions
+                productCards.forEach(card => {
+                    card.classList.add('auth-required');
+                });
+                
+                DOM.cart.checkoutBtn.disabled = true;
+                
+                // Redirect to login for appointments
+                if (bookAppointmentBtn) {
+                    bookAppointmentBtn.onclick = function(e) {
+                        e.preventDefault();
+                        showModal('login-modal');
+                    };
                 }
+                
+                if (footerBookAppointment) {
+                    footerBookAppointment.onclick = function(e) {
+                        e.preventDefault();
+                        showModal('login-modal');
+                    };
+                }
+                
+                // Disable add to cart buttons
+                document.querySelectorAll('.add-to-cart').forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.6';
+                });
             }
+        }
+
+        // Simulated authentication
+        function login(email, password) {
+            // Simulate API call
+            showNotification('Logging in...', 'info');
             
-            if (isValid) {
-                // Process payment and complete order
-                completeOrder();
-                updateCheckoutStep(4);
-            }
-        });
-        
-        continueShoppingBtn.addEventListener('click', function() {
-            checkoutModal.classList.remove('active');
-            // Clear cart
-            cart = [];
+            setTimeout(() => {
+                // For demo purposes, accept any non-empty credentials
+                if (email && password) {
+                    AppState.currentUser = {
+                        uid: 'user-' + Date.now(),
+                        email: email,
+                        displayName: email.split('@')[0],
+                        emailVerified: true
+                    };
+                    
+                    updateUserUI(AppState.currentUser);
+                    updateAuthUI();
+                    
+                    showNotification('Login successful!', 'success');
+                    hideModal('login-modal');
+                } else {
+                    showNotification('Please enter both email and password', 'error');
+                }
+            }, 1000);
+        }
+
+        function register(userData) {
+            // Simulate API call
+            showNotification('Creating account...', 'info');
+            
+            setTimeout(() => {
+                // For demo purposes, accept any valid data
+                if (userData.email && userData.password && userData.firstname && userData.lastname) {
+                    AppState.currentUser = {
+                        uid: 'user-' + Date.now(),
+                        email: userData.email,
+                        displayName: `${userData.firstname} ${userData.lastname}`,
+                        emailVerified: false
+                    };
+                    
+                    // Save user data to localStorage
+                    const users = JSON.parse(localStorage.getItem('pdsaUsers') || '[]');
+                    users.push({
+                        uid: AppState.currentUser.uid,
+                        ...userData
+                    });
+                    localStorage.setItem('pdsaUsers', JSON.stringify(users));
+                    
+                    updateUserUI(AppState.currentUser);
+                    updateAuthUI();
+                    
+                    showNotification('Registration successful! Welcome to PDSA Veterinary Clinic.', 'success');
+                    hideModal('register-modal');
+                } else {
+                    showNotification('Please fill in all required fields', 'error');
+                }
+            }, 1500);
+        }
+
+        function logout() {
+            AppState.currentUser = null;
+            AppState.isAdmin = false;
+            AppState.cart = [];
             updateCartUI();
-        });
-        
-        // Payment method selection
-        document.querySelectorAll('.payment-method').forEach(method => {
-            method.addEventListener('click', function() {
-                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
-                this.classList.add('selected');
-                
-                const methodType = this.getAttribute('data-method');
-                document.querySelectorAll('.payment-form').forEach(form => form.classList.remove('active'));
-                document.getElementById(`${methodType}-form`).classList.add('active');
-            });
-        });
-        
-        // Update checkout step
-        function updateCheckoutStep(step) {
-            // Update step indicators
-            stepIndicators.forEach(indicator => {
-                const indicatorStep = parseInt(indicator.getAttribute('data-step'));
-                indicator.classList.remove('active', 'completed');
-                
-                if (indicatorStep === step) {
-                    indicator.classList.add('active');
-                } else if (indicatorStep < step) {
-                    indicator.classList.add('completed');
-                }
-            });
-            
-            // Update step content
-            checkoutSteps.forEach(stepContent => {
-                stepContent.classList.remove('active');
-            });
-            document.getElementById(`step-${step}`).classList.add('active');
-            
-            // Update content based on step
-            if (step === 1) {
-                updateCheckoutCart();
-            } else if (step === 4) {
-                updateOrderConfirmation();
+            showNotification('Logged out successfully', 'info');
+            updateAuthUI();
+            hideModal('dashboard-modal');
+        }
+
+        function updateUserUI(userData) {
+            const userName = DOM.auth.userName;
+            if (userData) {
+                userName.textContent = userData.displayName || userData.email;
             }
         }
-        
-        // Update checkout cart
-        function updateCheckoutCart() {
-            const checkoutItems = document.getElementById('checkout-items');
-            checkoutItems.innerHTML = '';
-            
-            let subtotal = 0;
-            
-            cart.forEach(item => {
-                const itemTotal = parseFloat(item.price) * item.quantity;
-                subtotal += itemTotal;
-                
-                const itemElement = document.createElement('div');
-                itemElement.className = 'checkout-item';
-                itemElement.innerHTML = `
-                    <div class="checkout-item-img">
-                        <img src="${item.image}" alt="${item.name}">
-                    </div>
-                    <div class="checkout-item-details">
-                        <h4>${item.name}</h4>
-                        <div class="checkout-item-price">R${item.price} x ${item.quantity}</div>
-                    </div>
-                    <div class="checkout-item-total">R${itemTotal.toFixed(2)}</div>
-                `;
-                checkoutItems.appendChild(itemElement);
-            });
-            
-            const shipping = parseFloat(document.getElementById('checkout-shipping').textContent.replace('R', ''));
-            const tax = subtotal * 0.15; // 15% tax
-            const total = subtotal + shipping + tax;
-            
-            document.getElementById('checkout-subtotal').textContent = `R${subtotal.toFixed(2)}`;
-            document.getElementById('checkout-tax').textContent = `R${tax.toFixed(2)}`;
-            document.getElementById('checkout-total').textContent = `R${total.toFixed(2)}`;
-        }
-        
-        // Update order confirmation
-        function updateOrderConfirmation() {
-            const orderNumber = Math.floor(100000 + Math.random() * 900000);
-            document.getElementById('order-number').textContent = orderNumber;
-            document.getElementById('order-reference').textContent = orderNumber;
-            
-            const email = document.getElementById('shipping-email').value;
-            document.getElementById('confirm-email').textContent = email;
-            
-            const orderSummaryItems = document.getElementById('order-summary-items');
-            orderSummaryItems.innerHTML = '';
-            
-            let orderTotal = 0;
-            
-            cart.forEach(item => {
-                const itemTotal = parseFloat(item.price) * item.quantity;
-                orderTotal += itemTotal;
-                
-                const itemElement = document.createElement('div');
-                itemElement.className = 'order-summary-item';
-                itemElement.innerHTML = `
-                    <span>${item.name} x ${item.quantity}</span>
-                    <span>R${itemTotal.toFixed(2)}</span>
-                `;
-                orderSummaryItems.appendChild(itemElement);
-            });
-            
-            const shipping = parseFloat(document.getElementById('checkout-shipping').textContent.replace('R', ''));
-            const tax = orderTotal * 0.15;
-            orderTotal = orderTotal + shipping + tax;
-            
-            document.getElementById('order-total-amount').textContent = `R${orderTotal.toFixed(2)}`;
-        }
-        
-        // Complete order
-        function completeOrder() {
-            // In a real application, you would process the payment here
-            // and send the order to your backend
-            
-            // For demo purposes, we'll just show the confirmation
-            console.log('Order completed successfully');
-        }
-        
-        // DOM Elements
-        const publicWebsite = document.getElementById('public-website');
-        const loginBtn = document.getElementById('login-btn');
-        const registerBtn = document.getElementById('register-btn');
-        const bookAppointmentBtn = document.getElementById('book-appointment-btn');
-        const learnMoreBtn = document.getElementById('learn-more-btn');
-        const loginModal = document.getElementById('login-modal');
-        const registerModal = document.getElementById('register-modal');
-        const bookingConfirmationModal = document.getElementById('booking-confirmation-modal');
-        const closeModalBtns = document.querySelectorAll('.close-modal');
-        const switchToRegister = document.getElementById('switch-to-register');
-        const switchToLogin = document.getElementById('switch-to-login');
-        const bookingForm = document.getElementById('booking-form');
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        const contactForm = document.getElementById('contact-form');
-        const closeBookingModal = document.getElementById('close-booking-modal');
-        const faqQuestions = document.querySelectorAll('.faq-question');
-        const navLinks = document.querySelectorAll('nav a');
-        
-        // Sample database (in a real app, this would be server-side)
-        const users = [
-            { 
-                email: 'admin@pdsa.org.za', 
-                password: 'admin123', 
-                name: 'Admin User', 
-                role: 'admin',
-                phone: '0119844340',
-                pets: [
-                    { name: 'Max', type: 'Dog', breed: 'Golden Retriever', age: 5 }
-                ]
-            },
-            { 
-                email: 'user@example.com', 
-                password: 'user123', 
-                name: 'Test User', 
-                role: 'user',
-                phone: '07123456789',
-                pets: [
-                    { name: 'Whiskers', type: 'Cat', breed: 'Tabby', age: 3 }
-                ]
-            }
-        ];
 
-        let currentUser = null;
-        let availableTimes = [
-            '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-            '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00'
-        ];
-
-        // Initialize date picker
-        flatpickr(".datepicker", {
-            minDate: "today",
-            maxDate: new Date().fp_incr(30), // 30 days from now
-            dateFormat: "Y-m-d",
-            disable: [
-                function(date) {
-                    // Disable weekends
-                    return (date.getDay() === 0 || date.getDay() === 6);
-                }
-            ],
-            onChange: function(selectedDates, dateStr, instance) {
-                updateAvailableTimes(dateStr);
-            }
-        });
-
-        // Update available times based on selected date
-        function updateAvailableTimes(date) {
-            const timeSelect = document.getElementById('time');
-            timeSelect.innerHTML = '<option value="">Select Time</option>';
-            
-            // In a real app, this would check against booked appointments
-            const day = new Date(date).getDay();
-            let times = [...availableTimes];
-            
-            // Remove lunch time
-            times = times.filter(time => time !== '12:00' && time !== '12:30');
-            
-            // Different hours on Wednesday
-            if (day === 3) { // Wednesday
-                times = times.filter(time => {
-                    const hour = parseInt(time.split(':')[0]);
-                    return hour >= 10 && hour <= 14;
+        // Appointment Management
+        function setupAppointmentBooking() {
+            const appointmentForm = document.getElementById('appointment-form');
+            if (appointmentForm) {
+                appointmentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    showAppointmentConfirmation();
                 });
             }
             
-            // Populate time slots
-            times.forEach(time => {
+            document.getElementById('confirm-appointment')?.addEventListener('click', confirmAppointment);
+            document.getElementById('edit-appointment')?.addEventListener('click', showAppointmentForm);
+            
+            const addPetForm = document.getElementById('add-pet-form');
+            if (addPetForm) {
+                addPetForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    addNewPet();
+                });
+            }
+        }
+
+        function showAppointmentConfirmation() {
+            const formData = new FormData(document.getElementById('appointment-form'));
+            const petId = formData.get('appointment-pet');
+            const serviceId = formData.get('appointment-service');
+            const date = formData.get('appointment-date');
+            const time = formData.get('appointment-time');
+            const reason = formData.get('appointment-reason');
+            
+            const selectedPet = AppState.userPets.find(pet => pet.id === petId);
+            const selectedService = AppState.services.find(s => s.id == serviceId);
+            
+            if (!selectedPet || !selectedService) {
+                showNotification('Please select both a pet and a service', 'error');
+                return;
+            }
+            
+            document.getElementById('confirm-pet').textContent = `${selectedPet.name} (${selectedPet.species})`;
+            document.getElementById('confirm-service').textContent = `${selectedService.name} - R${selectedService.price}`;
+            document.getElementById('confirm-date').textContent = formatDate(date);
+            document.getElementById('confirm-time').textContent = formatTime(time);
+            document.getElementById('confirm-reason').textContent = reason || 'Not specified';
+            
+            document.getElementById('appointment-step-1').style.display = 'none';
+            document.getElementById('appointment-step-2').style.display = 'block';
+        }
+
+        function showAppointmentForm() {
+            document.getElementById('appointment-step-2').style.display = 'none';
+            document.getElementById('appointment-step-1').style.display = 'block';
+        }
+
+        function confirmAppointment() {
+            const formData = new FormData(document.getElementById('appointment-form'));
+            const petId = formData.get('appointment-pet');
+            const serviceId = formData.get('appointment-service');
+            const date = formData.get('appointment-date');
+            const time = formData.get('appointment-time');
+            const reason = formData.get('appointment-reason');
+            
+            const selectedPet = AppState.userPets.find(pet => pet.id === petId);
+            const selectedService = AppState.services.find(s => s.id == serviceId);
+            
+            const appointment = {
+                id: 'apt-' + Date.now(),
+                userId: AppState.currentUser.uid,
+                petId: petId,
+                petName: selectedPet.name,
+                serviceId: serviceId,
+                serviceName: selectedService.name,
+                date: date,
+                time: time,
+                reason: reason,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            
+            try {
+                // Save to localStorage
+                const appointments = JSON.parse(localStorage.getItem('pdsaAppointments') || '[]');
+                appointments.push(appointment);
+                localStorage.setItem('pdsaAppointments', JSON.stringify(appointments));
+                
+                AppState.userAppointments.push(appointment);
+                
+                hideModal('appointment-modal');
+                document.getElementById('appointment-form').reset();
+                showAppointmentForm();
+                
+                showNotification('Appointment booked successfully! We will confirm shortly.', 'success');
+            } catch (error) {
+                console.error('Error booking appointment:', error);
+                showNotification('Error booking appointment. Please try again.', 'error');
+            }
+        }
+
+        function addNewPet() {
+            const formData = new FormData(document.getElementById('add-pet-form'));
+            const petData = {
+                id: 'pet-' + Date.now(),
+                userId: AppState.currentUser.uid,
+                name: formData.get('name'),
+                species: formData.get('species'),
+                breed: formData.get('breed'),
+                dateOfBirth: formData.get('dateOfBirth'),
+                gender: formData.get('gender'),
+                color: formData.get('color'),
+                weight: parseFloat(formData.get('weight')) || 0,
+                medicalNotes: formData.get('medicalNotes'),
+                microchipNumber: formData.get('microchipNumber'),
+                createdAt: new Date().toISOString()
+            };
+            
+            try {
+                // Save to localStorage
+                const pets = JSON.parse(localStorage.getItem('pdsaPets') || '[]');
+                pets.push(petData);
+                localStorage.setItem('pdsaPets', JSON.stringify(pets));
+                
+                AppState.userPets.push(petData);
+                
+                hideModal('add-pet-modal');
+                document.getElementById('add-pet-form').reset();
+                
+                showNotification(`${petData.name} has been added to your pets!`, 'success');
+                
+                // If we came from appointment modal, go back
+                if (document.getElementById('appointment-modal').classList.contains('active')) {
+                    showModal('appointment-modal');
+                }
+            } catch (error) {
+                console.error('Error adding pet:', error);
+                showNotification('Error adding pet. Please try again.', 'error');
+            }
+        }
+
+        function updateAppointmentPetDropdown() {
+            const petSelect = document.getElementById('appointment-pet');
+            if (!petSelect) return;
+            
+            petSelect.innerHTML = '<option value="">Select a pet</option>';
+            
+            AppState.userPets.forEach(pet => {
                 const option = document.createElement('option');
-                option.value = time;
-                option.textContent = time;
-                timeSelect.appendChild(option);
+                option.value = pet.id;
+                option.textContent = `${pet.name} (${pet.species})`;
+                petSelect.appendChild(option);
+            });
+            
+            if (AppState.userPets.length === 0) {
+                petSelect.innerHTML = '<option value="">No pets registered. Please add a pet first.</option>';
+                petSelect.disabled = true;
+            } else {
+                petSelect.disabled = false;
+            }
+        }
+
+        // Event Listeners Setup
+        function setupEventListeners() {
+            setupAuthEventListeners();
+            setupCartEventListeners();
+            setupProductEventListeners();
+            setupFAQ();
+            setupNavScroll();
+            setupContactForm();
+        }
+
+        function setupAuthEventListeners() {
+            // Login form
+            document.getElementById('login-form')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                login(formData.get('email'), formData.get('password'));
+            });
+            
+            // Register form
+            document.getElementById('register-form')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const email = formData.get('email');
+                const password = formData.get('password');
+                const confirmPassword = formData.get('confirmPassword');
+                
+                if (password !== confirmPassword) {
+                    showNotification('Passwords do not match', 'error');
+                    return;
+                }
+                
+                register({
+                    firstname: formData.get('firstname'),
+                    lastname: formData.get('lastname'),
+                    email: email,
+                    password: password,
+                    phone: formData.get('phone'),
+                    address: formData.get('address')
+                });
+            });
+            
+            // Logout
+            document.getElementById('logout-link')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+            });
+            
+            // User dashboard
+            document.getElementById('user-dashboard-link')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                showDashboard();
+            });
+            
+            // Login from product
+            document.querySelectorAll('#login-from-product').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    showModal('login-modal');
+                });
+            });
+            
+            // Login and Register buttons
+            document.getElementById('login-btn').addEventListener('click', function() {
+                showModal('login-modal');
+            });
+            
+            document.getElementById('register-btn').addEventListener('click', function() {
+                showModal('register-modal');
             });
         }
 
-        // Toggle FAQ answers
-        faqQuestions.forEach(question => {
-            question.addEventListener('click', () => {
-                const item = question.parentElement;
-                item.classList.toggle('active');
-                
-                // Close other open items
-                faqQuestions.forEach(q => {
-                    if (q !== question && q.parentElement.classList.contains('active')) {
-                        q.parentElement.classList.remove('active');
-                    }
+        function setupCartEventListeners() {
+            // Cart toggle
+            const cartBtn = document.getElementById('cart-btn');
+            const closeCartBtn = document.getElementById('close-cart');
+            const continueShoppingBtn = document.getElementById('continue-shopping');
+            
+            if (cartBtn) {
+                cartBtn.addEventListener('click', function() {
+                    DOM.cart.container.classList.add('open');
+                    DOM.cart.overlay.classList.add('open');
+                });
+            }
+            
+            if (closeCartBtn) {
+                closeCartBtn.addEventListener('click', closeCart);
+            }
+            
+            if (DOM.cart.overlay) {
+                DOM.cart.overlay.addEventListener('click', closeCart);
+            }
+            
+            if (continueShoppingBtn) {
+                continueShoppingBtn.addEventListener('click', closeCart);
+            }
+            
+            // Checkout button
+            DOM.cart.checkoutBtn?.addEventListener('click', checkout);
+        }
+
+        function setupProductEventListeners() {
+            // Add to cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productCard = this.closest('.product-card');
+                    const productId = this.getAttribute('data-product-id');
+                    const productName = this.getAttribute('data-product-name');
+                    const productPrice = this.getAttribute('data-product-price');
+                    const productImage = productCard.querySelector('.product-img img').src;
+                    const quantity = parseInt(productCard.querySelector('.quantity-input').value);
+                    
+                    addToCart(productId, productName, productPrice, productImage, quantity);
+                    
+                    // Reset quantity
+                    productCard.querySelector('.quantity-input').value = 1;
                 });
             });
-        });
-
-        // Update active nav link on scroll
-        window.addEventListener('scroll', () => {
-            const scrollPosition = window.scrollY;
             
-            document.querySelectorAll('section').forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                const sectionBottom = sectionTop + section.offsetHeight;
-                const sectionId = section.getAttribute('id');
-                
-                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${sectionId}`) {
-                            link.classList.add('active');
+            // Product filters
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    document.querySelectorAll('.product-card').forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
                         }
                     });
-                }
+                });
             });
-        });
-
-        // Smooth scrolling for nav links
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                if (targetSection) {
-                    window.scrollTo({
-                        top: targetSection.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+            
+            // Quantity controls
+            document.querySelectorAll('.quantity-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    const input = this.parentElement.querySelector('.quantity-input');
+                    let value = parseInt(input.value);
                     
-                    // Update active link
-                    navLinks.forEach(navLink => navLink.classList.remove('active'));
-                    link.classList.add('active');
+                    if (action === 'increase' && value < 10) {
+                        input.value = value + 1;
+                    } else if (action === 'decrease' && value > 1) {
+                        input.value = value - 1;
+                    }
+                });
+            });
+        }
+
+        function setupContactForm() {
+            document.getElementById('contact-form')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const contactData = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    subject: formData.get('subject'),
+                    message: formData.get('message'),
+                    createdAt: new Date().toISOString()
+                };
+                
+                try {
+                    // Save to localStorage
+                    const messages = JSON.parse(localStorage.getItem('pdsaContactMessages') || '[]');
+                    messages.push(contactData);
+                    localStorage.setItem('pdsaContactMessages', JSON.stringify(messages));
+                    
+                    showNotification('Your message has been sent successfully! We will get back to you soon.', 'success');
+                    this.reset();
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                    showNotification('Error sending message. Please try again.', 'error');
                 }
             });
-        });
+        }
 
-        // Event Listeners
-        loginBtn.addEventListener('click', () => {
-            loginModal.classList.add('active');
-        });
-
-        registerBtn.addEventListener('click', () => {
-            registerModal.classList.add('active');
-        });
-
-        bookAppointmentBtn.addEventListener('click', () => {
-            document.getElementById('appointment').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        learnMoreBtn.addEventListener('click', () => {
-            document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
-        });
-
-        closeModalBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                loginModal.classList.remove('active');
-                registerModal.classList.remove('active');
-                bookingConfirmationModal.classList.remove('active');
-                checkoutModal.classList.remove('active');
-            });
-        });
-
-        switchToRegister.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginModal.classList.remove('active');
-            registerModal.classList.add('active');
-        });
-
-        switchToLogin.addEventListener('click', (e) => {
-            e.preventDefault();
-            registerModal.classList.remove('active');
-            loginModal.classList.add('active');
-        });
-
-        closeBookingModal.addEventListener('click', () => {
-            bookingConfirmationModal.classList.remove('active');
-        });
-
-        // Form Submissions
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            const user = users.find(u => u.email === email && u.password === password);
-            
-            if (user) {
-                currentUser = user;
-                showNotification(`Welcome back, ${user.name}!`, 'success');
-                loginModal.classList.remove('active');
-            } else {
-                showNotification('Invalid email or password. Please try again.', 'error');
-            }
-        });
-
-        registerForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const firstName = document.getElementById('first-name').value;
-            const lastName = document.getElementById('last-name').value;
-            const email = document.getElementById('register-email').value;
-            const phone = document.getElementById('register-phone').value;
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-confirm-password').value;
-            
-            if (password !== confirmPassword) {
-                showNotification('Passwords do not match!', 'error');
-                return;
-            }
-            
-            // Check if user already exists
-            const userExists = users.some(u => u.email === email);
-            if (userExists) {
-                showNotification('Email already registered. Please login instead.', 'error');
-                return;
-            }
-            
-            // In a real app, you would send this data to your server
-            users.push({ 
-                email, 
-                password, 
-                name: `${firstName} ${lastName}`, 
-                phone,
-                role: 'user',
-                pets: []
+        function setupModals() {
+            // Login/Register modal toggles
+            document.getElementById('show-register')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                hideModal('login-modal');
+                showModal('register-modal');
             });
             
-            showNotification('Registration successful! Please login.', 'success');
-            registerModal.classList.remove('active');
-            loginModal.classList.add('active');
-            registerForm.reset();
-        });
+            document.getElementById('show-login')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                hideModal('register-modal');
+                showModal('login-modal');
+            });
+            
+            // Add pet link in appointment modal
+            document.getElementById('add-pet-link')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                hideModal('appointment-modal');
+                showModal('add-pet-modal');
+            });
+            
+            // Cancel add pet
+            document.getElementById('cancel-add-pet')?.addEventListener('click', function() {
+                hideModal('add-pet-modal');
+                showModal('appointment-modal');
+            });
+            
+            // User dashboard links
+            document.getElementById('user-dashboard-link')?.addEventListener('click', function(e) {
+                e.preventDefault();
+                showDashboard();
+            });
+            
+            // Modal close buttons
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.modal-overlay').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                });
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    document.querySelectorAll('.modal-overlay').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                }
+            });
+        }
 
-        bookingForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('phone').value;
-            const pet = document.getElementById('pet').value;
-            const service = document.getElementById('service').value;
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
-            const notes = document.getElementById('notes').value;
-            
-            if (!date || !time) {
-                showNotification('Please select both date and time for your appointment.', 'error');
+        function setupFAQ() {
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', () => {
+                    const item = question.parentElement;
+                    item.classList.toggle('active');
+                    
+                    document.querySelectorAll('.faq-question').forEach(q => {
+                        if (q !== question && q.parentElement.classList.contains('active')) {
+                            q.parentElement.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        function setupNavScroll() {
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY;
+                
+                document.querySelectorAll('section').forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    const sectionId = section.getAttribute('id');
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                        document.querySelectorAll('nav a').forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${sectionId}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            });
+
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        document.querySelectorAll('nav a').forEach(navLink => navLink.classList.remove('active'));
+                        link.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        function setupDateRestrictions() {
+            const dateInput = document.getElementById('appointment-date');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.min = today;
+            }
+        }
+
+        // Utility Functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function closeCart() {
+            DOM.cart.container.classList.remove('open');
+            DOM.cart.overlay.classList.remove('open');
+        }
+
+        function showDashboard() {
+            if (!AppState.currentUser) {
+                showNotification('Please log in to view your dashboard', 'warning');
+                showModal('login-modal');
                 return;
             }
-            
-            // Format date for display
-            const appointmentDate = new Date(date);
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const formattedDate = appointmentDate.toLocaleDateString('en-GB', options);
-            
-            // In a real app, you would send this data to your server
-            const bookingDetails = `
-                <div class="detail-grid">
-                    <div class="detail-row">
-                        <h4>Reference Number</h4>
-                        <p>#APT${Math.floor(10000 + Math.random() * 90000)}</p>
-                    </div>
-                    <div class="detail-row">
-                        <h4>Date & Time</h4>
-                        <p>${formattedDate} at ${time}</p>
-                    </div>
-                    <div class="detail-row">
-                        <h4>Pet</h4>
-                        <p>${pet.charAt(0).toUpperCase() + pet.slice(1)}</p>
-                    </div>
-                    <div class="detail-row">
-                        <h4>Service</h4>
-                        <p>${service.split('(')[0].trim()}</p>
-                    </div>
-                    <div class="detail-row">
-                        <h4>Veterinarian</h4>
-                        <p>Dr. ${['Sarah Johnson', 'Michael Brown', 'Emma Wilson'][Math.floor(Math.random() * 3)]}</p>
-                    </div>
-                    <div class="detail-row">
-                        <h4>Location</h4>
-                        <p>PDSA Clinic, 1188 Nancefield Moroka Road, Mfolo South, Soweto</p>
-                    </div>
-                </div>
-                ${notes ? `<div class="detail-row mt-2">
-                    <h4>Notes</h4>
-                    <p>${notes}</p>
-                </div>` : ''}
-            `;
-            
-            document.getElementById('booking-details').innerHTML = bookingDetails;
-            bookingConfirmationModal.classList.add('active');
-            bookingForm.reset();
-        });
+            loadUserData();
+            showModal('dashboard-modal');
+        }
 
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            showNotification('Your message has been sent successfully! We will get back to you soon.', 'success');
-            contactForm.reset();
-        });
+        function showAppointmentModal() {
+            if (!AppState.currentUser) {
+                showNotification('Please log in to book an appointment', 'warning');
+                showModal('login-modal');
+                return;
+            }
+            updateAppointmentPetDropdown();
+            showModal('appointment-modal');
+        }
 
-        // Show notification
+        function showAddPetModal() {
+            if (!AppState.currentUser) {
+                showNotification('Please log in to add a pet', 'warning');
+                showModal('login-modal');
+                return;
+            }
+            showModal('add-pet-modal');
+        }
+
+        function scrollToProducts() {
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+            hideModal('dashboard-modal');
+        }
+
+        function showAdminPanel() {
+            showNotification('Admin panel would open here', 'info');
+        }
+
+        function calculateAge(dateString) {
+            const birthDate = new Date(dateString);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const displayHour = hour % 12 || 12;
+            return `${displayHour}:${minutes} ${ampm}`;
+        }
+
+        function getServiceName(serviceId) {
+            const service = AppState.services.find(s => s.id == serviceId);
+            return service ? service.name : 'Unknown Service';
+        }
+
+        // Enhanced Notification System
         function showNotification(message, type) {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
@@ -3589,7 +3774,8 @@
                 <button class="close-notification">&times;</button>
             `;
             
-            document.body.appendChild(notification);
+            const container = document.getElementById('notification-container') || document.body;
+            container.appendChild(notification);
             
             setTimeout(() => {
                 notification.classList.add('show');
@@ -3610,29 +3796,220 @@
             });
         }
 
-        // Close modals when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target === loginModal) {
-                loginModal.classList.remove('active');
+        // Placeholder functions for future implementation
+        function editPet(petId) {
+            showNotification('Edit pet functionality would open here', 'info');
+        }
+
+        function viewPetHistory(petId) {
+            showNotification('Pet history would be displayed here', 'info');
+        }
+
+        function viewAppointment(appointmentId) {
+            showNotification('Appointment details would be shown here', 'info');
+        }
+
+        function cancelAppointment(appointmentId) {
+            if (confirm('Are you sure you want to cancel this appointment?')) {
+                try {
+                    const appointments = JSON.parse(localStorage.getItem('pdsaAppointments') || '[]');
+                    const updatedAppointments = appointments.map(apt => {
+                        if (apt.id === appointmentId) {
+                            return { ...apt, status: 'cancelled' };
+                        }
+                        return apt;
+                    });
+                    localStorage.setItem('pdsaAppointments', JSON.stringify(updatedAppointments));
+                    
+                    AppState.userAppointments = AppState.userAppointments.filter(apt => apt.id !== appointmentId);
+                    
+                    showNotification('Appointment cancelled', 'success');
+                } catch (error) {
+                    console.error('Error cancelling appointment:', error);
+                    showNotification('Error cancelling appointment', 'error');
+                }
             }
-            if (e.target === registerModal) {
-                registerModal.classList.remove('active');
-            }
-            if (e.target === bookingConfirmationModal) {
-                bookingConfirmationModal.classList.remove('active');
-            }
-            if (e.target === checkoutModal) {
-                checkoutModal.classList.remove('active');
-            }
+        }
+
+        function viewOrder(orderId) {
+            showNotification('Order details would be shown here', 'info');
+        }
+
+        // Hero buttons
+        document.getElementById('learn-more-btn')?.addEventListener('click', () => {
+            document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
         });
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            initCart();
-            
-            // Set default payment method
-            document.querySelector('[data-method="credit-card"]').classList.add('selected');
+        // Emergency button functionality
+        document.getElementById('emergency-banner')?.addEventListener('click', (e) => {
+            // Emergency button now directly calls 10111
+            // No need for additional functionality
         });
+
+        // User Dashboard
+        function loadUserData() {
+            loadUserPets();
+            loadUserAppointments();
+            loadUserOrders();
+        }
+
+        function loadUserPets() {
+            if (!AppState.currentUser) return;
+            
+            // Show loading
+            const petsList = document.getElementById('user-pets-list');
+            if (petsList) {
+                petsList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner"></i><p>Loading pets...</p></div>';
+            }
+            
+            try {
+                const pets = JSON.parse(localStorage.getItem('pdsaPets') || '[]');
+                AppState.userPets = pets.filter(pet => pet.userId === AppState.currentUser.uid);
+                
+                updateAppointmentPetDropdown();
+                renderUserPets();
+            } catch (error) {
+                console.error('Error loading pets:', error);
+                showNotification('Error loading pets', 'error');
+            }
+        }
+
+        function loadUserAppointments() {
+            if (!AppState.currentUser) return;
+            
+            const appointmentsList = document.getElementById('user-appointments-list');
+            if (appointmentsList) {
+                appointmentsList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner"></i><p>Loading appointments...</p></div>';
+            }
+            
+            try {
+                const appointments = JSON.parse(localStorage.getItem('pdsaAppointments') || '[]');
+                AppState.userAppointments = appointments.filter(apt => apt.userId === AppState.currentUser.uid);
+                
+                renderUserAppointments();
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+                showNotification('Error loading appointments', 'error');
+            }
+        }
+
+        function loadUserOrders() {
+            if (!AppState.currentUser) return;
+            
+            const ordersList = document.getElementById('user-orders-list');
+            if (ordersList) {
+                ordersList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner"></i><p>Loading orders...</p></div>';
+            }
+            
+            try {
+                const orders = JSON.parse(localStorage.getItem('pdsaOrders') || '[]');
+                AppState.userOrders = orders.filter(order => order.userId === AppState.currentUser.uid);
+                
+                renderUserOrders();
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                showNotification('Error loading orders', 'error');
+            }
+        }
+
+        function renderUserPets() {
+            const petsList = document.getElementById('user-pets-list');
+            if (!petsList) return;
+            
+            if (AppState.userPets.length === 0) {
+                petsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-paw" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
+                        <p>No pets registered yet.</p>
+                        <button class="btn btn-primary" onclick="showModal('add-pet-modal')">Add Your First Pet</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            petsList.innerHTML = AppState.userPets.map(pet => `
+                <div class="dashboard-card">
+                    <h4>${pet.name} <small>(${pet.species})</small></h4>
+                    <p><strong>Breed:</strong> ${pet.breed || 'Unknown'}</p>
+                    <p><strong>Age:</strong> ${pet.dateOfBirth ? calculateAge(pet.dateOfBirth) + ' years' : 'Unknown'}</p>
+                    <p><strong>Gender:</strong> ${pet.gender || 'Unknown'}</p>
+                    <div style="margin-top: 0.5rem;">
+                        <button class="btn btn-outline btn-sm" onclick="editPet('${pet.id}')">Edit</button>
+                        <button class="btn btn-outline btn-sm" onclick="viewPetHistory('${pet.id}')">History</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderUserAppointments() {
+            const appointmentsList = document.getElementById('user-appointments-list');
+            if (!appointmentsList) return;
+            
+            if (AppState.userAppointments.length === 0) {
+                appointmentsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
+                        <p>No appointments scheduled.</p>
+                        <button class="btn btn-primary" onclick="showModal('appointment-modal')">Book Your First Appointment</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            const upcomingAppointments = AppState.userAppointments
+                .filter(apt => new Date(apt.date) >= new Date())
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .slice(0, 3);
+            
+            if (upcomingAppointments.length === 0) {
+                appointmentsList.innerHTML = '<p>No upcoming appointments.</p>';
+                return;
+            }
+            
+            appointmentsList.innerHTML = upcomingAppointments.map(apt => `
+                <div class="dashboard-card">
+                    <h4>${getServiceName(apt.serviceId)}</h4>
+                    <p><strong>Pet:</strong> ${apt.petName}</p>
+                    <p><strong>Date:</strong> ${formatDate(apt.date)} at ${apt.time}</p>
+                    <p><strong>Status:</strong> <span class="status status-${apt.status}">${apt.status}</span></p>
+                    <div style="margin-top: 0.5rem;">
+                        <button class="btn btn-outline btn-sm" onclick="viewAppointment('${apt.id}')">Details</button>
+                        ${apt.status === 'pending' ? `<button class="btn btn-outline btn-sm" onclick="cancelAppointment('${apt.id}')">Cancel</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderUserOrders() {
+            const ordersList = document.getElementById('user-orders-list');
+            if (!ordersList) return;
+            
+            if (AppState.userOrders.length === 0) {
+                ordersList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
+                        <p>No orders yet.</p>
+                        <button class="btn btn-primary" onclick="scrollToProducts()">Start Shopping</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            const recentOrders = AppState.userOrders.slice(0, 3);
+            
+            ordersList.innerHTML = recentOrders.map(order => `
+                <div class="dashboard-card">
+                    <h4>Order #${order.id}</h4>
+                    <p><strong>Date:</strong> ${formatDate(order.date)}</p>
+                    <p><strong>Items:</strong> ${order.items.length} item(s)</p>
+                    <p><strong>Total:</strong> R${order.total.toFixed(2)}</p>
+                    <p><strong>Status:</strong> <span class="status status-${order.status}">${order.status}</span></p>
+                    <div style="margin-top: 0.5rem;">
+                        <button class="btn btn-outline btn-sm" onclick="viewOrder('${order.id}')">View Details</button>
+                    </div>
+                </div>
+            `).join('');
+        }
     </script>
 </body>
-</html><!-- Test commit for GitHub Actions -->
+</html>

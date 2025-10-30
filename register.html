@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDSA Veterinary Clinic - Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #17a2b8;
+            --text-light: #666;
+            --text-dark: #333;
+            --border: #ddd;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            --gradient-success: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .register-container {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 600px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .register-hero {
+            flex: 1;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .register-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.1"><path fill="white" d="M500,250c138,0,250,112,250,250S638,750,500,750S250,638,250,500S362,250,500,250z"/></svg>') no-repeat center;
+            background-size: cover;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .hero-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .hero-features {
+            list-style: none;
+            margin-top: 2rem;
+        }
+        
+        .hero-features li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .hero-features i {
+            color: var(--success);
+            font-size: 1.2rem;
+        }
+        
+        .register-form-section {
+            flex: 1;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .form-header h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-header p {
+            color: var(--text-light);
+        }
+        
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #eee;
+            z-index: 1;
+        }
+        
+        .progress-bar {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-secondary);
+            z-index: 2;
+            transition: width 0.5s ease;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+        }
+        
+        .step-number {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 3px solid white;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-number {
+            background: var(--gradient-secondary);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
+        }
+        
+        .step.completed .step-number {
+            background: var(--gradient-success);
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .form-group input.error {
+            border-color: var(--danger);
+        }
+        
+        .form-group input.success {
+            border-color: var(--success);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 6px;
+            border-radius: 5px;
+            background-color: #eee;
+            overflow: hidden;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+            border-radius: 5px;
+        }
+        
+        .password-strength.weak .password-strength-bar {
+            width: 33%;
+            background: linear-gradient(90deg, var(--danger) 0%, #e74c3c 100%);
+        }
+        
+        .password-strength.medium .password-strength-bar {
+            width: 66%;
+            background: linear-gradient(90deg, var(--warning) 0%, #f39c12 100%);
+        }
+        
+        .password-strength.strong .password-strength-bar {
+            width: 100%;
+            background: linear-gradient(90deg, var(--success) 0%, #27ae60 100%);
+        }
+        
+        .password-requirements {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.25rem;
+            transition: color 0.3s;
+        }
+        
+        .requirement i {
+            margin-right: 0.5rem;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+        }
+        
+        .requirement.met {
+            color: var(--success);
+        }
+        
+        .requirement.unmet {
+            color: #999;
+        }
+        
+        .error-message {
+            color: var(--danger);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .form-group.has-error .error-message {
+            display: block;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-secondary);
+            color: white;
+            width: 100%;
+            padding: 1rem;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+        
+        .checkbox-group:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .checkbox-group input {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        .checkbox-group label {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-dark);
+        }
+        
+        .checkbox-group a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .form-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .form-footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: var(--gradient-success);
+        }
+        
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%);
+        }
+        
+        .notification.info {
+            background: var(--gradient-secondary);
+        }
+        
+        .close-notification {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .register-container {
+                flex-direction: column;
+                max-width: 500px;
+            }
+            
+            .register-hero {
+                padding: 2rem;
+                text-align: center;
+            }
+            
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .register-form-section {
+                padding: 2rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .register-container {
+                border-radius: 15px;
+            }
+            
+            .register-hero,
+            .register-form-section {
+                padding: 1.5rem;
+            }
+            
+            .hero-content h1 {
+                font-size: 1.75rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .step-label {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <!-- Registration Container -->
+    <div class="register-container">
+        <!-- Hero Section -->
+        <div class="register-hero">
+            <div class="hero-content">
+                <div class="hero-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1>Join PDSA Veterinary Clinic</h1>
+                <p>Create your account to access premium veterinary services, manage your pet's health records, and book appointments online.</p>
+                
+                <ul class="hero-features">
+                    <li><i class="fas fa-check-circle"></i> Easy Appointment Booking</li>
+                    <li><i class="fas fa-check-circle"></i> Digital Health Records</li>
+                    <li><i class="fas fa-check-circle"></i> 24/7 Emergency Support</li>
+                    <li><i class="fas fa-check-circle"></i> Exclusive Member Discounts</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Registration Form Section -->
+        <div class="register-form-section">
+            <div class="form-header">
+                <h2>Create Your Account</h2>
+                <p>Join thousands of pet owners who trust PDSA</p>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="progress-bar" id="progress-bar"></div>
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Personal Info</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Account Details</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+            
+            <form id="register-form">
+                <!-- Step 1: Personal Information -->
+                <div class="form-step active" id="step-1">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" name="first_name" placeholder="Enter first name" required>
+                            <div class="error-message">Please enter your first name</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" name="last_name" placeholder="Enter last name" required>
+                            <div class="error-message">Please enter your last name</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email Address</label>
+                        <input type="email" id="register-email" name="email" placeholder="Enter your email" required>
+                        <div class="error-message">Please enter a valid email address</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-phone">Phone Number</label>
+                        <input type="tel" id="register-phone" name="phone" placeholder="Enter your phone number" required>
+                        <div class="error-message">Please enter a valid phone number</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address (Optional)</label>
+                        <input type="text" id="address" name="address" placeholder="Enter your address">
+                    </div>
+                    <div class="form-navigation">
+                        <div></div> <!-- Empty div for spacing -->
+                        <button type="button" class="btn btn-primary next-step" data-next="2">
+                            Continue <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Account Details -->
+                <div class="form-step" id="step-2">
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" name="password" placeholder="Create a strong password" required>
+                        <button type="button" class="password-toggle" id="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <div class="password-strength">
+                            <div class="password-strength-bar"></div>
+                        </div>
+                        <div class="password-requirements">
+                            <div class="requirement unmet" id="req-length">
+                                <i class="fas fa-circle"></i> At least 8 characters
+                            </div>
+                            <div class="requirement unmet" id="req-uppercase">
+                                <i class="fas fa-circle"></i> One uppercase letter
+                            </div>
+                            <div class="requirement unmet" id="req-lowercase">
+                                <i class="fas fa-circle"></i> One lowercase letter
+                            </div>
+                            <div class="requirement unmet" id="req-number">
+                                <i class="fas fa-circle"></i> One number
+                            </div>
+                            <div class="requirement unmet" id="req-special">
+                                <i class="fas fa-circle"></i> One special character
+                            </div>
+                        </div>
+                        <div class="error-message">Please create a strong password</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm-password">Confirm Password</label>
+                        <input type="password" id="register-confirm-password" name="confirm_password" placeholder="Confirm your password" required>
+                        <button type="button" class="password-toggle" id="toggle-confirm-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <div class="error-message">Passwords do not match</div>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-outline prev-step" data-prev="1">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="btn btn-primary next-step" data-next="3">
+                            Continue <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Confirmation -->
+                <div class="form-step" id="step-3">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">I agree to the <a href="#terms-of-service" data-legal-page="terms-of-service">Terms of Service</a> and <a href="#privacy-policy" data-legal-page="privacy-policy">Privacy Policy</a></label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="newsletter" name="newsletter">
+                        <label for="newsletter">I would like to receive newsletters and promotional emails about PDSA services and products</label>
+                    </div>
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-outline prev-step" data-prev="2">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="submit-registration" disabled>
+                            <div class="loading-spinner"></div>
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-footer">
+                    Already have an account? <a href="login.html">Login here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form elements
+            const form = document.getElementById('register-form');
+            const steps = document.querySelectorAll('.form-step');
+            const stepIndicators = document.querySelectorAll('.step');
+            const nextButtons = document.querySelectorAll('.next-step');
+            const prevButtons = document.querySelectorAll('.prev-step');
+            const submitButton = document.getElementById('submit-registration');
+            const termsCheckbox = document.getElementById('terms');
+            const passwordInput = document.getElementById('register-password');
+            const confirmPasswordInput = document.getElementById('register-confirm-password');
+            const passwordStrengthBar = document.querySelector('.password-strength-bar');
+            const passwordStrength = document.querySelector('.password-strength');
+            const passwordRequirements = document.querySelectorAll('.requirement');
+            const togglePasswordButtons = document.querySelectorAll('.password-toggle');
+            const progressBar = document.getElementById('progress-bar');
+            
+            // Current step
+            let currentStep = 1;
+            
+            // Initialize form validation
+            initFormValidation();
+            
+            // Update progress bar
+            updateProgressBar();
+            
+            // Next step buttons
+            nextButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const nextStep = parseInt(this.getAttribute('data-next'));
+                    if (validateStep(currentStep)) {
+                        goToStep(nextStep);
+                    }
+                });
+            });
+            
+            // Previous step buttons
+            prevButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const prevStep = parseInt(this.getAttribute('data-prev'));
+                    goToStep(prevStep);
+                });
+            });
+            
+            // Terms checkbox
+            termsCheckbox.addEventListener('change', function() {
+                submitButton.disabled = !this.checked;
+            });
+            
+            // Password strength indicator
+            passwordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+                validatePasswordMatch();
+            });
+            
+            // Confirm password validation
+            confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+            
+            // Toggle password visibility
+            togglePasswordButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const input = this.previousElementSibling;
+                    const icon = this.querySelector('i');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                });
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    // Show loading state
+                    setButtonLoading(submitButton, true);
+                    
+                    // Simulate API call
+                    setTimeout(() => {
+                        // In a real application, you would submit the form data to your server
+                        setButtonLoading(submitButton, false);
+                        showNotification('Registration successful! Welcome to PDSA Veterinary Clinic.', 'success');
+                        
+                        // Redirect to login page after successful registration
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+                    }, 2000);
+                }
+            });
+            
+            // Go to specific step
+            function goToStep(step) {
+                // Hide all steps
+                steps.forEach(s => s.classList.remove('active'));
+                
+                // Show current step
+                document.getElementById(`step-${step}`).classList.add('active');
+                
+                // Update step indicators
+                stepIndicators.forEach(indicator => {
+                    const indicatorStep = parseInt(indicator.getAttribute('data-step'));
+                    indicator.classList.remove('active', 'completed');
+                    
+                    if (indicatorStep === step) {
+                        indicator.classList.add('active');
+                    } else if (indicatorStep < step) {
+                        indicator.classList.add('completed');
+                    }
+                });
+                
+                currentStep = step;
+                updateProgressBar();
+            }
+            
+            // Update progress bar
+            function updateProgressBar() {
+                const progress = ((currentStep - 1) / 2) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+            
+            // Initialize form validation
+            function initFormValidation() {
+                // Add real-time validation for required fields
+                const requiredInputs = form.querySelectorAll('input[required]');
+                
+                requiredInputs.forEach(input => {
+                    input.addEventListener('blur', function() {
+                        validateField(this);
+                    });
+                    
+                    input.addEventListener('input', function() {
+                        // Remove error state when user starts typing
+                        if (this.value.trim() !== '') {
+                            this.classList.remove('error');
+                            this.parentElement.classList.remove('has-error');
+                        }
+                    });
+                });
+                
+                // Email validation
+                const emailInput = document.getElementById('register-email');
+                emailInput.addEventListener('blur', function() {
+                    validateEmail(this);
+                });
+                
+                // Phone validation
+                const phoneInput = document.getElementById('register-phone');
+                phoneInput.addEventListener('blur', function() {
+                    validatePhone(this);
+                });
+            }
+            
+            // Validate a specific field
+            function validateField(field) {
+                const value = field.value.trim();
+                let isValid = true;
+                
+                if (field.hasAttribute('required') && value === '') {
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    field.classList.remove('error');
+                    field.classList.add('success');
+                    field.parentElement.classList.remove('has-error');
+                } else {
+                    field.classList.remove('success');
+                    field.classList.add('error');
+                    field.parentElement.classList.add('has-error');
+                }
+                
+                return isValid;
+            }
+            
+            // Validate email field
+            function validateEmail(field) {
+                const value = field.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                let isValid = true;
+                
+                if (field.hasAttribute('required') && value === '') {
+                    isValid = false;
+                } else if (value !== '' && !emailRegex.test(value)) {
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    field.classList.remove('error');
+                    field.classList.add('success');
+                    field.parentElement.classList.remove('has-error');
+                } else {
+                    field.classList.remove('success');
+                    field.classList.add('error');
+                    field.parentElement.classList.add('has-error');
+                }
+                
+                return isValid;
+            }
+            
+            // Validate phone field
+            function validatePhone(field) {
+                const value = field.value.trim();
+                // Simple phone validation - at least 10 digits
+                const phoneRegex = /^[\d\s\-\(\)\+]{10,}$/;
+                let isValid = true;
+                
+                if (field.hasAttribute('required') && value === '') {
+                    isValid = false;
+                } else if (value !== '' && !phoneRegex.test(value)) {
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    field.classList.remove('error');
+                    field.classList.add('success');
+                    field.parentElement.classList.remove('has-error');
+                } else {
+                    field.classList.remove('success');
+                    field.classList.add('error');
+                    field.parentElement.classList.add('has-error');
+                }
+                
+                return isValid;
+            }
+            
+            // Check password strength
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                const requirements = {
+                    length: password.length >= 8,
+                    uppercase: /[A-Z]/.test(password),
+                    lowercase: /[a-z]/.test(password),
+                    number: /[0-9]/.test(password),
+                    special: /[^A-Za-z0-9]/.test(password)
+                };
+                
+                // Update requirement indicators
+                passwordRequirements.forEach(req => {
+                    const requirementType = req.id.replace('req-', '');
+                    if (requirements[requirementType]) {
+                        req.classList.add('met');
+                        req.classList.remove('unmet');
+                        req.querySelector('i').className = 'fas fa-check-circle';
+                        strength++;
+                    } else {
+                        req.classList.remove('met');
+                        req.classList.add('unmet');
+                        req.querySelector('i').className = 'fas fa-circle';
+                    }
+                });
+                
+                // Update strength bar
+                passwordStrength.className = 'password-strength';
+                if (strength <= 2) {
+                    passwordStrength.classList.add('weak');
+                } else if (strength <= 4) {
+                    passwordStrength.classList.add('medium');
+                } else {
+                    passwordStrength.classList.add('strong');
+                }
+                
+                return strength;
+            }
+            
+            // Validate password match
+            function validatePasswordMatch() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                const parent = confirmPasswordInput.parentElement;
+                
+                if (confirmPassword === '') {
+                    confirmPasswordInput.classList.remove('error', 'success');
+                    parent.classList.remove('has-error');
+                    return true;
+                }
+                
+                if (password === confirmPassword) {
+                    confirmPasswordInput.classList.remove('error');
+                    confirmPasswordInput.classList.add('success');
+                    parent.classList.remove('has-error');
+                    return true;
+                } else {
+                    confirmPasswordInput.classList.remove('success');
+                    confirmPasswordInput.classList.add('error');
+                    parent.classList.add('has-error');
+                    return false;
+                }
+            }
+            
+            // Validate current step
+            function validateStep(step) {
+                let isValid = true;
+                
+                if (step === 1) {
+                    // Validate personal information
+                    const firstName = document.getElementById('first-name');
+                    const lastName = document.getElementById('last-name');
+                    const email = document.getElementById('register-email');
+                    const phone = document.getElementById('register-phone');
+                    
+                    if (!validateField(firstName)) isValid = false;
+                    if (!validateField(lastName)) isValid = false;
+                    if (!validateEmail(email)) isValid = false;
+                    if (!validatePhone(phone)) isValid = false;
+                } else if (step === 2) {
+                    // Validate account details
+                    const password = document.getElementById('register-password');
+                    const confirmPassword = document.getElementById('register-confirm-password');
+                    
+                    if (!validateField(password)) isValid = false;
+                    if (!validatePasswordMatch()) isValid = false;
+                    
+                    // Check password strength
+                    const strength = checkPasswordStrength(password.value);
+                    if (strength < 3) {
+                        password.classList.add('error');
+                        password.parentElement.classList.add('has-error');
+                        isValid = false;
+                    }
+                }
+                
+                return isValid;
+            }
+            
+            // Validate entire form
+            function validateForm() {
+                let isValid = true;
+                
+                // Validate all steps
+                for (let i = 1; i <= 3; i++) {
+                    if (!validateStep(i)) {
+                        isValid = false;
+                    }
+                }
+                
+                // Check terms agreement
+                if (!termsCheckbox.checked) {
+                    isValid = false;
+                    showNotification('Please agree to the Terms of Service and Privacy Policy', 'error');
+                }
+                
+                return isValid;
+            }
+            
+            // Set button loading state
+            function setButtonLoading(button, isLoading) {
+                const spinner = button.querySelector('.loading-spinner');
+                const icon = button.querySelector('.fa-user-plus');
+                
+                if (isLoading) {
+                    button.disabled = true;
+                    if (!spinner) {
+                        const newSpinner = document.createElement('div');
+                        newSpinner.className = 'loading-spinner';
+                        button.insertBefore(newSpinner, button.firstChild);
+                    } else {
+                        spinner.style.display = 'inline-block';
+                    }
+                    if (icon) icon.style.display = 'none';
+                } else {
+                    button.disabled = false;
+                    if (spinner) spinner.style.display = 'none';
+                    if (icon) icon.style.display = 'inline-block';
+                }
+            }
+            
+            // Show notification
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <span>${message}</span>
+                    <button class="close-notification">&times;</button>
+                `;
+                
+                const container = document.getElementById('notification-container');
+                container.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }, 5000);
+                
+                notification.querySelector('.close-notification').addEventListener('click', () => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
