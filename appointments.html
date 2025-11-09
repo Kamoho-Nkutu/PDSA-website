@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointments | PDSA Veterinary Clinic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
         :root {
             --primary: #2c3e50;
@@ -119,6 +123,61 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--primary-light);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .admin-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .cart-icon {
+            position: relative;
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .cart-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Main Content */
@@ -397,121 +456,6 @@
             margin-top: 0.5rem;
         }
 
-        /* Calendar View */
-        .calendar-container {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--box-shadow);
-            margin-bottom: 2rem;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .calendar-nav {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .calendar-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--primary);
-            min-width: 180px;
-            text-align: center;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.5rem;
-        }
-
-        .calendar-weekday {
-            text-align: center;
-            font-weight: 600;
-            color: var(--text-light);
-            padding: 0.75rem;
-            font-size: 0.9rem;
-            background: var(--primary-light);
-            border-radius: 8px;
-        }
-
-        .calendar-day {
-            height: 90px;
-            border: 1px solid #eee;
-            border-radius: var(--border-radius);
-            padding: 0.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .calendar-day:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .day-number {
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-            align-self: flex-end;
-        }
-
-        .day-appointments {
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
-            flex-grow: 1;
-            justify-content: flex-end;
-        }
-
-        .day-appointment {
-            font-size: 0.7rem;
-            padding: 0.15rem 0.35rem;
-            border-radius: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .appointment-type-1 {
-            background: rgba(78, 84, 200, 0.15);
-            color: var(--primary);
-        }
-
-        .appointment-type-2 {
-            background: rgba(255, 126, 95, 0.15);
-            color: var(--secondary);
-        }
-
-        .appointment-type-3 {
-            background: rgba(52, 199, 89, 0.15);
-            color: var(--success);
-        }
-
-        .current-day {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .current-day .day-number {
-            color: white;
-        }
-
-        .has-appointments {
-            border: 2px solid var(--secondary-light);
-        }
-
         /* No Appointments State */
         .no-appointments {
             text-align: center;
@@ -621,6 +565,169 @@
             text-decoration: underline;
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1100;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast i {
+            font-size: 1.25rem;
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.error {
+            background: var(--accent);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner i {
+            font-size: 2rem;
+            color: var(--secondary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background-color: var(--success);
+        }
+        
+        .notification.error {
+            background-color: var(--accent);
+        }
+        
+        .notification.info {
+            background-color: var(--secondary);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning);
+        }
+        
+        .close-notification {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .header {
@@ -639,15 +746,6 @@
             .appointment-actions {
                 flex-wrap: wrap;
                 justify-content: flex-start;
-            }
-            
-            .calendar-day {
-                height: 70px;
-                padding: 0.25rem;
-            }
-            
-            .day-appointment {
-                display: none;
             }
         }
 
@@ -670,11 +768,6 @@
             .page-header {
                 flex-direction: column;
                 align-items: flex-start;
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
             }
             
             .stats-container {
@@ -710,9 +803,27 @@
                 <a href="payment-history.html"><i class="fas fa-receipt"></i> Payments</a>
             </nav>
             
-            <div class="user-profile-btn">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
-                <span>Alex J.</span>
+            <div class="auth-buttons">
+                <div class="cart-icon" id="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                <button class="btn btn-outline" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button class="btn btn-primary" id="register-btn">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+                <a href="admin-dashboard.html" class="admin-link" id="admin-link" style="display: none;">
+                    <i class="fas fa-cog"></i> Admin
+                </a>
+                <div id="user-menu" style="display: none;">
+                    <div class="user-profile-btn">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
+                        <span id="user-name"></span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -724,10 +835,7 @@
                 <i class="fas fa-calendar"></i>
                 My Appointments
             </h1>
-            <button class="btn" id="new-appointment-btn">
-                <i class="fas fa-plus"></i>
-                Schedule Appointment
-            </button>
+            <!-- Removed the "Schedule Appointment" button -->
         </div>
 
         <!-- Stats Cards -->
@@ -736,21 +844,21 @@
                 <div class="stat-icon">
                     <i class="fas fa-clock"></i>
                 </div>
-                <div class="stat-value">2</div>
+                <div class="stat-value" id="upcoming-count">0</div>
                 <div class="stat-label">Upcoming Appointments</div>
             </div>
             <div class="stat-card stat-completed">
                 <div class="stat-icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <div class="stat-value">5</div>
+                <div class="stat-value" id="completed-count">0</div>
                 <div class="stat-label">Completed This Year</div>
             </div>
             <div class="stat-card stat-cancelled">
                 <div class="stat-icon">
                     <i class="fas fa-times-circle"></i>
                 </div>
-                <div class="stat-value">1</div>
+                <div class="stat-value" id="cancelled-count">0</div>
                 <div class="stat-label">Cancelled Appointments</div>
             </div>
         </div>
@@ -758,48 +866,20 @@
         <!-- Tabs -->
         <div class="tabs">
             <div class="tab active" data-tab="upcoming">
-                Upcoming <span class="tab-count">2</span>
+                Upcoming <span class="tab-count" id="upcoming-tab-count">0</span>
             </div>
             <div class="tab" data-tab="completed">
-                Completed <span class="tab-count">2</span>
+                Completed <span class="tab-count" id="completed-tab-count">0</span>
             </div>
             <div class="tab" data-tab="cancelled">
-                Cancelled <span class="tab-count">0</span>
-            </div>
-            <div class="tab" data-tab="calendar">
-                Calendar View
+                Cancelled <span class="tab-count" id="cancelled-tab-count">0</span>
             </div>
         </div>
 
-        <!-- Calendar View -->
-        <div class="calendar-container" id="calendar-view" style="display: none;">
-            <div class="calendar-header">
-                <div class="calendar-nav">
-                    <button class="btn btn-outline" id="prev-month">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <h2 class="calendar-title">June 2023</h2>
-                    <button class="btn btn-outline" id="next-month">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                <button class="btn" id="today-btn">
-                    <i class="fas fa-calendar"></i>
-                    Today
-                </button>
-            </div>
-
-            <div class="calendar-grid">
-                <div class="calendar-weekday">Sun</div>
-                <div class="calendar-weekday">Mon</div>
-                <div class="calendar-weekday">Tue</div>
-                <div class="calendar-weekday">Wed</div>
-                <div class="calendar-weekday">Thu</div>
-                <div class="calendar-weekday">Fri</div>
-                <div class="calendar-weekday">Sat</div>
-
-                <!-- Calendar days will be generated dynamically -->
-            </div>
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="loading-spinner">
+            <i class="fas fa-spinner"></i>
+            <p>Loading appointments...</p>
         </div>
 
         <!-- Appointments List -->
@@ -811,11 +891,59 @@
         <div class="no-appointments" id="no-appointments" style="display: none;">
             <i class="fas fa-calendar-plus"></i>
             <h2>No appointments scheduled</h2>
-            <p>You don't have any appointments scheduled yet. Book your first appointment to keep your pet healthy and happy.</p>
-            <button class="btn" id="schedule-appointment-btn">
-                <i class="fas fa-plus"></i>
-                Schedule Appointment
-            </button>
+            <p>You don't have any appointments scheduled at the moment. Appointments are managed by the clinic administration.</p>
+            <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 1rem;">
+                <i class="fas fa-info-circle"></i> 
+                Please contact the clinic to schedule new appointments.
+            </p>
+        </div>
+    </div>
+
+    <!-- Appointment Details Modal -->
+    <div class="modal" id="appointment-details-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Appointment Details</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="appointment-details-content">
+                    <!-- Appointment details will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="close-details-btn">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Appointment Modal -->
+    <div class="modal" id="cancel-appointment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Cancel Appointment</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel this appointment? This action cannot be undone.</p>
+                <div class="appointment-summary" id="cancel-summary">
+                    <!-- Appointment summary will be populated here -->
+                </div>
+                <div class="edit-form-group" style="margin-top: 1rem;">
+                    <label for="cancel-reason">Reason for cancellation (optional):</label>
+                    <textarea id="cancel-reason" rows="3" placeholder="Please provide a reason for cancellation..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="close-cancel-btn">
+                    Keep Appointment
+                </button>
+                <button class="btn btn-accent" id="confirm-cancel-btn">
+                    <i class="fas fa-times"></i> Cancel Appointment
+                </button>
+            </div>
         </div>
     </div>
 
@@ -823,137 +951,213 @@
         <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved. | <a href="index.html">Home</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
     </footer>
 
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Appointment cancelled successfully</span>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
     <script>
-        // Sample appointment data
-        const appointments = [
-            {
-                id: 1,
-                title: "Annual Checkup",
-                pet: "Bella",
-                date: "2023-06-15",
-                time: "10:30 AM",
-                type: "Wellness Exam",
-                vet: "Dr. Sarah Johnson",
-                status: "upcoming",
-                notes: "Annual vaccination due"
-            },
-            {
-                id: 2,
-                title: "Dental Cleaning",
-                pet: "Whiskers",
-                date: "2023-06-20",
-                time: "2:00 PM",
-                type: "Dental Care",
-                vet: "Dr. Michael Chen",
-                status: "upcoming",
-                notes: "Pre-anesthesia bloodwork required"
-            },
-            {
-                id: 3,
-                title: "Vaccination",
-                pet: "Bella",
-                date: "2023-05-10",
-                time: "11:15 AM",
-                type: "Vaccination",
-                vet: "Dr. Sarah Johnson",
-                status: "completed",
-                notes: "Rabies and DHPP vaccines administered"
-            },
-            {
-                id: 4,
-                title: "Spay Surgery",
-                pet: "Luna",
-                date: "2023-04-22",
-                time: "9:00 AM",
-                type: "Surgery",
-                vet: "Dr. Emily Rodriguez",
-                status: "completed",
-                notes: "Patient recovered well after surgery"
-            }
-        ];
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
+            authDomain: "pdsa-database.firebaseapp.com",
+            databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
+            projectId: "pdsa-database",
+            storageBucket: "pdsa-database.firebasestorage.app",
+            messagingSenderId: "1041468794677",
+            appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
+            measurementId: "G-8QLD9BK9M0"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Application State
+        const AppState = {
+            currentUser: null,
+            userAppointments: [],
+            userPets: []
+        };
 
         // DOM Elements
         const appointmentsList = document.getElementById('appointments-list');
         const noAppointments = document.getElementById('no-appointments');
-        const calendarView = document.getElementById('calendar-view');
+        const loadingSpinner = document.getElementById('loading-spinner');
         const tabs = document.querySelectorAll('.tab');
-        const newAppointmentBtn = document.getElementById('new-appointment-btn');
-        const scheduleAppointmentBtn = document.getElementById('schedule-appointment-btn');
-        const prevMonthBtn = document.getElementById('prev-month');
-        const nextMonthBtn = document.getElementById('next-month');
-        const todayBtn = document.getElementById('today-btn');
-        const calendarTitle = document.querySelector('.calendar-title');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const userMenu = document.getElementById('user-menu');
+        const userName = document.getElementById('user-name');
+        const adminLink = document.getElementById('admin-link');
 
-        // Calendar state
-        let currentMonth = new Date().getMonth();
-        let currentYear = new Date().getFullYear();
+        // Stats elements
+        const upcomingCount = document.getElementById('upcoming-count');
+        const completedCount = document.getElementById('completed-count');
+        const cancelledCount = document.getElementById('cancelled-count');
+        const upcomingTabCount = document.getElementById('upcoming-tab-count');
+        const completedTabCount = document.getElementById('completed-tab-count');
+        const cancelledTabCount = document.getElementById('cancelled-tab-count');
+
+        // Modal elements
+        const appointmentDetailsModal = document.getElementById('appointment-details-modal');
+        const cancelAppointmentModal = document.getElementById('cancel-appointment-modal');
+        const closeModalButtons = document.querySelectorAll('.close-modal');
+        const closeDetailsBtn = document.getElementById('close-details-btn');
+        const closeCancelBtn = document.getElementById('close-cancel-btn');
+        const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+
+        // State variables
+        let currentAppointmentId = null;
 
         // Initialize the page
         function init() {
-            renderAppointments('upcoming');
-            generateCalendar();
-            updateTabCounts();
+            // Firebase auth state listener
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    AppState.currentUser = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || user.email.split('@')[0],
+                        emailVerified: user.emailVerified
+                    };
+                    
+                    updateAuthUI();
+                    loadUserAppointments();
+                    loadUserPets();
+                } else {
+                    AppState.currentUser = null;
+                    AppState.userAppointments = [];
+                    updateAuthUI();
+                    updateNoAppointmentsState();
+                }
+            });
             
             // Event listeners
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     const tabName = tab.getAttribute('data-tab');
                     activateTab(tabName);
-                    
-                    if (tabName === 'calendar') {
-                        calendarView.style.display = 'block';
-                        appointmentsList.style.display = 'none';
-                        noAppointments.style.display = 'none';
-                    } else {
-                        calendarView.style.display = 'none';
-                        renderAppointments(tabName);
-                    }
+                    renderAppointments(tabName);
                 });
             });
-            
-            newAppointmentBtn.addEventListener('click', () => {
-                alert('Redirecting to appointment scheduling page...');
-                // In a real application, this would redirect to a scheduling page
-                window.location.href = 'schedule-appointment.html';
-            });
-            
-            scheduleAppointmentBtn.addEventListener('click', () => {
-                alert('Redirecting to appointment scheduling page...');
-                // In a real application, this would redirect to a scheduling page
-                window.location.href = 'schedule-appointment.html';
+
+            // Modal event listeners
+            closeModalButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    appointmentDetailsModal.classList.remove('active');
+                    cancelAppointmentModal.classList.remove('active');
+                });
             });
 
-            prevMonthBtn.addEventListener('click', () => {
-                currentMonth--;
-                if (currentMonth < 0) {
-                    currentMonth = 11;
-                    currentYear--;
+            closeDetailsBtn.addEventListener('click', () => {
+                appointmentDetailsModal.classList.remove('active');
+            });
+
+            closeCancelBtn.addEventListener('click', () => {
+                cancelAppointmentModal.classList.remove('active');
+            });
+
+            confirmCancelBtn.addEventListener('click', () => {
+                cancelAppointment(currentAppointmentId);
+            });
+
+            // Close modals when clicking outside
+            window.addEventListener('click', (event) => {
+                if (event.target === appointmentDetailsModal) {
+                    appointmentDetailsModal.classList.remove('active');
                 }
-                generateCalendar();
-            });
-
-            nextMonthBtn.addEventListener('click', () => {
-                currentMonth++;
-                if (currentMonth > 11) {
-                    currentMonth = 0;
-                    currentYear++;
+                if (event.target === cancelAppointmentModal) {
+                    cancelAppointmentModal.classList.remove('active');
                 }
-                generateCalendar();
             });
 
-            todayBtn.addEventListener('click', () => {
-                const today = new Date();
-                currentMonth = today.getMonth();
-                currentYear = today.getFullYear();
-                generateCalendar();
-            });
+            // Auth buttons
+            loginBtn.addEventListener('click', () => showLoginModal());
+            registerBtn.addEventListener('click', () => showRegisterModal());
+
+            // Load cart
+            loadCart();
+        }
+
+        // Load user's appointments from Firebase
+        function loadUserAppointments() {
+            if (!AppState.currentUser) {
+                console.log('No user logged in, skipping appointment load');
+                return;
+            }
+            
+            loadingSpinner.style.display = 'block';
+            appointmentsList.style.display = 'none';
+            noAppointments.style.display = 'none';
+            
+            // Simple query that doesn't require composite indexes
+            db.collection('appointments')
+                .where('userId', '==', AppState.currentUser.uid)
+                .get()
+                .then((querySnapshot) => {
+                    AppState.userAppointments = [];
+                    querySnapshot.forEach((doc) => {
+                        const appointment = doc.data();
+                        appointment.id = doc.id;
+                        
+                        // Convert Firestore timestamp to Date if needed
+                        if (appointment.date && appointment.date.toDate) {
+                            appointment.date = appointment.date.toDate().toISOString().split('T')[0];
+                        }
+                        
+                        AppState.userAppointments.push(appointment);
+                    });
+                    
+                    // Sort appointments by date and time on the client side
+                    AppState.userAppointments.sort((a, b) => {
+                        // Combine date and time for proper sorting
+                        const dateA = new Date(`${a.date}T${a.time || '00:00'}`);
+                        const dateB = new Date(`${b.date}T${b.time || '00:00'}`);
+                        return dateB - dateA; // Sort descending (newest first)
+                    });
+                    
+                    renderAppointments('upcoming');
+                    updateStats();
+                    loadingSpinner.style.display = 'none';
+                })
+                .catch((error) => {
+                    console.error('Error loading appointments:', error);
+                    showNotification('Error loading appointments: ' + error.message, 'error');
+                    loadingSpinner.style.display = 'none';
+                });
+        }
+
+        // Load user's pets for appointment details
+        function loadUserPets() {
+            if (!AppState.currentUser) return;
+            
+            db.collection('pets')
+                .where('userId', '==', AppState.currentUser.uid)
+                .get()
+                .then((querySnapshot) => {
+                    AppState.userPets = [];
+                    querySnapshot.forEach((doc) => {
+                        const pet = doc.data();
+                        pet.id = doc.id;
+                        AppState.userPets.push(pet);
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error loading pets:', error);
+                });
         }
 
         // Render appointments based on status
         function renderAppointments(status) {
             appointmentsList.innerHTML = '';
             
-            const filteredAppointments = appointments.filter(apt => apt.status === status);
+            const filteredAppointments = AppState.userAppointments.filter(apt => apt.status === status);
             
             if (filteredAppointments.length === 0) {
                 noAppointments.style.display = 'block';
@@ -978,13 +1182,17 @@
             const statusClass = `status-${appointment.status}`;
             const statusText = appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1);
             
+            // Find pet name
+            const pet = AppState.userPets.find(p => p.id === appointment.petId);
+            const petName = pet ? pet.name : 'Unknown Pet';
+            
             card.innerHTML = `
                 <div class="appointment-header">
                     <div>
-                        <h3 class="appointment-title">${appointment.title}</h3>
+                        <h3 class="appointment-title">${appointment.serviceType || 'Appointment'}</h3>
                         <div class="appointment-date">
                             <i class="fas fa-calendar"></i>
-                            ${formatDate(appointment.date)} at ${appointment.time}
+                            ${formatDate(appointment.date)} at ${appointment.time || 'Time TBD'}
                         </div>
                     </div>
                     <span class="appointment-status ${statusClass}">${statusText}</span>
@@ -997,7 +1205,7 @@
                         </div>
                         <div class="detail-content">
                             <h4>Pet</h4>
-                            <p>${appointment.pet}</p>
+                            <p>${petName}</p>
                         </div>
                     </div>
                     
@@ -1006,8 +1214,8 @@
                             <i class="fas fa-stethoscope"></i>
                         </div>
                         <div class="detail-content">
-                            <h4>Appointment Type</h4>
-                            <p>${appointment.type}</p>
+                            <h4>Service</h4>
+                            <p>${appointment.serviceType || 'General Checkup'}</p>
                         </div>
                     </div>
                     
@@ -1017,7 +1225,7 @@
                         </div>
                         <div class="detail-content">
                             <h4>Veterinarian</h4>
-                            <p>${appointment.vet}</p>
+                            <p>${appointment.veterinarian || 'To be assigned'}</p>
                         </div>
                     </div>
                 </div>
@@ -1026,16 +1234,12 @@
                 
                 <div class="appointment-actions">
                     ${appointment.status === 'upcoming' ? `
-                        <button class="btn btn-accent" onclick="rescheduleAppointment(${appointment.id})">
-                            <i class="fas fa-edit"></i>
-                            Reschedule
-                        </button>
-                        <button class="btn btn-outline" onclick="cancelAppointment(${appointment.id})">
+                        <button class="btn btn-outline" onclick="showCancelModal('${appointment.id}')">
                             <i class="fas fa-times"></i>
                             Cancel
                         </button>
                     ` : ''}
-                    <button class="btn" onclick="viewAppointmentDetails(${appointment.id})">
+                    <button class="btn" onclick="viewAppointmentDetails('${appointment.id}')">
                         <i class="fas fa-info-circle"></i>
                         Details
                     </button>
@@ -1056,100 +1260,358 @@
             });
         }
 
-        // Update tab counts
-        function updateTabCounts() {
-            const upcomingCount = appointments.filter(apt => apt.status === 'upcoming').length;
-            const completedCount = appointments.filter(apt => apt.status === 'completed').length;
-            const cancelledCount = appointments.filter(apt => apt.status === 'cancelled').length;
+        // Update stats and tab counts
+        function updateStats() {
+            const upcoming = AppState.userAppointments.filter(apt => apt.status === 'upcoming').length;
+            const completed = AppState.userAppointments.filter(apt => apt.status === 'completed').length;
+            const cancelled = AppState.userAppointments.filter(apt => apt.status === 'cancelled').length;
             
-            document.querySelector('[data-tab="upcoming"] .tab-count').textContent = upcomingCount;
-            document.querySelector('[data-tab="completed"] .tab-count').textContent = completedCount;
-            document.querySelector('[data-tab="cancelled"] .tab-count').textContent = cancelledCount;
+            upcomingCount.textContent = upcoming;
+            completedCount.textContent = completed;
+            cancelledCount.textContent = cancelled;
+            
+            upcomingTabCount.textContent = upcoming;
+            completedTabCount.textContent = completed;
+            cancelledTabCount.textContent = cancelled;
         }
 
         // Format date
         function formatDate(dateString) {
+            if (!dateString) return 'Date not set';
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             return new Date(dateString).toLocaleDateString('en-US', options);
         }
 
-        // Generate calendar
-        function generateCalendar() {
-            const calendarGrid = document.querySelector('.calendar-grid');
-            // Clear existing days (except weekdays)
-            for (let i = 7; i < calendarGrid.children.length; i++) {
-                calendarGrid.removeChild(calendarGrid.children[i]);
+        // Update no appointments state
+        function updateNoAppointmentsState() {
+            if (!AppState.currentUser || AppState.userAppointments.length === 0) {
+                noAppointments.style.display = 'block';
+                appointmentsList.style.display = 'none';
+            } else {
+                noAppointments.style.display = 'none';
+                appointmentsList.style.display = 'grid';
             }
+        }
+
+        // Show cancel modal
+        function showCancelModal(id) {
+            currentAppointmentId = id;
+            const appointment = AppState.userAppointments.find(apt => apt.id === id);
             
-            // Update calendar title
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"];
-            calendarTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
-            
-            const today = new Date();
-            const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
-            
-            // Get first day of month and number of days
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            
-            // Add empty cells for days before the first day of the month
-            for (let i = 0; i < firstDay; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'calendar-day';
-                calendarGrid.appendChild(emptyDay);
-            }
-            
-            // Add cells for each day of the month
-            for (let i = 1; i <= daysInMonth; i++) {
-                const dayCell = document.createElement('div');
-                dayCell.className = 'calendar-day';
+            if (appointment) {
+                const pet = AppState.userPets.find(p => p.id === appointment.petId);
+                const petName = pet ? pet.name : 'Unknown Pet';
                 
-                if (isCurrentMonth && i === today.getDate()) {
-                    dayCell.classList.add('current-day');
-                }
-                
-                // Check if this day has appointments
-                const hasAppointments = appointments.some(apt => {
-                    const aptDate = new Date(apt.date);
-                    return aptDate.getDate() === i && 
-                           aptDate.getMonth() === currentMonth && 
-                           aptDate.getFullYear() === currentYear;
-                });
-                
-                if (hasAppointments) {
-                    dayCell.classList.add('has-appointments');
-                }
-                
-                dayCell.innerHTML = `
-                    <div class="day-number">${i}</div>
-                    <div class="day-appointments">
-                        ${i === 15 ? '<div class="day-appointment appointment-type-1">Bella - 10:30 AM</div>' : ''}
-                        ${i === 20 ? '<div class="day-appointment appointment-type-2">Whiskers - 2:00 PM</div>' : ''}
-                        ${i === 5 ? '<div class="day-appointment appointment-type-3">Max - 11:00 AM</div>' : ''}
+                document.getElementById('cancel-summary').innerHTML = `
+                    <div class="appointment-card" style="margin: 0; box-shadow: none; border-left: 4px solid var(--accent);">
+                        <div class="appointment-header">
+                            <div>
+                                <h3 class="appointment-title">${appointment.serviceType || 'Appointment'}</h3>
+                                <div class="appointment-date">
+                                    <i class="fas fa-calendar"></i>
+                                    ${formatDate(appointment.date)} at ${appointment.time || 'Time TBD'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="appointment-details">
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-paw"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <h4>Pet</h4>
+                                    <p>${petName}</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-icon">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="detail-content">
+                                    <h4>Veterinarian</h4>
+                                    <p>${appointment.veterinarian || 'To be assigned'}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 `;
                 
-                calendarGrid.appendChild(dayCell);
+                cancelAppointmentModal.classList.add('active');
             }
         }
 
-        // Appointment actions
-        function rescheduleAppointment(id) {
-            alert(`Rescheduling appointment #${id}`);
-            // In a real application, this would open a rescheduling modal
-        }
-
+        // Cancel appointment
         function cancelAppointment(id) {
-            if (confirm('Are you sure you want to cancel this appointment?')) {
-                alert(`Cancelling appointment #${id}`);
-                // In a real application, this would update the appointment status
+            const reason = document.getElementById('cancel-reason').value;
+            
+            db.collection('appointments').doc(id).update({
+                status: 'cancelled',
+                cancellationReason: reason,
+                cancelledAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                cancelAppointmentModal.classList.remove('active');
+                showNotification('Appointment cancelled successfully', 'success');
+                loadUserAppointments(); // Reload to reflect changes
+            })
+            .catch((error) => {
+                console.error('Error cancelling appointment:', error);
+                showNotification('Error cancelling appointment: ' + error.message, 'error');
+            });
+        }
+
+        // View appointment details
+        function viewAppointmentDetails(id) {
+            const appointment = AppState.userAppointments.find(apt => apt.id === id);
+            
+            if (appointment) {
+                const pet = AppState.userPets.find(p => p.id === appointment.petId);
+                const petName = pet ? pet.name : 'Unknown Pet';
+                const petBreed = pet ? (pet.breed || 'Unknown breed') : 'Unknown breed';
+                
+                document.getElementById('appointment-details-content').innerHTML = `
+                    <div class="appointment-details" style="grid-template-columns: 1fr 1fr; margin-bottom: 1.5rem;">
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-paw"></i>
+                            </div>
+                            <div class="detail-content">
+                                <h4>Pet</h4>
+                                <p>${petName} (${petBreed})</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="detail-content">
+                                <h4>Date & Time</h4>
+                                <p>${formatDate(appointment.date)} at ${appointment.time || 'Time TBD'}</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-stethoscope"></i>
+                            </div>
+                            <div class="detail-content">
+                                <h4>Service Type</h4>
+                                <p>${appointment.serviceType || 'General Checkup'}</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="detail-content">
+                                <h4>Veterinarian</h4>
+                                <p>${appointment.veterinarian || 'To be assigned'}</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="detail-content">
+                                <h4>Duration</h4>
+                                <p>${appointment.duration || '30 minutes'}</p>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="detail-content">
+                                <h4>Location</h4>
+                                <p>${appointment.location || 'Main Clinic'}</p>
+                            </div>
+                        </div>
+                    </div>
+                    ${appointment.notes ? `
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-sticky-note"></i>
+                            </div>
+                            <div class="detail-content">
+                                <h4>Notes</h4>
+                                <p>${appointment.notes}</p>
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${appointment.cancellationReason ? `
+                        <div class="detail-item">
+                            <div class="detail-icon">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <div class="detail-content">
+                                <h4>Cancellation Reason</h4>
+                                <p>${appointment.cancellationReason}</p>
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+                
+                appointmentDetailsModal.classList.add('active');
+                currentAppointmentId = id;
             }
         }
 
-        function viewAppointmentDetails(id) {
-            alert(`Viewing details for appointment #${id}`);
-            // In a real application, this would open a details modal
+        // Authentication Management
+        function updateAuthUI() {
+            if (AppState.currentUser) {
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                userMenu.style.display = 'block';
+                if (userName) {
+                    userName.textContent = AppState.currentUser.displayName;
+                }
+            } else {
+                loginBtn.style.display = 'inline-flex';
+                registerBtn.style.display = 'inline-flex';
+                userMenu.style.display = 'none';
+            }
+        }
+
+        function showLoginModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Login Required</h2>
+                        <button class="modal-close" id="temp-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please log in to view and manage your appointments.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <button class="btn" onclick="window.location.href='index.html'">
+                                <i class="fas fa-home"></i> Go to Homepage
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            document.getElementById('temp-close').addEventListener('click', () => {
+                modal.remove();
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        function showRegisterModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Registration Required</h2>
+                        <button class="modal-close" id="temp-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please register to view your appointments.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <button class="btn" onclick="window.location.href='index.html'">
+                                <i class="fas fa-home"></i> Go to Homepage
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            document.getElementById('temp-close').addEventListener('click', () => {
+                modal.remove();
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        // Cart Management
+        function loadCart() {
+            const savedCart = localStorage.getItem('pdsaCart');
+            if (savedCart) {
+                try {
+                    const cart = JSON.parse(savedCart);
+                    const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+                    document.querySelector('.cart-count').textContent = totalItems;
+                } catch (error) {
+                    console.error('Error parsing saved cart:', error);
+                    document.querySelector('.cart-count').textContent = '0';
+                }
+            }
+        }
+
+        // Enhanced Notification System
+        function showNotification(message, type) {
+            let container = document.getElementById('notification-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'notification-container';
+                container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10000;';
+                document.body.appendChild(container);
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button class="close-notification">&times;</button>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            const autoRemove = setTimeout(() => {
+                closeNotification(notification);
+            }, 5000);
+            
+            const closeBtn = notification.querySelector('.close-notification');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    clearTimeout(autoRemove);
+                    closeNotification(notification);
+                });
+            }
+            
+            function closeNotification(notif) {
+                notif.classList.remove('show');
+                setTimeout(() => {
+                    if (notif.parentNode) {
+                        notif.parentNode.removeChild(notif);
+                    }
+                }, 300);
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            
+            const icon = toast.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+                toast.className = 'toast success';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+                toast.className = 'toast error';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
         }
 
         // Initialize the page when loaded

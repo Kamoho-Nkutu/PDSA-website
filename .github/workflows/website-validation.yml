@@ -1,0 +1,35 @@
+name: Website Validation
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  html-validation:
+    name: Validate HTML Website
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Validate website files
+      run: |
+        echo "🔍 Validating PDSA Veterinary Clinic Website"
+        echo "============================================"
+        
+        # Check for essential files
+        if [ ! -f "index.html" ]; then
+          echo "❌ ERROR: index.html is required"
+          exit 1
+        fi
+        
+        # Basic HTML validation
+        if ! grep -q "<!DOCTYPE html>" "index.html"; then
+          echo "❌ ERROR: Invalid HTML structure"
+          exit 1
+        fi
+        
+        echo "✅ Website validation passed"
+        echo "📁 Files found:"
+        find . -name "*.html" -o -name "*.css" -o -name "*.js" | head -10

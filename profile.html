@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile | PDSA Veterinary Clinic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <style>
         :root {
             --primary: #2c3e50;
@@ -91,6 +96,12 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         .user-menu {
             position: relative;
         }
@@ -152,30 +163,6 @@
             cursor: pointer;
         }
 
-        /* Main Content */
-        .profile-container {
-            padding: 2rem 0;
-        }
-
-        .profile-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .profile-header h1 {
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .profile-actions {
-            display: flex;
-            gap: 15px;
-        }
-
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
@@ -213,6 +200,30 @@
         .btn-success {
             background-color: var(--success);
             color: white;
+        }
+
+        /* Main Content */
+        .profile-container {
+            padding: 2rem 0;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-header h1 {
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 15px;
         }
 
         .profile-content {
@@ -557,6 +568,66 @@
             margin-top: 1.5rem;
         }
 
+        /* Enhanced Elements */
+        .progress-container {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--success);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--light);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card a {
+            font-size: 0.9rem;
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
         /* Responsive Styles */
         @media (max-width: 992px) {
             .profile-content {
@@ -615,9 +686,97 @@
         .fade-in {
             animation: fadeIn 0.5s ease;
         }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: var(--shadow);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background-color: var(--accent);
+        }
+
+        .toast.warning {
+            background-color: var(--warning);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Debug Panel */
+        .debug-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 10000;
+            max-width: 300px;
+            display: none;
+        }
+
+        .debug-toggle {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
+    <!-- Debug Toggle -->
+    <button class="debug-toggle" id="debug-toggle">D</button>
+    <div class="debug-panel" id="debug-panel">
+        <h4>Firebase Debug Info</h4>
+        <div id="debug-info">Loading...</div>
+        <button class="btn btn-outline" id="retry-connection" style="margin-top: 10px; color: white; border-color: white;">Retry Connection</button>
+    </div>
+
     <header class="main-header">
         <div class="container">
             <div class="header-content">
@@ -627,20 +786,30 @@
                 </div>
                 <nav class="main-nav">
                     <ul class="nav-list">
-                        <li><a href="admin-dashboard.html">Home</a></li>
+                        <li><a href="index.html">Home</a></li>
                         <li><a href="services.html">Services</a></li>
                         <li><a href="about.html">About Us</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </nav>
-                <div class="user-menu">
-                    <div class="user-avatar">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&q=80" alt="User Avatar" id="user-avatar-small">
-                        <div class="user-dropdown">
-                            <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
-                            <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
-                            <a href="notifications.html"><i class="fas fa-bell"></i> Notifications <span class="badge">3</span></a>
-                            <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                <div class="auth-buttons">
+                    <div id="login-buttons" style="display: none;">
+                        <button class="btn btn-outline" id="login-btn">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        <button class="btn btn-primary" id="register-btn">
+                            <i class="fas fa-user-plus"></i> Register
+                        </button>
+                    </div>
+                    <div class="user-menu" id="user-menu" style="display: none;">
+                        <div class="user-avatar">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&q=80" alt="User Avatar" id="user-avatar-small">
+                            <div class="user-dropdown">
+                                <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
+                                <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                                <a href="notifications.html"><i class="fas fa-bell"></i> Notifications <span class="badge">3</span></a>
+                                <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -656,14 +825,14 @@
             <div class="profile-header">
                 <h1><i class="fas fa-user-circle"></i> My Profile</h1>
                 <div class="profile-actions">
-                    <a href="edit-profile.html" class="btn btn-primary">
+                    <button class="btn btn-primary" id="edit-profile-btn">
                         <i class="fas fa-edit"></i> Edit Profile
-                    </a>
+                    </button>
                     <button class="btn btn-outline" id="print-profile">
                         <i class="fas fa-print"></i> Print Profile
                     </button>
-                    <button class="btn btn-outline" id="download-profile">
-                        <i class="fas fa-download"></i> Download
+                    <button class="btn btn-outline" id="demo-login-btn">
+                        <i class="fas fa-user"></i> Demo Login
                     </button>
                 </div>
             </div>
@@ -675,24 +844,23 @@
                         <button class="btn btn-outline change-avatar" id="change-avatar-btn">
                             <i class="fas fa-camera"></i> Change Photo
                         </button>
-                        <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
                     </div>
                     <nav class="profile-nav">
                         <a href="profile.html" class="active"><i class="fas fa-user"></i> Personal Info</a>
-                        <a href="my-pets.html"><i class="fas fa-paw"></i> My Pets <span class="badge">3</span></a>
-                        <a href="appointments.html"><i class="fas fa-calendar-alt"></i> Appointments <span class="badge">2</span></a>
+                        <a href="my-pets.html"><i class="fas fa-paw"></i> My Pets <span class="badge" id="pets-count">0</span></a>
+                        <a href="appointments.html"><i class="fas fa-calendar-alt"></i> Appointments <span class="badge" id="appointments-count">0</span></a>
                         <a href="payment-history.html"><i class="fas fa-receipt"></i> Payment History</a>
                         <a href="prescriptions.html"><i class="fas fa-prescription-bottle"></i> Prescriptions</a>
                         <a href="medical-records.html"><i class="fas fa-file-medical"></i> Medical Records</a>
-                        <a href="messages.html"><i class="fas fa-comments"></i> Messages <span class="badge">5</span></a>
+                        <a href="messages.html"><i class="fas fa-comments"></i> Messages <span class="badge" id="messages-count">0</span></a>
                     </nav>
                     
-                    <div class="profile-stats" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
+                    <div class="progress-container">
                         <h3 style="margin-bottom: 1rem; color: var(--primary);">Profile Completion</h3>
-                        <div class="progress-bar" style="height: 10px; background-color: #eee; border-radius: 5px; margin-bottom: 0.5rem;">
-                            <div class="progress" style="height: 100%; width: 85%; background-color: var(--success); border-radius: 5px;"></div>
+                        <div class="progress-bar">
+                            <div class="progress" id="profile-progress" style="width: 0%;"></div>
                         </div>
-                        <p style="text-align: center; color: var(--gray); font-size: 0.9rem;">85% Complete</p>
+                        <p style="text-align: center; color: var(--gray); font-size: 0.9rem;" id="profile-completion-text">0% Complete</p>
                     </div>
                 </div>
 
@@ -702,40 +870,35 @@
                         <div class="detail-grid">
                             <div class="detail-row">
                                 <span class="detail-label">Full Name:</span>
-                                <span class="detail-value" id="user-name">Sarah Johnson</span>
+                                <span class="detail-value" id="user-name">Loading...</span>
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">Email:</span>
-                                <span class="detail-value" id="user-email">sarah.johnson@example.com</span>
+                                <span class="detail-value" id="user-email">Loading...</span>
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">Phone:</span>
-                                <span class="detail-value" id="user-phone">+27 71 234 5678</span>
+                                <span class="detail-value" id="user-phone">Loading...</span>
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">Date of Birth:</span>
-                                <span class="detail-value" id="user-dob">15/03/1985</span>
+                                <span class="detail-value" id="user-dob">Loading...</span>
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">Address:</span>
-                                <span class="detail-value" id="user-address">
-                                    1188 Nancefield Road<br>
-                                    Mfolo, Soweto<br>
-                                    Johannesburg<br>
-                                    1868
-                                </span>
+                                <span class="detail-value" id="user-address">Loading...</span>
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">Member Since:</span>
-                                <span class="detail-value" id="member-since">15 June 2020</span>
+                                <span class="detail-value" id="member-since">Loading...</span>
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">Last Login:</span>
-                                <span class="detail-value" id="last-login">Today, 14:32</span>
+                                <span class="detail-value" id="last-login">Loading...</span>
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">Preferred Branch:</span>
-                                <span class="detail-value" id="preferred-branch">Soweto Clinic</span>
+                                <span class="detail-value" id="preferred-branch">Loading...</span>
                             </div>
                         </div>
                     </div>
@@ -749,9 +912,9 @@
                                 </div>
                                 <div class="security-content">
                                     <h3>Password</h3>
-                                    <p>Last changed: 3 months ago</p>
+                                    <p id="password-last-changed">Last changed: Loading...</p>
                                 </div>
-                                <a href="change-password.html" class="btn btn-outline">Change Password</a>
+                                <button class="btn btn-outline" id="change-password-btn">Change Password</button>
                             </div>
                             
                             <div class="security-item">
@@ -762,29 +925,7 @@
                                     <h3>Two-Factor Authentication</h3>
                                     <p>Add an extra layer of security</p>
                                 </div>
-                                <a href="two-factor-auth.html" class="btn btn-outline">Enable 2FA</a>
-                            </div>
-                            
-                            <div class="security-item">
-                                <div class="security-icon">
-                                    <i class="fas fa-link"></i>
-                                </div>
-                                <div class="security-content">
-                                    <h3>Connected Devices</h3>
-                                    <p>2 active sessions</p>
-                                </div>
-                                <a href="devices.html" class="btn btn-outline">Manage</a>
-                            </div>
-                            
-                            <div class="security-item">
-                                <div class="security-icon">
-                                    <i class="fas fa-history"></i>
-                                </div>
-                                <div class="security-content">
-                                    <h3>Login History</h3>
-                                    <p>View recent account activity</p>
-                                </div>
-                                <a href="login-history.html" class="btn btn-outline">View History</a>
+                                <button class="btn btn-outline" id="enable-2fa-btn">Enable 2FA</button>
                             </div>
                         </div>
                     </div>
@@ -793,40 +934,45 @@
                         <h2><i class="fas fa-heart"></i> Membership Details</h2>
                         <div class="membership-card">
                             <div class="membership-header">
-                                <h3>PDSA Premium Member</h3>
-                                <span class="membership-status active">Active</span>
+                                <h3 id="membership-plan">Loading...</h3>
+                                <span class="membership-status" id="membership-status">Loading...</span>
                             </div>
                             <div class="membership-details">
-                                <p><i class="fas fa-id-card"></i> Member ID: PDSA789456123</p>
-                                <p><i class="fas fa-calendar-alt"></i> Joined: 15 June 2020</p>
-                                <p><i class="fas fa-calendar-check"></i> Expires: 15 June 2024</p>
-                                <p><i class="fas fa-percentage"></i> Discount: 15% on all services</p>
-                                <p><i class="fas fa-gift"></i> Priority appointments & emergency access</p>
+                                <p><i class="fas fa-id-card"></i> Member ID: <span id="member-id">Loading...</span></p>
+                                <p><i class="fas fa-calendar-alt"></i> Joined: <span id="membership-joined">Loading...</span></p>
+                                <p><i class="fas fa-calendar-check"></i> Expires: <span id="membership-expires">Loading...</span></p>
+                                <p><i class="fas fa-percentage"></i> Discount: <span id="membership-discount">Loading...</span></p>
+                                <p><i class="fas fa-gift"></i> <span id="membership-benefits">Loading...</span></p>
                             </div>
                             <div class="membership-actions">
-                                <a href="renew-membership.html" class="btn btn-success">Renew Membership</a>
-                                <a href="membership-benefits.html" class="btn btn-outline" style="color: white; border-color: white;">View Benefits</a>
+                                <button class="btn btn-success" id="renew-membership-btn">Renew Membership</button>
+                                <button class="btn btn-outline" id="view-benefits-btn" style="color: white; border-color: white;">View Benefits</button>
                             </div>
                         </div>
                     </div>
                     
                     <div class="detail-section fade-in">
                         <h2><i class="fas fa-chart-line"></i> Quick Stats</h2>
-                        <div class="detail-grid">
-                            <div class="detail-row" style="text-align: center; padding: 1rem; background-color: var(--light); border-radius: 8px;">
-                                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Pets</h3>
-                                <p style="font-size: 2rem; font-weight: bold; color: var(--secondary);">3</p>
-                                <a href="my-pets.html" style="font-size: 0.9rem;">View All Pets</a>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h3>Pets</h3>
+                                <div class="stat-value" id="stats-pets">0</div>
+                                <a href="my-pets.html">View All Pets</a>
                             </div>
-                            <div class="detail-row" style="text-align: center; padding: 1rem; background-color: var(--light); border-radius: 8px;">
-                                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Appointments</h3>
-                                <p style="font-size: 2rem; font-weight: bold; color: var(--secondary);">12</p>
-                                <a href="appointments.html" style="font-size: 0.9rem;">View Appointments</a>
+                            <div class="stat-card">
+                                <h3>Appointments</h3>
+                                <div class="stat-value" id="stats-appointments">0</div>
+                                <a href="appointments.html">View Appointments</a>
                             </div>
-                            <div class="detail-row" style="text-align: center; padding: 1rem; background-color: var(--light); border-radius: 8px;">
-                                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">Spent This Year</h3>
-                                <p style="font-size: 2rem; font-weight: bold; color: var(--secondary);">R4,250</p>
-                                <a href="payment-history.html" style="font-size: 0.9rem;">View Payment History</a>
+                            <div class="stat-card">
+                                <h3>Spent This Year</h3>
+                                <div class="stat-value" id="stats-spent">R0</div>
+                                <a href="payment-history.html">View Payment History</a>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Prescriptions</h3>
+                                <div class="stat-value" id="stats-prescriptions">0</div>
+                                <a href="prescriptions.html">View Prescriptions</a>
                             </div>
                         </div>
                     </div>
@@ -841,11 +987,6 @@
                 <div class="footer-section">
                     <h3>PDSA Veterinary Clinic</h3>
                     <p>Providing compassionate care for pets in Soweto since 2010.</p>
-                    <div class="social-links" style="display: flex; gap: 15px; margin-top: 1rem;">
-                        <a href="#" style="color: #bbb; font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
-                        <a href="#" style="color: #bbb; font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
-                        <a href="#" style="color: #bbb; font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
-                    </div>
                 </div>
                 <div class="footer-section">
                     <h3>Quick Links</h3>
@@ -860,7 +1001,6 @@
                     <h3>Emergency</h3>
                     <p>24/7 Emergency Line: <strong>011 984 4340</strong></p>
                     <p>Address: 1188 Nancefield Road, Mfolo, Soweto</p>
-                    <p>Email: emergency@pdsa.org.za</p>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -869,166 +1009,477 @@
         </div>
     </footer>
 
-    <!-- Avatar Change Modal -->
-    <div class="modal" id="avatar-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Change Profile Picture</h2>
-            <div class="avatar-options">
-                <div class="avatar-upload">
-                    <h3>Upload New Photo</h3>
-                    <div class="upload-area" id="upload-area">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <p>Drag & drop your photo here or click to browse</p>
-                        <input type="file" id="avatar-file-input" accept="image/*">
-                    </div>
-                    <div class="avatar-preview" id="avatar-preview" style="display: none;">
-                        <img id="preview-image" src="#" alt="Preview">
-                    </div>
-                </div>
-                <div class="avatar-defaults">
-                    <h3>Choose Default Avatar</h3>
-                    <div class="default-avatars">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&q=80" alt="Avatar 1" class="default-avatar">
-                        <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&q=80" alt="Avatar 2" class="default-avatar">
-                        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&q=80" alt="Avatar 3" class="default-avatar">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-outline" id="cancel-avatar-change">Cancel</button>
-                <button class="btn btn-primary" id="save-avatar" disabled>Save Changes</button>
-            </div>
-        </div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Profile updated successfully!</span>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Avatar change functionality
-            const changeAvatarBtn = document.getElementById('change-avatar-btn');
-            const avatarModal = document.getElementById('avatar-modal');
-            const closeModal = document.querySelector('.close-modal');
-            const cancelAvatarChange = document.getElementById('cancel-avatar-change');
-            const saveAvatar = document.getElementById('save-avatar');
-            const avatarFileInput = document.getElementById('avatar-file-input');
-            const uploadArea = document.getElementById('upload-area');
-            const avatarPreview = document.getElementById('avatar-preview');
-            const previewImage = document.getElementById('preview-image');
-            const defaultAvatars = document.querySelectorAll('.default-avatar');
-            
-            // Open modal
-            changeAvatarBtn.addEventListener('click', () => {
-                avatarModal.style.display = 'flex';
-            });
-            
-            // Close modal
-            const closeAvatarModal = () => {
-                avatarModal.style.display = 'none';
+        // Firebase Configuration with error handling
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
+            authDomain: "pdsa-database.firebaseapp.com",
+            databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
+            projectId: "pdsa-database",
+            storageBucket: "pdsa-database.firebasestorage.app",
+            messagingSenderId: "1041468794677",
+            appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
+            measurementId: "G-8QLD9BK9M0"
+        };
+
+        // Initialize Firebase with error handling
+        let auth, db, storage;
+        let firebaseInitialized = false;
+
+        try {
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+            storage = firebase.storage();
+            firebaseInitialized = true;
+            console.log('Firebase initialized successfully');
+            updateDebugInfo('Firebase: Initialized successfully');
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+            updateDebugInfo(`Firebase Init Error: ${error.message}`);
+            showToast('Firebase initialization failed. Using demo mode.', 'error');
+            initializeDemoMode();
+        }
+
+        // Application State
+        const AppState = {
+            currentUser: null,
+            userProfile: null,
+            userMembership: null,
+            userStats: {
+                pets: 0,
+                appointments: 0,
+                spent: 0,
+                prescriptions: 0
+            },
+            isDemoMode: false
+        };
+
+        // Demo mode initialization
+        function initializeDemoMode() {
+            AppState.isDemoMode = true;
+            AppState.currentUser = {
+                uid: 'demo-user',
+                email: 'demo@example.com',
+                displayName: 'Demo User'
+            };
+            AppState.userProfile = {
+                displayName: 'Demo User',
+                email: 'demo@example.com',
+                phone: '+27 71 234 5678',
+                dateOfBirth: '1985-03-15',
+                address: '1188 Nancefield Road\nMfolo, Soweto\nJohannesburg\n1868',
+                preferredBranch: 'Soweto Clinic',
+                memberSince: new Date('2020-06-15'),
+                lastLogin: new Date(),
+                avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80'
+            };
+            AppState.userMembership = {
+                planName: 'Premium Care',
+                status: 'active',
+                planType: 'premium',
+                startDate: new Date('2020-06-15'),
+                endDate: new Date('2024-06-15')
+            };
+            AppState.userStats = {
+                pets: 3,
+                appointments: 12,
+                spent: 4250,
+                prescriptions: 5
             };
             
-            closeModal.addEventListener('click', closeAvatarModal);
-            cancelAvatarChange.addEventListener('click', closeAvatarModal);
+            updateAuthUI(true);
+            updateProfileUI();
+            updateMembershipUI();
+            updateStatsUI();
+            updateDebugInfo('Demo Mode: Active - No Firebase connection');
+        }
+
+        // Update debug information
+        function updateDebugInfo(message) {
+            const debugInfo = document.getElementById('debug-info');
+            const timestamp = new Date().toLocaleTimeString();
+            debugInfo.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+            debugInfo.scrollTop = debugInfo.scrollHeight;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Debug panel toggle
+            const debugToggle = document.getElementById('debug-toggle');
+            const debugPanel = document.getElementById('debug-panel');
             
-            // Click outside modal to close
-            avatarModal.addEventListener('click', (e) => {
-                if (e.target === avatarModal) {
-                    closeAvatarModal();
-                }
+            debugToggle.addEventListener('click', () => {
+                debugPanel.style.display = debugPanel.style.display === 'block' ? 'none' : 'block';
             });
-            
-            // File upload handling
-            uploadArea.addEventListener('click', () => {
-                avatarFileInput.click();
+
+            // Retry connection button
+            document.getElementById('retry-connection').addEventListener('click', () => {
+                location.reload();
             });
-            
-            avatarFileInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        previewImage.src = e.target.result;
-                        avatarPreview.style.display = 'block';
-                        saveAvatar.disabled = false;
-                    };
-                    
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-            
-            // Drag and drop functionality
-            uploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                this.style.borderColor = '#3498db';
-                this.style.backgroundColor = '#f8f9fa';
-            });
-            
-            uploadArea.addEventListener('dragleave', function() {
-                this.style.borderColor = '#95a5a6';
-                this.style.backgroundColor = 'transparent';
-            });
-            
-            uploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                this.style.borderColor = '#95a5a6';
-                this.style.backgroundColor = 'transparent';
-                
-                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                    avatarFileInput.files = e.dataTransfer.files;
-                    
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        previewImage.src = e.target.result;
-                        avatarPreview.style.display = 'block';
-                        saveAvatar.disabled = false;
-                    };
-                    
-                    reader.readAsDataURL(e.dataTransfer.files[0]);
-                }
-            });
-            
-            // Default avatar selection
-            defaultAvatars.forEach(avatar => {
-                avatar.addEventListener('click', function() {
-                    defaultAvatars.forEach(a => a.style.borderColor = 'transparent');
-                    this.style.borderColor = '#3498db';
-                    previewImage.src = this.src;
-                    avatarPreview.style.display = 'block';
-                    saveAvatar.disabled = false;
+
+            // Initialize Firebase Auth Listener if Firebase is initialized
+            if (firebaseInitialized) {
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        AppState.currentUser = user;
+                        updateDebugInfo(`Auth: User signed in - ${user.email}`);
+                        updateAuthUI(true);
+                        loadUserProfile();
+                        loadUserMembership();
+                        loadUserStats();
+                    } else {
+                        AppState.currentUser = null;
+                        updateDebugInfo('Auth: No user signed in');
+                        updateAuthUI(false);
+                        // Don't redirect automatically, let user use demo mode
+                    }
+                }, (error) => {
+                    console.error('Auth state change error:', error);
+                    updateDebugInfo(`Auth Error: ${error.message}`);
+                    showToast('Authentication error. Using demo mode.', 'error');
+                    initializeDemoMode();
                 });
-            });
-            
-            // Save new avatar
-            saveAvatar.addEventListener('click', function() {
-                const avatarLarge = document.getElementById('user-avatar-large');
-                const avatarSmall = document.getElementById('user-avatar-small');
+            } else {
+                // Use demo mode if Firebase failed to initialize
+                initializeDemoMode();
+            }
+
+            // Update UI based on authentication state
+            function updateAuthUI(isLoggedIn) {
+                const loginButtons = document.getElementById('login-buttons');
+                const userMenu = document.getElementById('user-menu');
                 
-                avatarLarge.src = previewImage.src;
-                avatarSmall.src = previewImage.src;
+                if (isLoggedIn) {
+                    loginButtons.style.display = 'none';
+                    userMenu.style.display = 'block';
+                } else {
+                    loginButtons.style.display = 'flex';
+                    userMenu.style.display = 'none';
+                }
+            }
+
+            // Load user profile from Firestore with error handling
+            function loadUserProfile() {
+                if (!AppState.currentUser || AppState.isDemoMode) return;
+
+                updateDebugInfo('Firestore: Loading user profile...');
                 
-                // Show success message (in a real app, you would save to server)
-                alert('Profile picture updated successfully!');
-                closeAvatarModal();
+                db.collection('users').doc(AppState.currentUser.uid).get()
+                    .then((doc) => {
+                        if (doc.exists) {
+                            AppState.userProfile = doc.data();
+                            updateDebugInfo('Firestore: Profile loaded successfully');
+                            updateProfileUI();
+                        } else {
+                            updateDebugInfo('Firestore: No profile found, creating new one');
+                            createUserProfile();
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error loading user profile:', error);
+                        updateDebugInfo(`Firestore Error: ${error.message} - Code: ${error.code}`);
+                        showToast('Error loading profile data. Using demo data.', 'error');
+                        initializeDemoMode();
+                    });
+            }
+
+            // Create a new user profile in Firestore
+            function createUserProfile() {
+                const userData = {
+                    uid: AppState.currentUser.uid,
+                    email: AppState.currentUser.email,
+                    displayName: AppState.currentUser.displayName || AppState.currentUser.email.split('@')[0],
+                    phone: '',
+                    dateOfBirth: '',
+                    address: '',
+                    preferredBranch: 'Soweto Clinic',
+                    memberSince: new Date(),
+                    lastLogin: new Date(),
+                    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                db.collection('users').doc(AppState.currentUser.uid).set(userData)
+                    .then(() => {
+                        AppState.userProfile = userData;
+                        updateDebugInfo('Firestore: New profile created successfully');
+                        updateProfileUI();
+                        showToast('Profile created successfully!');
+                    })
+                    .catch((error) => {
+                        console.error('Error creating user profile:', error);
+                        updateDebugInfo(`Firestore Create Error: ${error.message}`);
+                        showToast('Error creating profile. Using demo data.', 'error');
+                        initializeDemoMode();
+                    });
+            }
+
+            // Update profile UI with user data
+            function updateProfileUI() {
+                if (!AppState.userProfile) return;
+
+                const profile = AppState.userProfile;
+                
+                // Update personal information
+                document.getElementById('user-name').textContent = profile.displayName || 'Not set';
+                document.getElementById('user-email').textContent = profile.email;
+                document.getElementById('user-phone').textContent = profile.phone || 'Not set';
+                document.getElementById('user-dob').textContent = profile.dateOfBirth ? new Date(profile.dateOfBirth).toLocaleDateString() : 'Not set';
+                document.getElementById('user-address').textContent = profile.address || 'Not set';
+                document.getElementById('member-since').textContent = profile.memberSince ? new Date(profile.memberSince).toLocaleDateString() : 'Not set';
+                document.getElementById('last-login').textContent = profile.lastLogin ? new Date(profile.lastLogin).toLocaleString() : 'Not set';
+                document.getElementById('preferred-branch').textContent = profile.preferredBranch || 'Not set';
+
+                // Update avatar
+                if (profile.avatarUrl) {
+                    document.getElementById('user-avatar-large').src = profile.avatarUrl;
+                    document.getElementById('user-avatar-small').src = profile.avatarUrl;
+                }
+
+                // Calculate profile completion
+                calculateProfileCompletion(profile);
+            }
+
+            // Calculate profile completion percentage
+            function calculateProfileCompletion(profile) {
+                let completedFields = 0;
+                const totalFields = 6; // name, phone, dob, address, branch, avatar
+                
+                if (profile.displayName && profile.displayName !== '') completedFields++;
+                if (profile.phone && profile.phone !== '') completedFields++;
+                if (profile.dateOfBirth) completedFields++;
+                if (profile.address && profile.address !== '') completedFields++;
+                if (profile.preferredBranch && profile.preferredBranch !== '') completedFields++;
+                if (profile.avatarUrl && profile.avatarUrl !== '') completedFields++;
+                
+                const completionPercentage = Math.round((completedFields / totalFields) * 100);
+                
+                document.getElementById('profile-progress').style.width = `${completionPercentage}%`;
+                document.getElementById('profile-completion-text').textContent = `${completionPercentage}% Complete`;
+            }
+
+            // Load user membership data
+            function loadUserMembership() {
+                if (!AppState.currentUser || AppState.isDemoMode) {
+                    updateMembershipUI();
+                    return;
+                }
+
+                updateDebugInfo('Firestore: Loading membership data...');
+                
+                db.collection('memberships')
+                    .where('userId', '==', AppState.currentUser.uid)
+                    .where('status', 'in', ['active', 'expiring'])
+                    .limit(1)
+                    .get()
+                    .then((querySnapshot) => {
+                        if (!querySnapshot.empty) {
+                            const doc = querySnapshot.docs[0];
+                            AppState.userMembership = doc.data();
+                            updateDebugInfo('Firestore: Membership data loaded');
+                            updateMembershipUI();
+                        } else {
+                            updateDebugInfo('Firestore: No active membership found');
+                            updateMembershipUI(true);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error loading membership:', error);
+                        updateDebugInfo(`Firestore Membership Error: ${error.message}`);
+                        updateMembershipUI(true);
+                    });
+            }
+
+            // Update membership UI
+            function updateMembershipUI(noMembership = false) {
+                if (noMembership || !AppState.userMembership) {
+                    document.getElementById('membership-plan').textContent = 'No Active Membership';
+                    document.getElementById('membership-status').textContent = 'Inactive';
+                    document.getElementById('membership-status').className = 'membership-status';
+                    document.getElementById('member-id').textContent = 'N/A';
+                    document.getElementById('membership-joined').textContent = 'N/A';
+                    document.getElementById('membership-expires').textContent = 'N/A';
+                    document.getElementById('membership-discount').textContent = '0%';
+                    document.getElementById('membership-benefits').textContent = 'No active benefits';
+                    document.getElementById('renew-membership-btn').textContent = 'Get Membership';
+                    return;
+                }
+
+                const membership = AppState.userMembership;
+                
+                document.getElementById('membership-plan').textContent = `${membership.planName} Member`;
+                document.getElementById('membership-status').textContent = membership.status.charAt(0).toUpperCase() + membership.status.slice(1);
+                document.getElementById('membership-status').className = `membership-status ${membership.status}`;
+                document.getElementById('member-id').textContent = membership.memberId || 'PDSA' + Math.floor(100000000 + Math.random() * 900000000);
+                document.getElementById('membership-joined').textContent = membership.startDate ? new Date(membership.startDate).toLocaleDateString() : 'N/A';
+                document.getElementById('membership-expires').textContent = membership.endDate ? new Date(membership.endDate).toLocaleDateString() : 'N/A';
+                
+                // Set benefits based on plan type
+                const benefits = {
+                    basic: '10% on all services',
+                    premium: '15% on all services, priority appointments',
+                    family: '20% on all services, priority appointments & emergency access'
+                };
+                
+                const discounts = {
+                    basic: '10%',
+                    premium: '15%',
+                    family: '20%'
+                };
+                
+                document.getElementById('membership-discount').textContent = discounts[membership.planType] || '0%';
+                document.getElementById('membership-benefits').textContent = benefits[membership.planType] || 'No active benefits';
+            }
+
+            // Load user statistics
+            function loadUserStats() {
+                if (AppState.isDemoMode) {
+                    updateStatsUI();
+                    return;
+                }
+
+                if (!AppState.currentUser) return;
+
+                updateDebugInfo('Firestore: Loading user statistics...');
+                
+                // For demo purposes, we'll use static data
+                // In a real app, you would query Firestore for actual counts
+                setTimeout(() => {
+                    updateStatsUI();
+                }, 1000);
+            }
+
+            // Update statistics UI
+            function updateStatsUI() {
+                document.getElementById('pets-count').textContent = AppState.userStats.pets;
+                document.getElementById('appointments-count').textContent = AppState.userStats.appointments;
+                document.getElementById('stats-pets').textContent = AppState.userStats.pets;
+                document.getElementById('stats-appointments').textContent = AppState.userStats.appointments;
+                document.getElementById('stats-spent').textContent = `R${AppState.userStats.spent.toLocaleString()}`;
+                document.getElementById('stats-prescriptions').textContent = AppState.userStats.prescriptions;
+            }
+
+            // Show toast notification
+            function showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toast-message');
+                
+                toastMessage.textContent = message;
+                toast.className = 'toast';
+                toast.classList.add(type);
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 4000);
+            }
+
+            // Demo login functionality
+            document.getElementById('demo-login-btn').addEventListener('click', function() {
+                if (!AppState.isDemoMode) {
+                    initializeDemoMode();
+                }
+                showToast('Demo mode activated!', 'success');
             });
-            
+
             // Print profile
             document.getElementById('print-profile').addEventListener('click', function() {
                 window.print();
             });
-            
+
             // Mobile menu toggle
             document.getElementById('mobile-menu-btn').addEventListener('click', function() {
                 const nav = document.querySelector('.main-nav');
                 nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
             });
-            
+
+            // Login/Register buttons
+            document.getElementById('login-btn').addEventListener('click', function() {
+                showToast('Redirecting to login page...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1000);
+            });
+
+            document.getElementById('register-btn').addEventListener('click', function() {
+                showToast('Redirecting to registration page...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'register.html';
+                }, 1000);
+            });
+
             // Logout functionality
             document.getElementById('logout-btn').addEventListener('click', function(e) {
                 e.preventDefault();
                 if (confirm('Are you sure you want to logout?')) {
-                    // In a real app, this would redirect to logout endpoint
-                    alert('You have been logged out successfully.');
-                    window.location.href = 'index.html';
+                    if (firebaseInitialized && !AppState.isDemoMode) {
+                        auth.signOut()
+                            .then(() => {
+                                showToast('You have been logged out successfully.');
+                                setTimeout(() => {
+                                    window.location.href = 'index.html';
+                                }, 1500);
+                            })
+                            .catch((error) => {
+                                console.error('Error signing out:', error);
+                                showToast('Error logging out', 'error');
+                            });
+                    } else {
+                        showToast('Demo session ended.');
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    }
+                }
+            });
+
+            // Edit profile button
+            document.getElementById('edit-profile-btn').addEventListener('click', function() {
+                if (AppState.isDemoMode) {
+                    showToast('This feature is not available in demo mode', 'warning');
+                } else {
+                    showToast('Edit profile feature coming soon!', 'info');
+                }
+            });
+
+            // Security actions
+            document.getElementById('change-password-btn').addEventListener('click', function() {
+                showToast('Password change feature coming soon!', 'info');
+            });
+
+            document.getElementById('enable-2fa-btn').addEventListener('click', function() {
+                showToast('Two-factor authentication feature coming soon!', 'info');
+            });
+
+            // Membership actions
+            document.getElementById('renew-membership-btn').addEventListener('click', function() {
+                showToast('Redirecting to membership page...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'membership.html';
+                }, 1000);
+            });
+
+            document.getElementById('view-benefits-btn').addEventListener('click', function() {
+                showToast('Redirecting to benefits page...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'membership-benefits.html';
+                }, 1000);
+            });
+
+            // Change avatar button
+            document.getElementById('change-avatar-btn').addEventListener('click', function() {
+                if (AppState.isDemoMode) {
+                    showToast('Avatar change is not available in demo mode', 'warning');
+                } else {
+                    showToast('Avatar change feature coming soon!', 'info');
                 }
             });
         });

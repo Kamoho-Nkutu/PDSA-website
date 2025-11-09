@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | PDSA Veterinary Clinic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-dark: #1a252f;
+            --primary-light: #d6eaf8;
+            --secondary: #3498db;
+            --secondary-dark: #2980b9;
+            --secondary-light: #ebf5fb;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --text-color: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-light: #f8f9fa;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-user {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-links a.active {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .admin-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .cart-icon {
+            position: relative;
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .cart-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 50px;
+            transition: var(--transition);
+        }
+
+        .user-profile-btn:hover {
+            background: var(--primary-light);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 0.5rem 0;
+            min-width: 150px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .user-dropdown a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--primary);
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .user-dropdown a:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .user-profile-btn:hover .user-dropdown {
+            display: block;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-header h1 i {
+            color: var(--secondary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--secondary);
+            outline-offset: 2px;
+        }
+
+        .btn-secondary {
+            background: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+        }
+
+        .btn-accent:hover {
+            background: #c0392b;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary-light);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Orders Section */
+        .orders-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .orders-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-header {
+            padding: 1.5rem;
+            background: var(--primary-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .order-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .order-id {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .order-date {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-processing {
+            background: #cce7ff;
+            color: #004085;
+        }
+
+        .status-shipped {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-delivered {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .order-body {
+            padding: 1.5rem;
+        }
+
+        .order-items {
+            margin-bottom: 1.5rem;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-right: 1rem;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-price {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .item-quantity {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .order-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .summary-label {
+            color: var(--text-light);
+        }
+
+        .summary-value {
+            font-weight: 600;
+        }
+
+        .summary-total {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* No Orders State */
+        .no-orders {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .no-orders i {
+            font-size: 4rem;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .no-orders h2 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .no-orders p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner i {
+            font-size: 2rem;
+            color: var(--secondary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background-color: var(--success);
+        }
+        
+        .notification.error {
+            background-color: var(--accent);
+        }
+        
+        .notification.info {
+            background-color: var(--secondary);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning);
+        }
+        
+        .close-notification {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .order-actions {
+                flex-direction: column;
+            }
+            
+            .order-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .order-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .item-image {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+            <span>PDSA Veterinary Clinic</span>
+        </a>
+        
+        <div class="nav-user">
+            <nav class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="services.html"><i class="fas fa-stethoscope"></i> Services</a>
+                <a href="appointments.html"><i class="fas fa-calendar"></i> Appointments</a>
+                <a href="my-pets.html"><i class="fas fa-paw"></i> My Pets</a>
+                <a href="orders.html" class="active"><i class="fas fa-receipt"></i> My Orders</a>
+            </nav>
+            
+            <div class="auth-buttons">
+                <div class="cart-icon" id="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                <button class="btn btn-outline" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button class="btn btn-primary" id="register-btn">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+                <a href="admin-dashboard.html" class="admin-link" id="admin-link" style="display: none;">
+                    <i class="fas fa-cog"></i> Admin
+                </a>
+                <div id="user-menu" style="display: none;">
+                    <div class="user-profile-btn">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
+                        <span id="user-name"></span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="#" id="user-dashboard-link">Dashboard</a>
+                            <a href="#" id="user-profile-link">My Profile</a>
+                            <a href="my-pets.html" id="my-pets-link">My Pets</a>
+                            <a href="appointments.html" id="my-appointments-link">Appointments</a>
+                            <a href="#" id="my-orders-link">My Orders</a>
+                            <a href="#" id="logout-link">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-receipt"></i>
+                My Orders
+            </h1>
+            <button class="btn" id="shop-now-btn">
+                <i class="fas fa-shopping-cart"></i>
+                Continue Shopping
+            </button>
+        </div>
+
+        <!-- Order Filters -->
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All Orders</button>
+            <button class="filter-btn" data-filter="pending">Pending</button>
+            <button class="filter-btn" data-filter="confirmed">Confirmed</button>
+            <button class="filter-btn" data-filter="processing">Processing</button>
+            <button class="filter-btn" data-filter="shipped">Shipped</button>
+            <button class="filter-btn" data-filter="delivered">Delivered</button>
+            <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+        </div>
+
+        <!-- Orders Container -->
+        <div class="orders-container" id="orders-container">
+            <!-- Orders will be dynamically added here -->
+        </div>
+
+        <!-- No Orders State -->
+        <div class="no-orders" id="no-orders">
+            <i class="fas fa-shopping-bag"></i>
+            <h2>You haven't placed any orders yet</h2>
+            <p>Browse our products and make your first purchase to see your order history here.</p>
+            <button class="btn" id="browse-products">
+                <i class="fas fa-paw"></i>
+                Browse Products
+            </button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="loading-spinner">
+            <i class="fas fa-spinner"></i>
+            <p>Loading your orders...</p>
+        </div>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notification-container"></div>
+
+    <footer>
+        <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved. | <a href="index.html">Home</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
+    </footer>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
+            authDomain: "pdsa-database.firebaseapp.com",
+            databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
+            projectId: "pdsa-database",
+            storageBucket: "pdsa-database.firebasestorage.app",
+            messagingSenderId: "1041468794677",
+            appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
+            measurementId: "G-8QLD9BK9M0"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Application State
+        const AppState = {
+            currentUser: null,
+            userOrders: [],
+            isAdmin: false,
+            currentFilter: 'all'
+        };
+
+        // DOM Elements
+        const ordersContainer = document.getElementById('orders-container');
+        const noOrders = document.getElementById('no-orders');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const userMenu = document.getElementById('user-menu');
+        const userName = document.getElementById('user-name');
+        const adminLink = document.getElementById('admin-link');
+        const logoutLink = document.getElementById('logout-link');
+        const cartBtn = document.getElementById('cart-btn');
+        const cartCount = document.querySelector('.cart-count');
+        const shopNowBtn = document.getElementById('shop-now-btn');
+        const browseProductsBtn = document.getElementById('browse-products');
+
+        // Initialize the page
+        function init() {
+            console.log('Initializing Orders page...');
+            
+            // Firebase auth state listener
+            auth.onAuthStateChanged((user) => {
+                console.log('Auth state changed:', user ? 'User logged in' : 'No user');
+                if (user) {
+                    AppState.currentUser = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || user.email.split('@')[0],
+                        emailVerified: user.emailVerified
+                    };
+                    
+                    console.log('Current user:', AppState.currentUser);
+                    
+                    // Check if user is admin
+                    checkAdminStatus(user.uid);
+                    
+                    updateUserUI(AppState.currentUser);
+                    updateAuthUI();
+                    loadUserOrders();
+                } else {
+                    AppState.currentUser = null;
+                    AppState.isAdmin = false;
+                    AppState.userOrders = [];
+                    updateAuthUI();
+                    updateNoOrdersState();
+                }
+            });
+            
+            // Event listeners
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const filter = btn.getAttribute('data-filter');
+                    setActiveFilter(filter);
+                });
+            });
+            
+            loginBtn.addEventListener('click', () => showLoginModal());
+            registerBtn.addEventListener('click', () => showRegisterModal());
+            logoutLink.addEventListener('click', logout);
+            shopNowBtn.addEventListener('click', () => window.location.href = 'index.html#products');
+            browseProductsBtn.addEventListener('click', () => window.location.href = 'index.html#products');
+
+            // Load cart from localStorage
+            loadCart();
+        }
+
+        // Load user's orders from Firebase
+        function loadUserOrders() {
+            if (!AppState.currentUser) {
+                console.log('No user logged in, skipping orders load');
+                return;
+            }
+            
+            console.log('Loading orders for user:', AppState.currentUser.uid);
+            
+            loadingSpinner.style.display = 'block';
+            ordersContainer.innerHTML = '';
+            
+            // For demo purposes, we'll create some mock orders if none exist
+            // In a real implementation, you would only use the Firestore query
+            db.collection('orders')
+                .where('userId', '==', AppState.currentUser.uid)
+                .orderBy('createdAt', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    console.log('Orders query result:', querySnapshot.size, 'orders found');
+                    
+                    AppState.userOrders = [];
+                    
+                    if (querySnapshot.size === 0) {
+                        // Create mock orders for demo purposes
+                        createMockOrders();
+                    } else {
+                        querySnapshot.forEach((doc) => {
+                            const order = doc.data();
+                            order.id = doc.id;
+                            AppState.userOrders.push(order);
+                            console.log('Loaded order:', order.id, order.status);
+                        });
+                    }
+                    
+                    renderOrders();
+                    updateNoOrdersState();
+                    loadingSpinner.style.display = 'none';
+                })
+                .catch((error) => {
+                    console.error('Error loading orders:', error);
+                    // For demo purposes, create mock orders if there's an error
+                    createMockOrders();
+                    loadingSpinner.style.display = 'none';
+                    updateNoOrdersState();
+                });
+        }
+
+        // Create mock orders for demonstration
+        function createMockOrders() {
+            console.log('Creating mock orders for demonstration');
+            
+            const mockOrders = [
+                {
+                    id: 'ORD-001',
+                    userId: AppState.currentUser.uid,
+                    status: 'delivered',
+                    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+                    items: [
+                        {
+                            id: 'prod-1',
+                            name: 'Premium Dog Food - Large Bag',
+                            price: 45.99,
+                            image: 'https://images.unsplash.com/photo-1560809454-892b55bce5f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
+                            quantity: 1
+                        },
+                        {
+                            id: 'prod-2',
+                            name: 'Chew Toy - Durable Rubber',
+                            price: 12.50,
+                            image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
+                            quantity: 2
+                        }
+                    ],
+                    shipping: 5.99,
+                    tax: 4.78
+                },
+                {
+                    id: 'ORD-002',
+                    userId: AppState.currentUser.uid,
+                    status: 'processing',
+                    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+                    items: [
+                        {
+                            id: 'prod-3',
+                            name: 'Cat Litter - Odor Control',
+                            price: 18.75,
+                            image: 'https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
+                            quantity: 1
+                        }
+                    ],
+                    shipping: 0.00,
+                    tax: 1.50
+                },
+                {
+                    id: 'ORD-003',
+                    userId: AppState.currentUser.uid,
+                    status: 'pending',
+                    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+                    items: [
+                        {
+                            id: 'prod-4',
+                            name: 'Pet Grooming Kit',
+                            price: 32.99,
+                            image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
+                            quantity: 1
+                        },
+                        {
+                            id: 'prod-5',
+                            name: 'Flea & Tick Treatment',
+                            price: 24.99,
+                            image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80',
+                            quantity: 1
+                        }
+                    ],
+                    shipping: 3.99,
+                    tax: 4.56
+                }
+            ];
+            
+            AppState.userOrders = mockOrders;
+            renderOrders();
+        }
+
+        // Render orders based on current filter
+        function renderOrders() {
+            console.log('Rendering orders:', AppState.userOrders.length);
+            
+            ordersContainer.innerHTML = '';
+            
+            if (AppState.userOrders.length === 0) {
+                console.log('No orders to render');
+                return;
+            }
+            
+            const filteredOrders = AppState.userOrders.filter(order => {
+                if (AppState.currentFilter === 'all') return true;
+                return order.status === AppState.currentFilter;
+            });
+            
+            if (filteredOrders.length === 0) {
+                ordersContainer.innerHTML = `
+                    <div class="no-orders">
+                        <i class="fas fa-filter"></i>
+                        <h2>No orders found</h2>
+                        <p>No orders match the selected filter.</p>
+                        <button class="btn" onclick="setActiveFilter('all')">
+                            Show All Orders
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredOrders.forEach(order => {
+                const orderCard = createOrderCard(order);
+                ordersContainer.appendChild(orderCard);
+            });
+            
+            console.log('Orders rendered successfully');
+        }
+
+        // Create order card HTML
+        function createOrderCard(order) {
+            const card = document.createElement('div');
+            card.className = 'order-card';
+            
+            // Format date
+            const orderDate = order.createdAt ? 
+                order.createdAt.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }) : 
+                'Date not available';
+            
+            // Calculate total
+            const subtotal = order.items ? order.items.reduce((total, item) => {
+                return total + (parseFloat(item.price) * (item.quantity || 1));
+            }, 0) : 0;
+            
+            const shipping = order.shipping || 0;
+            const tax = order.tax || 0;
+            const total = subtotal + shipping + tax;
+            
+            card.innerHTML = `
+                <div class="order-header">
+                    <div class="order-info">
+                        <div class="order-id">Order #${order.id || 'N/A'}</div>
+                        <div class="order-date">Placed on ${orderDate}</div>
+                    </div>
+                    <div class="order-status status-${order.status || 'pending'}">
+                        ${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending'}
+                    </div>
+                </div>
+                <div class="order-body">
+                    <div class="order-items">
+                        ${order.items ? order.items.map(item => `
+                            <div class="order-item">
+                                <div class="item-image">
+                                    <img src="${item.image || 'https://images.unsplash.com/photo-1560809454-892b55bce5f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80'}" alt="${item.name}">
+                                </div>
+                                <div class="item-details">
+                                    <div class="item-name">${item.name}</div>
+                                    <div class="item-price">R${parseFloat(item.price).toFixed(2)}</div>
+                                </div>
+                                <div class="item-quantity">Qty: ${item.quantity || 1}</div>
+                            </div>
+                        `).join('') : '<p>No items in this order</p>'}
+                    </div>
+                    
+                    <div class="order-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Subtotal:</span>
+                            <span class="summary-value">R${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Shipping:</span>
+                            <span class="summary-value">R${shipping.toFixed(2)}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Tax:</span>
+                            <span class="summary-value">R${tax.toFixed(2)}</span>
+                        </div>
+                        <div class="summary-item summary-total">
+                            <span class="summary-label">Total:</span>
+                            <span class="summary-value">R${total.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="order-actions">
+                        <button class="btn btn-sm" data-action="view" data-id="${order.id}">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                        <button class="btn btn-sm btn-outline" data-action="track" data-id="${order.id}">
+                            <i class="fas fa-shipping-fast"></i> Track Order
+                        </button>
+                        ${order.status === 'pending' || order.status === 'confirmed' ? `
+                            <button class="btn btn-sm btn-accent" data-action="cancel" data-id="${order.id}">
+                                <i class="fas fa-times"></i> Cancel Order
+                            </button>
+                        ` : ''}
+                        ${order.status === 'delivered' ? `
+                            <button class="btn btn-sm btn-secondary" data-action="reorder" data-id="${order.id}">
+                                <i class="fas fa-redo"></i> Reorder
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners to buttons
+            const buttons = card.querySelectorAll('button');
+            buttons.forEach(button => {
+                const action = button.getAttribute('data-action');
+                const id = button.getAttribute('data-id');
+                
+                button.addEventListener('click', () => {
+                    if (action === 'view') {
+                        viewOrderDetails(id);
+                    } else if (action === 'track') {
+                        trackOrder(id);
+                    } else if (action === 'cancel') {
+                        cancelOrder(id);
+                    } else if (action === 'reorder') {
+                        reorderItems(id);
+                    }
+                });
+            });
+            
+            return card;
+        }
+
+        // Set active filter
+        function setActiveFilter(filter) {
+            AppState.currentFilter = filter;
+            
+            // Update UI
+            filterBtns.forEach(btn => {
+                if (btn.getAttribute('data-filter') === filter) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            renderOrders();
+        }
+
+        // View order details
+        function viewOrderDetails(orderId) {
+            const order = AppState.userOrders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            // Create modal or redirect to order details page
+            showNotification(`Viewing details for order #${orderId}`, 'info');
+            // In a real implementation, you would show a modal or navigate to a details page
+            console.log('View order details:', order);
+        }
+
+        // Track order
+        function trackOrder(orderId) {
+            const order = AppState.userOrders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            showNotification(`Tracking information for order #${orderId}`, 'info');
+            // In a real implementation, you would show tracking information
+            console.log('Track order:', order);
+        }
+
+        // Cancel order
+        function cancelOrder(orderId) {
+            const order = AppState.userOrders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            if (!confirm(`Are you sure you want to cancel order #${orderId}?`)) {
+                return;
+            }
+            
+            // Update order status in Firebase
+            db.collection('orders').doc(orderId).update({
+                status: 'cancelled',
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                showNotification(`Order #${orderId} has been cancelled`, 'success');
+                loadUserOrders(); // Reload orders to reflect the change
+            })
+            .catch((error) => {
+                console.error('Error cancelling order:', error);
+                showNotification('Error cancelling order: ' + error.message, 'error');
+            });
+        }
+
+        // Reorder items
+        function reorderItems(orderId) {
+            const order = AppState.userOrders.find(o => o.id === orderId);
+            if (!order || !order.items) return;
+            
+            // Add items to cart
+            const cart = JSON.parse(localStorage.getItem('pdsaCart') || '[]');
+            
+            order.items.forEach(item => {
+                const existingItem = cart.find(cartItem => cartItem.id === item.id);
+                
+                if (existingItem) {
+                    existingItem.quantity += item.quantity || 1;
+                } else {
+                    cart.push({
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        image: item.image,
+                        quantity: item.quantity || 1
+                    });
+                }
+            });
+            
+            localStorage.setItem('pdsaCart', JSON.stringify(cart));
+            loadCart();
+            
+            showNotification('Items added to cart!', 'success');
+            
+            // Optionally redirect to cart page
+            setTimeout(() => {
+                if (confirm('Items added to cart. Would you like to view your cart?')) {
+                    window.location.href = 'index.html#cart';
+                }
+            }, 1000);
+        }
+
+        // Show/hide no orders state
+        function updateNoOrdersState() {
+            console.log('Updating no orders state. User orders:', AppState.userOrders.length, 'Current user:', !!AppState.currentUser);
+            
+            if (!AppState.currentUser) {
+                noOrders.style.display = 'block';
+                ordersContainer.style.display = 'none';
+                noOrders.innerHTML = `
+                    <i class="fas fa-user-lock"></i>
+                    <h2>Please Log In</h2>
+                    <p>You need to be logged in to view your order history.</p>
+                    <button class="btn" id="login-from-orders">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login Now
+                    </button>
+                `;
+                
+                // Add event listener to login button
+                document.getElementById('login-from-orders').addEventListener('click', showLoginModal);
+                return;
+            }
+            
+            if (AppState.userOrders.length === 0) {
+                noOrders.style.display = 'block';
+                ordersContainer.style.display = 'none';
+            } else {
+                noOrders.style.display = 'none';
+                ordersContainer.style.display = 'grid';
+            }
+        }
+
+        // Check if user is admin
+        function checkAdminStatus(userId) {
+            db.collection('users').doc(userId).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        AppState.isAdmin = userData.role === 'admin';
+                        updateAdminUI();
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error checking admin status:', error);
+                });
+        }
+
+        // Update UI based on authentication state
+        function updateAuthUI() {
+            if (AppState.currentUser) {
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                userMenu.style.display = 'block';
+            } else {
+                loginBtn.style.display = 'flex';
+                registerBtn.style.display = 'flex';
+                userMenu.style.display = 'none';
+                adminLink.style.display = 'none';
+            }
+        }
+
+        // Update user UI elements
+        function updateUserUI(user) {
+            userName.textContent = user.displayName;
+        }
+
+        // Update admin UI
+        function updateAdminUI() {
+            if (AppState.isAdmin) {
+                adminLink.style.display = 'flex';
+            } else {
+                adminLink.style.display = 'none';
+            }
+        }
+
+        // Load cart from localStorage
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('pdsaCart') || '[]');
+            const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            cartCount.textContent = totalItems;
+        }
+
+        // Show login modal
+        function showLoginModal() {
+            // In a real implementation, this would show a login modal
+            // For now, redirect to login page
+            window.location.href = 'login.html';
+        }
+
+        // Show register modal
+        function showRegisterModal() {
+            // In a real implementation, this would show a register modal
+            // For now, redirect to register page
+            window.location.href = 'register.html';
+        }
+
+        // Logout user
+        function logout() {
+            auth.signOut()
+                .then(() => {
+                    showNotification('Logged out successfully', 'success');
+                    AppState.currentUser = null;
+                    AppState.isAdmin = false;
+                    AppState.userOrders = [];
+                    updateAuthUI();
+                    updateNoOrdersState();
+                })
+                .catch((error) => {
+                    console.error('Error signing out:', error);
+                    showNotification('Error logging out: ' + error.message, 'error');
+                });
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notificationContainer = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button class="close-notification">&times;</button>
+            `;
+            
+            notificationContainer.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                closeNotification(notification);
+            }, 5000);
+            
+            // Close button event
+            notification.querySelector('.close-notification').addEventListener('click', () => {
+                closeNotification(notification);
+            });
+        }
+
+        // Close notification
+        function closeNotification(notification) {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

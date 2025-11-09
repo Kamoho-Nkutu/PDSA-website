@@ -171,6 +171,7 @@
         
         .form-group {
             margin-bottom: 1.6rem;
+            position: relative;
         }
         
         .form-group label {
@@ -256,15 +257,10 @@
             transform: translateY(0);
         }
         
-        .btn-outline {
-            background: transparent;
-            border: 1.5px solid var(--secondary);
-            color: var(--secondary);
-        }
-        
-        .btn-outline:hover {
-            background: var(--secondary);
-            color: white;
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
         }
         
         .form-footer {
@@ -546,6 +542,16 @@
         .success-animation {
             animation: success 0.5s ease;
         }
+        
+        .form-group.success input {
+            border-color: var(--success);
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.15);
+        }
+        
+        .success-check {
+            color: var(--success);
+            margin-left: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -713,22 +719,35 @@
     </footer>
 
     <script>
-        // Firebase configuration - Replace with your actual Firebase config
-       const firebaseConfig = {
-  apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
-  authDomain: "pdsa-database.firebaseapp.com",
-  databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
-  projectId: "pdsa-database",
-  storageBucket: "pdsa-database.firebasestorage.app",
-  messagingSenderId: "1041468794677",
-  appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
-  measurementId: "G-8QLD9BK9M0"
-};
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
+            authDomain: "pdsa-database.firebaseapp.com",
+            databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
+            projectId: "pdsa-database",
+            storageBucket: "pdsa-database.firebasestorage.app",
+            messagingSenderId: "1041468794677",
+            appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
+            measurementId: "G-8QLD9BK9M0"
+        };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase with error handling
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
+
         const auth = firebase.auth();
         const db = firebase.firestore();
+
+        // Enable offline persistence for better user experience
+        db.enablePersistence()
+            .catch((err) => {
+                console.error('Firestore persistence error:', err);
+            });
 
         document.addEventListener('DOMContentLoaded', function() {
             // DOM Elements
@@ -749,6 +768,11 @@
             const loginPasswordToggle = document.getElementById('login-password-toggle');
             const registerPasswordToggle = document.getElementById('register-password-toggle');
             const confirmPasswordToggle = document.getElementById('confirm-password-toggle');
+
+            // Rate limiting variables
+            let loginAttempts = 0;
+            const maxLoginAttempts = 5;
+            let lockoutTime = null;
 
             // Tab switching
             authTabs.forEach(tab => {
@@ -806,6 +830,11 @@
                     return;
                 }
                 
+                if (!validateEmail(email)) {
+                    showAlert('Please enter a valid email address.', 'error');
+                    return;
+                }
+                
                 auth.sendPasswordResetEmail(email)
                     .then(() => {
                         showAlert('Password reset email sent! Check your inbox.', 'success');
@@ -819,6 +848,10 @@
             // Login form submission
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
+                
+                if (checkLoginLockout()) {
+                    return;
+                }
                 
                 const email = document.getElementById('login-email').value;
                 const password = document.getElementById('login-password').value;
@@ -834,15 +867,20 @@
                     .then((userCredential) => {
                         // Signed in
                         const user = userCredential.user;
+                        resetLoginAttempts();
                         showAlert('Login successful! Redirecting...', 'success');
+                        
+                        // Initialize session management
+                        initializeSession();
                         
                         // Check if user has admin role
                         checkAdminRole(user.uid);
                     })
                     .catch((error) => {
                         loginButton.classList.remove('btn-loading');
-                        const errorCode = error.code;
+                        handleFailedLogin();
                         
+                        const errorCode = error.code;
                         let userMessage = 'Login failed. Please try again.';
                         
                         switch(errorCode) {
@@ -873,32 +911,18 @@
             registerForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                const firstName = document.getElementById('first-name').value;
-                const lastName = document.getElementById('last-name').value;
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                const confirmPassword = document.getElementById('confirm-password').value;
-                const role = document.getElementById('role').value;
-                const phone = document.getElementById('phone').value;
-                
                 // Validate form
                 if (!validateRegistrationForm()) return;
                 
-                // Validate passwords match
-                if (password !== confirmPassword) {
-                    showAlert('Passwords do not match.', 'error');
-                    confirmPasswordInput.parentElement.classList.add('error');
-                    return;
-                }
-                
-                // Validate password strength
-                if (!isPasswordStrong(password)) {
-                    showAlert('Password does not meet security requirements.', 'error');
-                    return;
-                }
-                
                 // Show loading state
                 registerButton.classList.add('btn-loading');
+                
+                const firstName = document.getElementById('first-name').value.trim();
+                const lastName = document.getElementById('last-name').value.trim();
+                const email = document.getElementById('register-email').value.trim();
+                const password = document.getElementById('register-password').value;
+                const role = document.getElementById('role').value;
+                const phone = document.getElementById('phone').value.trim();
                 
                 // Create user with Firebase Auth
                 auth.createUserWithEmailAndPassword(email, password)
@@ -906,21 +930,17 @@
                         // User created
                         const user = userCredential.user;
                         
-                        // Update user profile
-                        return user.updateProfile({
-                            displayName: `${firstName} ${lastName}`
-                        }).then(() => {
-                            // Save additional user data to Firestore
-                            return db.collection('adminUsers').doc(user.uid).set({
-                                firstName: firstName,
-                                lastName: lastName,
-                                email: email,
-                                phone: phone,
-                                role: role,
-                                status: 'pending', // Needs approval from super admin
-                                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                                createdBy: 'self-registration'
-                            });
+                        // Create admin user document
+                        return db.collection('adminUsers').doc(user.uid).set({
+                            firstName: firstName,
+                            lastName: lastName,
+                            email: email,
+                            phone: phone,
+                            role: role,
+                            status: 'pending', // Default status is pending
+                            permissions: getDefaultPermissions(role),
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            createdBy: 'self-registration'
                         });
                     })
                     .then(() => {
@@ -967,51 +987,245 @@
                         setTimeout(() => registerForm.classList.remove('shake'), 500);
                     });
             });
-            
-            function checkAdminRole(userId) {
-                // Check if user has admin privileges in Firestore
-                db.collection('adminUsers').doc(userId).get()
-                    .then((doc) => {
-                        if (doc.exists) {
-                            const userData = doc.data();
-                            
-                            if (userData.role === 'admin' || userData.role === 'vet' || userData.role === 'manager') {
-                                if (userData.status === 'active') {
-                                    // User is approved admin, redirect to dashboard
-                                    setTimeout(() => {
-                                        window.location.href = 'admin-dashboard.html';
-                                    }, 1000);
-                                } else if (userData.status === 'pending') {
-                                    // User is pending approval
-                                    auth.signOut();
-                                    showAlert('Your account is pending approval. Please contact an administrator.', 'info');
-                                    loginButton.classList.remove('btn-loading');
-                                } else if (userData.status === 'suspended') {
-                                    // User is suspended
-                                    auth.signOut();
-                                    showAlert('Your account has been suspended. Please contact an administrator.', 'error');
-                                    loginButton.classList.remove('btn-loading');
-                                }
-                            } else {
-                                // User is not admin
-                                auth.signOut();
-                                showAlert('Access denied. You do not have admin privileges.', 'error');
-                                loginButton.classList.remove('btn-loading');
-                            }
-                        } else {
-                            // User not found in adminUsers collection
-                            auth.signOut();
-                            showAlert('Access denied. Admin account not found.', 'error');
-                            loginButton.classList.remove('btn-loading');
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error checking admin role:', error);
-                        showAlert('Error verifying admin access. Please try again.', 'error');
-                        loginButton.classList.remove('btn-loading');
-                    });
+
+            // Enhanced form validation functions
+            function validateEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
             }
-            
+
+            function validatePhone(phone) {
+                const phoneRegex = /^(\+27|0)[1-9][0-9]{8}$/;
+                return phoneRegex.test(phone.replace(/\s/g, ''));
+            }
+
+            function validateRegistrationForm() {
+                const firstName = document.getElementById('first-name').value.trim();
+                const lastName = document.getElementById('last-name').value.trim();
+                const email = document.getElementById('register-email').value.trim();
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                const role = document.getElementById('role').value;
+                const phone = document.getElementById('phone').value.trim();
+                
+                let isValid = true;
+                
+                // Clear previous errors
+                document.querySelectorAll('.form-group').forEach(group => {
+                    group.classList.remove('error');
+                });
+                
+                // Validate first name
+                if (!firstName) {
+                    showFieldError('first-name', 'First name is required');
+                    isValid = false;
+                } else if (firstName.length < 2) {
+                    showFieldError('first-name', 'First name must be at least 2 characters');
+                    isValid = false;
+                }
+                
+                // Validate last name
+                if (!lastName) {
+                    showFieldError('last-name', 'Last name is required');
+                    isValid = false;
+                } else if (lastName.length < 2) {
+                    showFieldError('last-name', 'Last name must be at least 2 characters');
+                    isValid = false;
+                }
+                
+                // Validate email
+                if (!email) {
+                    showFieldError('register-email', 'Email is required');
+                    isValid = false;
+                } else if (!validateEmail(email)) {
+                    showFieldError('register-email', 'Please enter a valid email address');
+                    isValid = false;
+                } else if (!email.endsWith('@pdsa.org.za')) {
+                    showFieldError('register-email', 'Please use an official PDSA email address');
+                    isValid = false;
+                }
+                
+                // Validate password
+                if (!password) {
+                    showFieldError('register-password', 'Password is required');
+                    isValid = false;
+                } else if (!isPasswordStrong(password)) {
+                    showFieldError('register-password', 'Password does not meet security requirements');
+                    isValid = false;
+                }
+                
+                // Validate confirm password
+                if (!confirmPassword) {
+                    showFieldError('confirm-password', 'Please confirm your password');
+                    isValid = false;
+                } else if (password !== confirmPassword) {
+                    showFieldError('confirm-password', 'Passwords do not match');
+                    isValid = false;
+                }
+                
+                // Validate role
+                if (!role) {
+                    showFieldError('role', 'Please select a role');
+                    isValid = false;
+                }
+                
+                // Validate phone (optional but if provided, validate format)
+                if (phone && !validatePhone(phone)) {
+                    showFieldError('phone', 'Please enter a valid South African phone number');
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+
+            function showFieldError(fieldId, message) {
+                const field = document.getElementById(fieldId);
+                const formGroup = field.closest('.form-group');
+                
+                formGroup.classList.add('error');
+                
+                // Remove existing error message
+                const existingError = formGroup.querySelector('.error-message');
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                // Add error message
+                const errorElement = document.createElement('div');
+                errorElement.className = 'error-message';
+                errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+                formGroup.appendChild(errorElement);
+            }
+
+            function validateLoginForm() {
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                let isValid = true;
+                
+                // Clear previous errors
+                document.querySelectorAll('.form-group').forEach(group => {
+                    group.classList.remove('error');
+                });
+                
+                if (!email) {
+                    document.getElementById('login-email').parentElement.parentElement.classList.add('error');
+                    isValid = false;
+                } else if (!validateEmail(email)) {
+                    document.getElementById('login-email').parentElement.parentElement.classList.add('error');
+                    showFieldError('login-email', 'Please enter a valid email address');
+                    isValid = false;
+                }
+                
+                if (!password) {
+                    document.getElementById('login-password').parentElement.parentElement.classList.add('error');
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+
+            // Admin role checking
+            async function checkAdminRole(userId) {
+                try {
+                    const doc = await db.collection('adminUsers').doc(userId).get();
+                    
+                    if (!doc.exists) {
+                        throw new Error('Admin account not found');
+                    }
+                    
+                    const userData = doc.data();
+                    
+                    // Check account status
+                    switch (userData.status) {
+                        case 'active':
+                            // User is approved, redirect to dashboard
+                            setTimeout(() => {
+                                // Store user data in sessionStorage for dashboard use
+                                sessionStorage.setItem('adminUser', JSON.stringify({
+                                    uid: userId,
+                                    ...userData
+                                }));
+                                window.location.href = 'admin-dashboard.html';
+                            }, 1000);
+                            break;
+                            
+                        case 'pending':
+                            auth.signOut();
+                            showAlert('Your account is pending approval. Please contact a system administrator.', 'info');
+                            break;
+                            
+                        case 'suspended':
+                            auth.signOut();
+                            showAlert('Your account has been suspended. Please contact a system administrator.', 'error');
+                            break;
+                            
+                        default:
+                            auth.signOut();
+                            showAlert('Your account status is invalid. Please contact administrator.', 'error');
+                            break;
+                    }
+                    
+                    loginButton.classList.remove('btn-loading');
+                    
+                } catch (error) {
+                    console.error('Error checking admin role:', error);
+                    auth.signOut();
+                    showAlert('Access denied. Admin account not found or error verifying access.', 'error');
+                    loginButton.classList.remove('btn-loading');
+                }
+            }
+
+            // Rate limiting functions
+            function checkLoginLockout() {
+                if (lockoutTime && Date.now() < lockoutTime) {
+                    const remainingTime = Math.ceil((lockoutTime - Date.now()) / 1000 / 60);
+                    showAlert(`Too many failed attempts. Try again in ${remainingTime} minutes.`, 'error');
+                    return true;
+                }
+                return false;
+            }
+
+            function handleFailedLogin() {
+                loginAttempts++;
+                
+                if (loginAttempts >= maxLoginAttempts) {
+                    lockoutTime = Date.now() + (15 * 60 * 1000); // 15 minute lockout
+                    showAlert('Too many failed login attempts. Account temporarily locked for 15 minutes.', 'error');
+                }
+            }
+
+            function resetLoginAttempts() {
+                loginAttempts = 0;
+                lockoutTime = null;
+            }
+
+            // Session management
+            let sessionTimeout;
+
+            function resetSessionTimer() {
+                clearTimeout(sessionTimeout);
+                // Set timeout for 2 hours
+                sessionTimeout = setTimeout(() => {
+                    auth.signOut();
+                    showAlert('Session expired due to inactivity. Please login again.', 'info');
+                }, 2 * 60 * 60 * 1000); // 2 hours
+            }
+
+            function setupSessionListeners() {
+                // Reset timer on user activity
+                document.addEventListener('mousemove', resetSessionTimer);
+                document.addEventListener('keypress', resetSessionTimer);
+                document.addEventListener('click', resetSessionTimer);
+                
+                // Start the timer
+                resetSessionTimer();
+            }
+
+            function initializeSession() {
+                setupSessionListeners();
+            }
+
+            // Password strength functions
             function checkPasswordStrength(password) {
                 const requirements = {
                     length: password.length >= 8,
@@ -1069,77 +1283,20 @@
                     req.innerHTML = req.innerHTML.replace('fa-check-circle', 'fa-circle');
                 });
             }
-            
-            function validateLoginForm() {
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                let isValid = true;
+
+            // Helper function to get default permissions based on role
+            function getDefaultPermissions(role) {
+                const permissions = {
+                    admin: ['all'],
+                    vet: ['view_patients', 'edit_patients', 'view_appointments', 'edit_appointments'],
+                    manager: ['view_patients', 'view_appointments', 'view_reports', 'manage_staff'],
+                    support: ['view_patients', 'view_appointments']
+                };
                 
-                // Clear previous errors
-                document.querySelectorAll('.form-group').forEach(group => {
-                    group.classList.remove('error');
-                });
-                
-                if (!email) {
-                    document.getElementById('login-email').parentElement.parentElement.classList.add('error');
-                    isValid = false;
-                }
-                
-                if (!password) {
-                    document.getElementById('login-password').parentElement.parentElement.classList.add('error');
-                    isValid = false;
-                }
-                
-                return isValid;
+                return permissions[role] || ['view_patients'];
             }
-            
-            function validateRegistrationForm() {
-                const firstName = document.getElementById('first-name').value;
-                const lastName = document.getElementById('last-name').value;
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                const confirmPassword = document.getElementById('confirm-password').value;
-                const role = document.getElementById('role').value;
-                let isValid = true;
-                
-                // Clear previous errors
-                document.querySelectorAll('.form-group').forEach(group => {
-                    group.classList.remove('error');
-                });
-                
-                if (!firstName) {
-                    document.getElementById('first-name').parentElement.classList.add('error');
-                    isValid = false;
-                }
-                
-                if (!lastName) {
-                    document.getElementById('last-name').parentElement.classList.add('error');
-                    isValid = false;
-                }
-                
-                if (!email) {
-                    document.getElementById('register-email').parentElement.parentElement.classList.add('error');
-                    isValid = false;
-                }
-                
-                if (!password) {
-                    document.getElementById('register-password').parentElement.parentElement.classList.add('error');
-                    isValid = false;
-                }
-                
-                if (!confirmPassword) {
-                    document.getElementById('confirm-password').parentElement.parentElement.classList.add('error');
-                    isValid = false;
-                }
-                
-                if (!role) {
-                    document.getElementById('role').parentElement.parentElement.classList.add('error');
-                    isValid = false;
-                }
-                
-                return isValid;
-            }
-            
+
+            // Alert functions
             function showAlert(message, type) {
                 alertMessage.textContent = message;
                 alertBox.className = `alert alert-${type}`;

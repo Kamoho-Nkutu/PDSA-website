@@ -5,25 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Membership | PDSA Veterinary Clinic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
-        :root {
-            --primary: #2c3e50;
-            --primary-dark: #1a252f;
-            --primary-light: #d6eaf8;
-            --secondary: #3498db;
-            --secondary-dark: #2980b9;
-            --secondary-light: #ebf5fb;
-            --accent: #e74c3c;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --text-color: #2c3e50;
-            --text-light: #7f8c8d;
-            --bg-light: #f8f9fa;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
-        }
-
+        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -32,580 +19,816 @@
         }
 
         body {
-            background-color: var(--bg-light);
-            color: var(--text-color);
+            background-color: #f8f9fa;
+            color: #333;
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         /* Header Styles */
         .header {
-            background: white;
+            background-color: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 1rem 2rem;
+            padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+
+        .header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
             text-decoration: none;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
 
         .logo img {
             height: 40px;
+            margin-right: 10px;
         }
 
         .nav-user {
-            position: relative;
             display: flex;
             align-items: center;
-            gap: 1.5rem;
         }
 
         .nav-links {
             display: flex;
-            gap: 1.5rem;
+            margin-right: 20px;
         }
 
         .nav-links a {
-            color: var(--text-color);
             text-decoration: none;
-            font-weight: 500;
+            color: #555;
+            padding: 8px 15px;
+            border-radius: 4px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: var(--transition);
         }
 
-        .nav-links a:hover {
-            color: var(--secondary);
+        .nav-links a i {
+            margin-right: 5px;
         }
 
-        .nav-links a.active {
-            color: var(--secondary);
-            font-weight: 600;
+        .nav-links a:hover, .nav-links a.active {
+            background-color: #e9f7fe;
+            color: #3498db;
+        }
+
+        .auth-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #3498db;
+            color: #3498db;
+        }
+
+        .btn-outline:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #2ecc71;
+        }
+
+        .btn-primary:hover {
+            background-color: #27ae60;
+        }
+
+        .cart-icon {
+            position: relative;
+            margin-right: 15px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .user-profile-btn {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
             cursor: pointer;
-            padding: 0.5rem 0.75rem;
-            border-radius: 50px;
-            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
         }
 
         .user-profile-btn:hover {
-            background: var(--primary-light);
+            background-color: #f5f5f5;
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-light);
+            margin-right: 8px;
         }
 
-        /* Main Content */
+        .admin-link {
+            text-decoration: none;
+            color: #555;
+            padding: 8px 15px;
+            border-radius: 4px;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .admin-link:hover {
+            background-color: #e9f7fe;
+            color: #3498db;
+        }
+
+        /* Main Content Styles */
         .main-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
+            padding: 40px 0;
+            flex: 1;
         }
 
         .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1.5rem;
+            margin-bottom: 30px;
         }
 
         .page-header h1 {
+            color: #2c3e50;
             font-size: 2rem;
-            color: var(--primary);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
         }
 
         .page-header h1 i {
-            color: var(--secondary);
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            background: var(--secondary);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            text-decoration: none;
-        }
-
-        .btn:hover {
-            background: var(--secondary-dark);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-accent {
-            background: var(--accent);
-        }
-
-        .btn-accent:hover {
-            background: #c0392b;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--secondary);
-            color: var(--secondary);
-        }
-
-        .btn-outline:hover {
-            background: var(--secondary-light);
+            margin-right: 10px;
+            color: #3498db;
         }
 
         /* Membership Status Card */
         .membership-status-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: var(--box-shadow);
-            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border-radius: 10px;
+            padding: 25px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
+            justify-content: space-between;
             align-items: center;
-        }
-
-        .status-content {
-            flex: 1;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .status-content h2 {
-            color: var(--primary);
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
 
         .status-content p {
-            color: var(--text-light);
-            margin-bottom: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
         }
 
         .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-weight: 600;
-            background: rgba(39, 174, 96, 0.15);
-            color: var(--success);
             display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-badge.active {
+            background-color: #2ecc71;
         }
 
         .status-badge.expiring {
-            background: rgba(243, 156, 18, 0.15);
-            color: var(--warning);
+            background-color: #f39c12;
         }
 
         .status-badge.expired {
-            background: rgba(231, 76, 60, 0.15);
-            color: var(--accent);
+            background-color: #e74c3c;
+        }
+
+        /* No Membership State */
+        .no-membership {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .no-membership i {
+            font-size: 4rem;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+
+        .no-membership h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .no-membership p {
+            color: #7f8c8d;
+            max-width: 500px;
+            margin: 0 auto 25px;
         }
 
         /* Benefits Section */
-        .benefits-section {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: var(--box-shadow);
-            margin-bottom: 2rem;
+        .benefits-section, .usage-stats, .plans-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .section-header {
-            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            margin-bottom: 25px;
+        }
+
+        .section-header i {
+            font-size: 1.5rem;
+            color: #3498db;
+            margin-right: 10px;
         }
 
         .section-header h2 {
-            color: var(--primary);
+            color: #2c3e50;
+            font-size: 1.5rem;
         }
 
         .benefits-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
         }
 
         .benefit-card {
             display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            padding: 1.5rem;
-            background: var(--bg-light);
-            border-radius: var(--border-radius);
-            transition: var(--transition);
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
         }
 
         .benefit-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--box-shadow);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .benefit-icon {
-            background: var(--secondary-light);
-            color: var(--secondary);
+            flex-shrink: 0;
             width: 50px;
             height: 50px;
+            background-color: #3498db;
             border-radius: 50%;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            flex-shrink: 0;
+            align-items: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 1.2rem;
         }
 
         .benefit-content h3 {
-            color: var(--primary);
-            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
         }
 
         .benefit-content p {
-            color: var(--text-light);
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        /* Usage Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
             font-size: 0.9rem;
         }
 
         /* Plans Section */
-        .plans-section {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: var(--box-shadow);
-            margin-bottom: 2rem;
-        }
-
         .plans-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 30px;
         }
 
         .plans-header h2 {
-            color: var(--primary);
+            color: #2c3e50;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+        }
+
+        .plans-header h2 i {
+            margin-right: 10px;
+            color: #3498db;
         }
 
         .billing-toggle {
             display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: var(--bg-light);
-            padding: 0.5rem;
-            border-radius: 50px;
+            background-color: #f8f9fa;
+            border-radius: 30px;
+            padding: 5px;
         }
 
         .billing-option {
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
+            padding: 8px 16px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s;
+            font-size: 0.9rem;
         }
 
         .billing-option.active {
-            background: var(--secondary);
+            background-color: #3498db;
             color: white;
         }
 
         .plans-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
         }
 
         .plan-card {
-            background: white;
-            border: 1px solid #eee;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            transition: var(--transition);
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
             position: relative;
-            display: flex;
-            flex-direction: column;
+            background-color: white;
         }
 
         .plan-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .plan-card.popular {
-            border: 2px solid var(--secondary);
-            transform: scale(1.02);
+            border-color: #3498db;
+            transform: scale(1.05);
+        }
+
+        .plan-card.popular:hover {
+            transform: scale(1.05) translateY(-5px);
         }
 
         .plan-card.popular::before {
-            content: 'MOST POPULAR';
+            content: "MOST POPULAR";
             position: absolute;
-            top: -10px;
-            right: 1.5rem;
-            background: var(--secondary);
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #3498db;
             color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
             font-size: 0.7rem;
-            font-weight: 600;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
+            font-weight: bold;
+        }
+
+        .plan-card.current {
+            border-color: #2ecc71;
+            background-color: #f8fff9;
         }
 
         .plan-header {
-            margin-bottom: 1.5rem;
             text-align: center;
+            margin-bottom: 25px;
         }
 
         .plan-name {
-            font-size: 1.5rem;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
         }
 
         .plan-price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--text-color);
-            margin-bottom: 0.5rem;
+            color: #3498db;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
 
         .plan-price span {
             font-size: 1rem;
-            font-weight: 500;
-            color: var(--text-light);
+            color: #7f8c8d;
         }
 
         .plan-description {
-            color: var(--text-light);
-            margin-bottom: 1.5rem;
-            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9rem;
         }
 
         .plan-features {
-            flex: 1;
-            margin-bottom: 1.5rem;
+            margin-bottom: 25px;
         }
 
         .plan-feature {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 12px;
         }
 
         .plan-feature i {
-            color: var(--success);
+            margin-right: 10px;
             width: 20px;
-        }
-
-        .plan-feature.disabled {
-            color: var(--text-light);
-        }
-
-        .plan-feature.disabled i {
-            color: var(--text-light);
-        }
-
-        .plan-action {
-            margin-top: auto;
-        }
-
-        /* Usage Stats */
-        .usage-stats {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            box-shadow: var(--box-shadow);
-            margin-bottom: 2rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .stat-card {
-            background: var(--bg-light);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
             text-align: center;
         }
 
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
+        .plan-feature i.fa-check {
+            color: #2ecc71;
         }
 
-        .stat-label {
-            color: var(--text-light);
-            font-size: 0.9rem;
+        .plan-feature i.fa-times {
+            color: #e74c3c;
+        }
+
+        .plan-feature.disabled {
+            color: #bdc3c7;
+        }
+
+        .plan-action {
+            text-align: center;
+        }
+
+        .plan-action .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .plan-action .btn.current-plan {
+            background-color: #2ecc71;
+            cursor: default;
+        }
+
+        .plan-action .btn.current-plan:hover {
+            transform: none;
+            box-shadow: none;
         }
 
         /* Footer */
         footer {
-            background-color: var(--primary);
+            background-color: #2c3e50;
             color: white;
             text-align: center;
-            padding: 1.5rem;
-            margin-top: 3rem;
+            padding: 20px 0;
+            margin-top: 50px;
         }
 
         footer a {
-            color: white;
+            color: #3498db;
             text-decoration: none;
-            margin: 0 0.5rem;
         }
 
         footer a:hover {
             text-decoration: underline;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header {
-                padding: 1rem;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .plans-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .plan-card.popular {
-                transform: scale(1);
-            }
-            
-            .membership-status-card {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .benefits-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
         }
 
-        @media (max-width: 480px) {
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .modal-header h2 {
+            color: #2c3e50;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Notification Styles */
+        #notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+        }
+
+        .notification {
+            background-color: white;
+            border-radius: 5px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3498db;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 350px;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification.success {
+            border-left-color: #2ecc71;
+        }
+
+        .notification.error {
+            border-left-color: #e74c3c;
+        }
+
+        .notification.warning {
+            border-left-color: #f39c12;
+        }
+
+        .notification.info {
+            border-left-color: #3498db;
+        }
+
+        .close-notification {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #7f8c8d;
+            margin-left: 10px;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+            }
+
+            .nav-user {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 15px;
+            }
+
+            .nav-links {
+                margin-right: 0;
+            }
+
             .page-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
+
+            .page-header h1 {
+                margin-bottom: 15px;
             }
-            
+
             .plans-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            
-            .stats-grid {
+
+            .billing-toggle {
+                margin-top: 15px;
+            }
+
+            .plans-container {
                 grid-template-columns: 1fr;
             }
-        }
 
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            .plan-card.popular {
+                transform: none;
+            }
+
+            .plan-card.popular:hover {
+                transform: translateY(-5px);
+            }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <a href="index.html" class="logo">
-            <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
-            <span>PDSA Veterinary Clinic</span>
-        </a>
-        
-        <div class="nav-user">
-            <nav class="nav-links">
-                <a href="index.html"><i class="fas fa-home"></i> Home</a>
-                <a href="my-pets.html"><i class="fas fa-paw"></i> My Pets</a>
-                <a href="appointments.html"><i class="fas fa-calendar"></i> Appointments</a>
-                <a href="#" class="active"><i class="fas fa-crown"></i> Membership</a>
-                <a href="payment-history.html"><i class="fas fa-receipt"></i> Payments</a>
-            </nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+                <span>PDSA Veterinary Clinic</span>
+            </a>
             
-            <div class="user-profile-btn">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
-                <span>Alex J.</span>
+            <div class="nav-user">
+                <nav class="nav-links">
+                    <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                    <a href="my-pets.html"><i class="fas fa-paw"></i> My Pets</a>
+                    <a href="appointments.html"><i class="fas fa-calendar"></i> Appointments</a>
+                    <a href="#" class="active"><i class="fas fa-crown"></i> Membership</a>
+                    <a href="payment-history.html"><i class="fas fa-receipt"></i> Payments</a>
+                </nav>
+                
+                <div class="auth-buttons">
+                    <div class="cart-icon" id="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </div>
+                    <button class="btn btn-outline" id="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="btn btn-primary" id="register-btn">
+                        <i class="fas fa-user-plus"></i> Register
+                    </button>
+                    <a href="admin-dashboard.html" class="admin-link" id="admin-link" style="display: none;">
+                        <i class="fas fa-cog"></i> Admin
+                    </a>
+                    <div id="user-menu" style="display: none;">
+                        <div class="user-profile-btn">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
+                            <span id="user-name"></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <div class="main-container">
+    <div class="container main-container">
         <div class="page-header">
             <h1>
                 <i class="fas fa-crown"></i>
                 My Membership
             </h1>
-            <button class="btn" onclick="location.href='renew-membership.html'">
+            <button class="btn" id="renew-membership-btn" style="display: none;">
                 <i class="fas fa-sync-alt"></i>
                 Renew Membership
             </button>
         </div>
 
         <!-- Membership Status -->
-        <div class="membership-status-card">
+        <div class="membership-status-card" id="membership-status-card" style="display: none;">
             <div class="status-content">
-                <h2>Premium Care Membership</h2>
-                <p>Your membership is active and will renew automatically on <strong>July 30, 2023</strong>. You're enjoying all the benefits of our Premium Care plan.</p>
-                <span class="status-badge">Active</span>
+                <h2 id="membership-plan-name">Premium Care Membership</h2>
+                <p id="membership-status-text">Your membership is active and will renew automatically on <strong id="renewal-date">July 30, 2023</strong>. You're enjoying all the benefits of our Premium Care plan.</p>
+                <span class="status-badge" id="membership-badge">Active</span>
             </div>
-            <button class="btn btn-outline" onclick="location.href='membership-history.html'">
+            <button class="btn btn-outline" id="view-history-btn">
                 <i class="fas fa-history"></i>
                 View History
+            </button>
+        </div>
+
+        <!-- No Membership State -->
+        <div class="no-membership" id="no-membership">
+            <i class="fas fa-crown"></i>
+            <h2>No Active Membership</h2>
+            <p>You don't have an active membership plan. Choose a plan below to start enjoying exclusive benefits and savings on veterinary care.</p>
+            <button class="btn" id="get-started-btn">
+                <i class="fas fa-star"></i>
+                Get Started
             </button>
         </div>
 
@@ -613,7 +836,7 @@
         <div class="benefits-section">
             <div class="section-header">
                 <i class="fas fa-star"></i>
-                <h2>Your Membership Benefits</h2>
+                <h2>Membership Benefits</h2>
             </div>
             
             <div class="benefits-grid">
@@ -680,7 +903,7 @@
         </div>
 
         <!-- Usage Statistics -->
-        <div class="usage-stats">
+        <div class="usage-stats" id="usage-stats" style="display: none;">
             <div class="section-header">
                 <i class="fas fa-chart-line"></i>
                 <h2>Membership Usage</h2>
@@ -688,22 +911,22 @@
             
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-value">3</div>
+                    <div class="stat-value" id="visits-count">0</div>
                     <div class="stat-label">Visits This Year</div>
                 </div>
                 
                 <div class="stat-card">
-                    <div class="stat-value">R1,250</div>
+                    <div class="stat-value" id="savings-amount">R0</div>
                     <div class="stat-label">Total Savings</div>
                 </div>
                 
                 <div class="stat-card">
-                    <div class="stat-value">2</div>
+                    <div class="stat-value" id="pets-covered">0</div>
                     <div class="stat-label">Pets Covered</div>
                 </div>
                 
                 <div class="stat-card">
-                    <div class="stat-value">85%</div>
+                    <div class="stat-value" id="benefits-used">0%</div>
                     <div class="stat-label">Benefits Used</div>
                 </div>
             </div>
@@ -724,7 +947,7 @@
             
             <div class="plans-container">
                 <!-- Basic Plan -->
-                <div class="plan-card">
+                <div class="plan-card" id="basic-plan">
                     <div class="plan-header">
                         <h3 class="plan-name">Basic Care</h3>
                         <div class="plan-price">R249<span>/month</span></div>
@@ -755,12 +978,12 @@
                     </div>
                     
                     <div class="plan-action">
-                        <button class="btn btn-outline" data-plan="basic">Select Plan</button>
+                        <button class="btn btn-outline" data-plan="basic" id="basic-plan-btn">Select Plan</button>
                     </div>
                 </div>
                 
                 <!-- Premium Plan -->
-                <div class="plan-card popular">
+                <div class="plan-card popular" id="premium-plan">
                     <div class="plan-header">
                         <h3 class="plan-name">Premium Care</h3>
                         <div class="plan-price">R499<span>/month</span></div>
@@ -791,12 +1014,12 @@
                     </div>
                     
                     <div class="plan-action">
-                        <button class="btn" data-plan="premium">Current Plan</button>
+                        <button class="btn" data-plan="premium" id="premium-plan-btn">Select Plan</button>
                     </div>
                 </div>
                 
                 <!-- Family Plan -->
-                <div class="plan-card">
+                <div class="plan-card" id="family-plan">
                     <div class="plan-header">
                         <h3 class="plan-name">Family Plan</h3>
                         <div class="plan-price">R799<span>/month</span></div>
@@ -827,7 +1050,7 @@
                     </div>
                     
                     <div class="plan-action">
-                        <button class="btn btn-outline" data-plan="family">Select Plan</button>
+                        <button class="btn btn-outline" data-plan="family" id="family-plan-btn">Select Plan</button>
                     </div>
                 </div>
             </div>
@@ -835,14 +1058,71 @@
     </div>
 
     <footer>
-        <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved. | <a href="index.html">Home</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
+        <div class="container">
+            <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved. | <a href="index.html">Home</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
+        </div>
     </footer>
 
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
     <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
+            authDomain: "pdsa-database.firebaseapp.com",
+            databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
+            projectId: "pdsa-database",
+            storageBucket: "pdsa-database.firebasestorage.app",
+            messagingSenderId: "1041468794677",
+            appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
+            measurementId: "G-8QLD9BK9M0"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Application State
+        const AppState = {
+            currentUser: null,
+            userMembership: null,
+            userPets: [],
+            isDemoMode: false
+        };
+
         // DOM Elements
-        const billingOptions = document.querySelectorAll('.billing-option');
-        const planButtons = document.querySelectorAll('[data-plan]');
-        
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const userMenu = document.getElementById('user-menu');
+        const userName = document.getElementById('user-name');
+        const adminLink = document.getElementById('admin-link');
+        const renewMembershipBtn = document.getElementById('renew-membership-btn');
+        const membershipStatusCard = document.getElementById('membership-status-card');
+        const noMembership = document.getElementById('no-membership');
+        const usageStats = document.getElementById('usage-stats');
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const viewHistoryBtn = document.getElementById('view-history-btn');
+        const premiumPlanBtn = document.getElementById('premium-plan-btn');
+
+        // Membership elements
+        const membershipPlanName = document.getElementById('membership-plan-name');
+        const membershipStatusText = document.getElementById('membership-status-text');
+        const renewalDate = document.getElementById('renewal-date');
+        const membershipBadge = document.getElementById('membership-badge');
+        const visitsCount = document.getElementById('visits-count');
+        const savingsAmount = document.getElementById('savings-amount');
+        const petsCovered = document.getElementById('pets-covered');
+        const benefitsUsed = document.getElementById('benefits-used');
+
+        // Plan elements
+        const basicPlanBtn = document.getElementById('basic-plan-btn');
+        const familyPlanBtn = document.getElementById('family-plan-btn');
+        const basicPlanCard = document.getElementById('basic-plan');
+        const premiumPlanCard = document.getElementById('premium-plan');
+        const familyPlanCard = document.getElementById('family-plan');
+
         // Pricing in ZAR (South African Rand)
         const monthlyPrices = {
             basic: 249,
@@ -851,14 +1131,36 @@
         };
         
         const annualPrices = {
-            basic: 2390, // 249 * 12 * 0.8 (20% discount)
-            premium: 4790, // 499 * 12 * 0.8
-            family: 7670 // 799 * 12 * 0.8
+            basic: 2390,
+            premium: 4790,
+            family: 7670
         };
-        
+
         // Initialize the page
         function init() {
+            // Firebase auth state listener
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    AppState.currentUser = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || user.email.split('@')[0],
+                        emailVerified: user.emailVerified
+                    };
+                    
+                    updateAuthUI();
+                    loadUserMembership();
+                    loadUserPets();
+                } else {
+                    AppState.currentUser = null;
+                    AppState.userMembership = null;
+                    updateAuthUI();
+                    showNoMembershipState();
+                }
+            });
+            
             // Set up billing toggle
+            const billingOptions = document.querySelectorAll('.billing-option');
             billingOptions.forEach(option => {
                 option.addEventListener('click', () => {
                     const period = option.getAttribute('data-period');
@@ -867,19 +1169,210 @@
             });
             
             // Set up plan selection
+            const planButtons = document.querySelectorAll('[data-plan]');
             planButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const plan = button.getAttribute('data-plan');
-                    if (plan !== 'premium') { // Can't change from current plan in this demo
-                        alert(`You've selected the ${plan} plan. You would be redirected to the payment page in a real application.`);
-                    }
+                    selectMembershipPlan(plan);
                 });
             });
+
+            // Event listeners
+            getStartedBtn.addEventListener('click', () => {
+                document.querySelector('.plans-section').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            viewHistoryBtn.addEventListener('click', () => {
+                showNotification('Membership history feature coming soon!', 'info');
+            });
+
+            renewMembershipBtn.addEventListener('click', () => {
+                showNotification('Membership renewal feature coming soon!', 'info');
+            });
+
+            // Auth buttons
+            loginBtn.addEventListener('click', () => showLoginModal());
+            registerBtn.addEventListener('click', () => showRegisterModal());
+
+            // Load cart
+            loadCart();
         }
-        
+
+        // Load user's membership from Firebase
+        function loadUserMembership() {
+            if (!AppState.currentUser) return;
+
+            db.collection('memberships')
+                .where('userId', '==', AppState.currentUser.uid)
+                .where('status', 'in', ['active', 'expiring'])
+                .limit(1)
+                .get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const doc = querySnapshot.docs[0];
+                        AppState.userMembership = doc.data();
+                        AppState.userMembership.id = doc.id;
+                        updateMembershipUI();
+                    } else {
+                        // Check for any membership (including expired)
+                        db.collection('memberships')
+                            .where('userId', '==', AppState.currentUser.uid)
+                            .orderBy('createdAt', 'desc')
+                            .limit(1)
+                            .get()
+                            .then((querySnapshot) => {
+                                if (!querySnapshot.empty) {
+                                    const doc = querySnapshot.docs[0];
+                                    AppState.userMembership = doc.data();
+                                    AppState.userMembership.id = doc.id;
+                                    updateMembershipUI();
+                                } else {
+                                    AppState.userMembership = null;
+                                    showNoMembershipState();
+                                }
+                            })
+                            .catch((error) => {
+                                console.error('Error loading membership history:', error);
+                                AppState.userMembership = null;
+                                showNoMembershipState();
+                            });
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error loading active membership:', error);
+                    AppState.userMembership = null;
+                    showNoMembershipState();
+                });
+        }
+
+        // Load user's pets
+        function loadUserPets() {
+            if (!AppState.currentUser) return;
+            
+            db.collection('pets')
+                .where('userId', '==', AppState.currentUser.uid)
+                .get()
+                .then((querySnapshot) => {
+                    AppState.userPets = [];
+                    querySnapshot.forEach((doc) => {
+                        const pet = doc.data();
+                        pet.id = doc.id;
+                        AppState.userPets.push(pet);
+                    });
+                    updateUsageStats();
+                })
+                .catch((error) => {
+                    console.error('Error loading pets:', error);
+                });
+        }
+
+        // Update membership UI based on current membership
+        function updateMembershipUI() {
+            if (!AppState.userMembership) {
+                showNoMembershipState();
+                return;
+            }
+
+            const membership = AppState.userMembership;
+            
+            // Update membership status card
+            membershipPlanName.textContent = `${membership.planName} Membership`;
+            membershipStatusText.textContent = getMembershipStatusText(membership);
+            
+            if (membership.endDate) {
+                renewalDate.textContent = formatDate(membership.endDate);
+            } else {
+                renewalDate.textContent = 'Not set';
+            }
+            
+            membershipBadge.textContent = membership.status.charAt(0).toUpperCase() + membership.status.slice(1);
+            membershipBadge.className = `status-badge ${membership.status}`;
+
+            // Show/hide elements
+            membershipStatusCard.style.display = 'flex';
+            noMembership.style.display = 'none';
+            usageStats.style.display = 'block';
+            renewMembershipBtn.style.display = membership.status === 'expiring' ? 'block' : 'none';
+
+            // Update plan buttons and styling
+            updatePlanButtons(membership.planType);
+        }
+
+        // Show no membership state
+        function showNoMembershipState() {
+            membershipStatusCard.style.display = 'none';
+            noMembership.style.display = 'block';
+            usageStats.style.display = 'none';
+            renewMembershipBtn.style.display = 'none';
+            
+            // Update plan buttons for no membership
+            updatePlanButtons(null);
+        }
+
+        // Get membership status text
+        function getMembershipStatusText(membership) {
+            if (!membership.endDate) {
+                return 'Your membership is active.';
+            }
+            
+            const now = new Date();
+            const endDate = membership.endDate.toDate ? membership.endDate.toDate() : new Date(membership.endDate);
+            
+            if (membership.status === 'active') {
+                const daysUntilExpiry = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
+                if (daysUntilExpiry <= 30) {
+                    return `Your membership expires in ${daysUntilExpiry} days on `;
+                }
+                return 'Your membership is active and will renew automatically on ';
+            }
+            
+            return 'Your membership status: ';
+        }
+
+        // Update plan selection buttons and styling
+        function updatePlanButtons(currentPlan) {
+            const planButtons = document.querySelectorAll('[data-plan]');
+            const planCards = document.querySelectorAll('.plan-card');
+            
+            // Reset all plan cards
+            planCards.forEach(card => {
+                card.classList.remove('current');
+            });
+            
+            // Update buttons and highlight current plan
+            planButtons.forEach(button => {
+                const plan = button.getAttribute('data-plan');
+                if (plan === currentPlan) {
+                    button.textContent = 'Current Plan';
+                    button.className = 'btn current-plan';
+                    button.disabled = true;
+                    
+                    // Highlight the current plan card
+                    const planCard = button.closest('.plan-card');
+                    planCard.classList.add('current');
+                } else {
+                    button.textContent = 'Select Plan';
+                    button.className = 'btn btn-outline';
+                    button.disabled = false;
+                }
+            });
+        }
+
+        // Update usage statistics
+        function updateUsageStats() {
+            if (!AppState.userMembership) return;
+
+            // Calculate usage based on pets and membership
+            const petCount = AppState.userPets.length;
+            visitsCount.textContent = petCount > 0 ? Math.min(petCount * 2, 6) : '0';
+            savingsAmount.textContent = `R${petCount * 625}`;
+            petsCovered.textContent = petCount;
+            benefitsUsed.textContent = petCount > 0 ? `${Math.min(petCount * 25, 100)}%` : '0%';
+        }
+
         // Select billing period
         function selectBillingPeriod(period) {
-            // Update active billing option
+            const billingOptions = document.querySelectorAll('.billing-option');
             billingOptions.forEach(option => {
                 if (option.getAttribute('data-period') === period) {
                     option.classList.add('active');
@@ -888,21 +1381,228 @@
                 }
             });
             
-            // Update prices
             updatePricing(period);
         }
-        
+
         // Update pricing based on billing cycle
         function updatePricing(period) {
             const prices = period === 'annual' ? annualPrices : monthlyPrices;
             const billingText = period === 'annual' ? '/year' : '/month';
             
-            // Update plan prices
             document.querySelector('[data-plan="basic"]').closest('.plan-card').querySelector('.plan-price').innerHTML = `R${prices.basic}<span>${billingText}</span>`;
             document.querySelector('[data-plan="premium"]').closest('.plan-card').querySelector('.plan-price').innerHTML = `R${prices.premium}<span>${billingText}</span>`;
             document.querySelector('[data-plan="family"]').closest('.plan-card').querySelector('.plan-price').innerHTML = `R${prices.family}<span>${billingText}</span>`;
         }
-        
+
+        // Select membership plan
+        function selectMembershipPlan(plan) {
+            if (!AppState.currentUser) {
+                showNotification('Please log in to select a membership plan', 'warning');
+                showLoginModal();
+                return;
+            }
+
+            const planNames = {
+                basic: 'Basic Care',
+                premium: 'Premium Care',
+                family: 'Family Plan'
+            };
+
+            // Show loading state
+            const planButton = document.querySelector(`[data-plan="${plan}"]`);
+            const originalText = planButton.textContent;
+            planButton.innerHTML = '<div class="loading-spinner"></div> Processing...';
+            planButton.disabled = true;
+
+            // Create membership data
+            const planData = {
+                userId: AppState.currentUser.uid,
+                planType: plan,
+                planName: planNames[plan],
+                status: 'active',
+                startDate: new Date(),
+                endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            // If user already has a membership, update it instead of creating a new one
+            if (AppState.userMembership && AppState.userMembership.id) {
+                db.collection('memberships').doc(AppState.userMembership.id).update({
+                    planType: plan,
+                    planName: planNames[plan],
+                    status: 'active',
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    showNotification(`Successfully updated to ${planNames[plan]} membership!`, 'success');
+                    loadUserMembership();
+                })
+                .catch((error) => {
+                    console.error('Error updating membership:', error);
+                    showNotification('Error updating membership: ' + error.message, 'error');
+                    planButton.textContent = originalText;
+                    planButton.disabled = false;
+                });
+            } else {
+                // Create new membership
+                db.collection('memberships').add(planData)
+                    .then(() => {
+                        showNotification(`Successfully subscribed to ${planNames[plan]} membership!`, 'success');
+                        loadUserMembership();
+                    })
+                    .catch((error) => {
+                        console.error('Error creating membership:', error);
+                        showNotification('Error creating membership: ' + error.message, 'error');
+                        planButton.textContent = originalText;
+                        planButton.disabled = false;
+                    });
+            }
+        }
+
+        // Format date
+        function formatDate(date) {
+            if (!date) return 'Unknown';
+            const dateObj = date.toDate ? date.toDate() : new Date(date);
+            return dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        // Authentication Management
+        function updateAuthUI() {
+            if (AppState.currentUser) {
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                userMenu.style.display = 'block';
+                if (userName) {
+                    userName.textContent = AppState.currentUser.displayName;
+                }
+            } else {
+                loginBtn.style.display = 'inline-flex';
+                registerBtn.style.display = 'inline-flex';
+                userMenu.style.display = 'none';
+            }
+        }
+
+        function showLoginModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Login Required</h2>
+                        <button class="modal-close" id="temp-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please log in to view and manage your membership.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <button class="btn" onclick="window.location.href='index.html'">
+                                <i class="fas fa-home"></i> Go to Homepage
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            document.getElementById('temp-close').addEventListener('click', () => {
+                modal.remove();
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        function showRegisterModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Registration Required</h2>
+                        <button class="modal-close" id="temp-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please register to access membership features.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <button class="btn" onclick="window.location.href='index.html'">
+                                <i class="fas fa-home"></i> Go to Homepage
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            document.getElementById('temp-close').addEventListener('click', () => {
+                modal.remove();
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        // Cart Management
+        function loadCart() {
+            const savedCart = localStorage.getItem('pdsaCart');
+            if (savedCart) {
+                try {
+                    const cart = JSON.parse(savedCart);
+                    const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+                    document.querySelector('.cart-count').textContent = totalItems;
+                } catch (error) {
+                    console.error('Error parsing saved cart:', error);
+                    document.querySelector('.cart-count').textContent = '0';
+                }
+            }
+        }
+
+        // Enhanced Notification System
+        function showNotification(message, type) {
+            let container = document.getElementById('notification-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'notification-container';
+                container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10000;';
+                document.body.appendChild(container);
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button class="close-notification">&times;</button>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            const autoRemove = setTimeout(() => {
+                closeNotification(notification);
+            }, 5000);
+            
+            const closeBtn = notification.querySelector('.close-notification');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    clearTimeout(autoRemove);
+                    closeNotification(notification);
+                });
+            }
+            
+            function closeNotification(notif) {
+                notif.classList.remove('show');
+                setTimeout(() => {
+                    if (notif.parentNode) {
+                        notif.parentNode.removeChild(notif);
+                    }
+                }, 300);
+            }
+        }
+
         // Initialize the page when loaded
         document.addEventListener('DOMContentLoaded', init);
     </script>

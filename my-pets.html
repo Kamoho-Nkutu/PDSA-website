@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Pets | PDSA Veterinary Clinic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <style>
         :root {
             --primary: #2c3e50;
@@ -115,6 +120,61 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--primary-light);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .admin-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .cart-icon {
+            position: relative;
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .cart-icon:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Main Content */
@@ -455,39 +515,6 @@
             margin-right: auto;
         }
 
-        /* Medical History Section */
-        .medical-history {
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .medical-history h3 {
-            font-size: 1.25rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .vaccination-list {
-            background: var(--bg-light);
-            border-radius: var(--border-radius);
-            padding: 1rem;
-        }
-
-        .vaccination-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .vaccination-item:last-child {
-            border-bottom: none;
-        }
-
         /* Modal for pet details */
         .modal {
             display: none;
@@ -606,6 +633,70 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner i {
+            font-size: 2rem;
+            color: var(--secondary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 350px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background-color: var(--success);
+        }
+        
+        .notification.error {
+            background-color: var(--accent);
+        }
+        
+        .notification.info {
+            background-color: var(--secondary);
+        }
+        
+        .notification.warning {
+            background-color: var(--warning);
+        }
+        
+        .close-notification {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -625,9 +716,35 @@
                 <a href="payment-history.html"><i class="fas fa-receipt"></i> Payments</a>
             </nav>
             
-            <div class="user-profile-btn">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
-                <span>Alex J.</span>
+            <div class="auth-buttons">
+                <div class="cart-icon" id="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </div>
+                <button class="btn btn-outline" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button class="btn btn-primary" id="register-btn">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+                <a href="admin-dashboard.html" class="admin-link" id="admin-link" style="display: none;">
+                    <i class="fas fa-cog"></i> Admin
+                </a>
+                <div id="user-menu" style="display: none;">
+                    <div class="user-profile-btn">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="user-avatar">
+                        <span id="user-name"></span>
+                        <i class="fas fa-chevron-down"></i>
+                        <div class="user-dropdown">
+                            <a href="#" id="user-dashboard-link">Dashboard</a>
+                            <a href="#" id="user-profile-link">My Profile</a>
+                            <a href="#" id="my-pets-link">My Pets</a>
+                            <a href="#" id="my-appointments-link">Appointments</a>
+                            <a href="#" id="my-orders-link">Orders</a>
+                            <a href="#" id="logout-link">Logout</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -674,9 +791,9 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="pet-type">Animal Type *</label>
-                        <select id="pet-type" class="form-control" required aria-required="true">
-                            <option value="">Select Type</option>
+                        <label for="pet-species">Species *</label>
+                        <select id="pet-species" class="form-control" required aria-required="true">
+                            <option value="">Select Species</option>
                             <option value="dog">Dog</option>
                             <option value="cat">Cat</option>
                             <option value="bird">Bird</option>
@@ -691,8 +808,17 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="pet-age">Age (years)</label>
-                        <input type="number" id="pet-age" class="form-control" min="0" max="30">
+                        <label for="pet-dob">Date of Birth</label>
+                        <input type="date" id="pet-dob" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pet-gender">Gender</label>
+                        <select id="pet-gender" class="form-control">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
                     </div>
                     
                     <div class="form-group">
@@ -701,14 +827,19 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="pet-birthday">Birthday</label>
-                        <input type="date" id="pet-birthday" class="form-control">
+                        <label for="pet-color">Color/Markings</label>
+                        <input type="text" id="pet-color" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pet-microchip">Microchip Number</label>
+                        <input type="text" id="pet-microchip" class="form-control">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="pet-notes">Medical Notes</label>
-                    <textarea id="pet-notes" class="form-control" rows="3" placeholder="Any medical conditions, allergies, or special care instructions"></textarea>
+                    <label for="pet-medical-notes">Medical Notes</label>
+                    <textarea id="pet-medical-notes" class="form-control" rows="3" placeholder="Any known allergies, conditions, or special needs"></textarea>
                 </div>
                 
                 <div class="form-actions">
@@ -750,44 +881,38 @@
         </div>
     </div>
 
+    <!-- Notification System -->
+    <div id="notification-container"></div>
+
     <footer>
         <p>&copy; 2023 PDSA Veterinary Clinic. All rights reserved. | <a href="index.html">Home</a> | <a href="contact.html">Contact Us</a> | <a href="privacy.html">Privacy Policy</a></p>
     </footer>
 
     <script>
-        // Load pets from localStorage or use sample data
-        let pets = JSON.parse(localStorage.getItem('pdsa-pets')) || [
-            {
-                id: 1,
-                name: "Bella",
-                type: "dog",
-                breed: "Golden Retriever",
-                age: 3,
-                weight: 25,
-                birthday: "2020-05-15",
-                image: "https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80",
-                notes: "Annual vaccination due next month. Allergic to chicken.",
-                vaccinations: [
-                    { name: "Rabies", date: "2022-05-15", due: "2023-05-15" },
-                    { name: "DHPP", date: "2022-05-15", due: "2023-05-15" }
-                ]
-            },
-            {
-                id: 2,
-                name: "Whiskers",
-                type: "cat",
-                breed: "Siamese",
-                age: 5,
-                weight: 4.5,
-                birthday: "2018-11-22",
-                image: "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80",
-                notes: "Requires dental checkup. Last visit was 6 months ago.",
-                vaccinations: [
-                    { name: "FVRCP", date: "2022-11-22", due: "2023-11-22" },
-                    { name: "Rabies", date: "2022-11-22", due: "2023-11-22" }
-                ]
-            }
-        ];
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
+            authDomain: "pdsa-database.firebaseapp.com",
+            databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
+            projectId: "pdsa-database",
+            storageBucket: "pdsa-database.firebasestorage.app",
+            messagingSenderId: "1041468794677",
+            appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
+            measurementId: "G-8QLD9BK9M0"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Application State
+        const AppState = {
+            currentUser: null,
+            userPets: [],
+            isAdmin: false
+        };
 
         // DOM Elements
         const petsContainer = document.getElementById('pets-container');
@@ -808,12 +933,41 @@
         const modalPetName = document.getElementById('modal-pet-name');
         const modalBody = document.getElementById('modal-body');
         const modalClose = document.getElementById('modal-close');
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const userMenu = document.getElementById('user-menu');
+        const userName = document.getElementById('user-name');
+        const adminLink = document.getElementById('admin-link');
+        const logoutLink = document.getElementById('logout-link');
+        const cartBtn = document.getElementById('cart-btn');
+        const cartCount = document.querySelector('.cart-count');
 
         // Initialize the page
         function init() {
-            savePets(); // Save sample data if first visit
-            renderPets();
-            updateNoPetsState();
+            // Firebase auth state listener
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    AppState.currentUser = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || user.email.split('@')[0],
+                        emailVerified: user.emailVerified
+                    };
+                    
+                    // Check if user is admin
+                    checkAdminStatus(user.uid);
+                    
+                    updateUserUI(AppState.currentUser);
+                    updateAuthUI();
+                    loadUserPets();
+                } else {
+                    AppState.currentUser = null;
+                    AppState.isAdmin = false;
+                    AppState.userPets = [];
+                    updateAuthUI();
+                    updateNoPetsState();
+                }
+            });
             
             // Event listeners
             addPetBtn.addEventListener('click', () => openPetForm());
@@ -824,6 +978,9 @@
             uploadTrigger.addEventListener('click', () => imageUpload.click());
             imageUpload.addEventListener('change', handleImageUpload);
             modalClose.addEventListener('click', closeModal);
+            loginBtn.addEventListener('click', () => showLoginModal());
+            registerBtn.addEventListener('click', () => showRegisterModal());
+            logoutLink.addEventListener('click', logout);
             
             // Close modal when clicking outside
             petModal.addEventListener('click', (e) => {
@@ -836,22 +993,60 @@
                     closeModal();
                 }
             });
+
+            // Load cart from localStorage
+            loadCart();
         }
 
-        // Save pets to localStorage
-        function savePets() {
-            localStorage.setItem('pdsa-pets', JSON.stringify(pets));
+        // Load user's pets from Firebase - FIXED VERSION
+        function loadUserPets() {
+            if (!AppState.currentUser) {
+                console.log('No user logged in, skipping pet load');
+                return;
+            }
+            
+            const petsList = document.getElementById('pets-container');
+            if (petsList) {
+                petsList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner"></i><p>Loading pets...</p></div>';
+            }
+            
+            // FIX: Use a simpler query that doesn't require composite indexes
+            db.collection('pets')
+                .where('userId', '==', AppState.currentUser.uid)
+                .get()
+                .then((querySnapshot) => {
+                    AppState.userPets = [];
+                    querySnapshot.forEach((doc) => {
+                        const pet = doc.data();
+                        pet.id = doc.id;
+                        AppState.userPets.push(pet);
+                    });
+                    
+                    // Sort pets by creation date on the client side
+                    AppState.userPets.sort((a, b) => {
+                        const dateA = a.createdAt ? a.createdAt.toDate() : new Date(0);
+                        const dateB = b.createdAt ? b.createdAt.toDate() : new Date(0);
+                        return dateB - dateA;
+                    });
+                    
+                    renderPets();
+                    updateNoPetsState();
+                })
+                .catch((error) => {
+                    console.error('Error loading pets:', error);
+                    showNotification('Error loading pets: ' + error.message, 'error');
+                });
         }
 
         // Render all pets
         function renderPets() {
             petsContainer.innerHTML = '';
             
-            if (pets.length === 0) {
+            if (AppState.userPets.length === 0) {
                 return;
             }
             
-            pets.forEach(pet => {
+            AppState.userPets.forEach(pet => {
                 const petCard = createPetCard(pet);
                 petsContainer.appendChild(petCard);
             });
@@ -862,33 +1057,36 @@
             const card = document.createElement('div');
             card.className = 'pet-card';
             
-            const typeIcon = pet.type === 'dog' ? 'fa-dog' : 
-                            pet.type === 'cat' ? 'fa-cat' :
-                            pet.type === 'bird' ? 'fa-crow' :
-                            pet.type === 'rabbit' ? 'fa-rabbit' : 'fa-paw';
+            const typeIcon = pet.species === 'dog' ? 'fa-dog' : 
+                            pet.species === 'cat' ? 'fa-cat' :
+                            pet.species === 'bird' ? 'fa-crow' :
+                            pet.species === 'rabbit' ? 'fa-rabbit' : 'fa-paw';
+            
+            // Calculate age from date of birth
+            const age = pet.dateOfBirth ? calculateAge(pet.dateOfBirth) : 'Unknown';
             
             card.innerHTML = `
                 <div class="pet-image">
-                    <img src="${pet.image}" alt="${pet.name}">
-                    <span class="pet-type">${pet.type.charAt(0).toUpperCase() + pet.type.slice(1)}</span>
+                    <img src="${pet.image || 'https://images.unsplash.com/photo-1560809454-892b55bce5f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80'}" alt="${pet.name}">
+                    <span class="pet-type">${pet.species.charAt(0).toUpperCase() + pet.species.slice(1)}</span>
                 </div>
                 <div class="pet-info">
                     <h3 class="pet-name">${pet.name}</h3>
                     <div class="pet-details">
                         <div class="pet-detail">
                             <i class="fas ${typeIcon}"></i>
-                            <span>${pet.breed}</span>
+                            <span>${pet.breed || 'Unknown breed'}</span>
                         </div>
                         <div class="pet-detail">
                             <i class="fas fa-birthday-cake"></i>
-                            <span>${pet.age} years</span>
+                            <span>${age} years</span>
                         </div>
                         <div class="pet-detail">
                             <i class="fas fa-weight"></i>
-                            <span>${pet.weight} kg</span>
+                            <span>${pet.weight || 'Unknown'} kg</span>
                         </div>
                     </div>
-                    <p>${pet.notes}</p>
+                    <p>${pet.medicalNotes || 'No medical notes'}</p>
                     <div class="pet-actions">
                         <button class="btn" data-action="edit" data-id="${pet.id}">
                             <i class="fas fa-edit"></i>
@@ -914,11 +1112,11 @@
                 
                 button.addEventListener('click', () => {
                     if (action === 'edit') {
-                        editPet(parseInt(id));
+                        editPet(id);
                     } else if (action === 'view') {
-                        viewPet(parseInt(id));
+                        viewPet(id);
                     } else if (action === 'appointment') {
-                        scheduleAppointment(parseInt(id));
+                        scheduleAppointment(id);
                     }
                 });
             });
@@ -926,9 +1124,31 @@
             return card;
         }
 
+        // Calculate age from date of birth
+        function calculateAge(dateString) {
+            if (!dateString) return 'Unknown';
+            
+            const birthDate = new Date(dateString);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
         // Show/hide no pets state
         function updateNoPetsState() {
-            if (pets.length === 0) {
+            if (!AppState.currentUser) {
+                noPets.style.display = 'block';
+                petsContainer.style.display = 'none';
+                return;
+            }
+            
+            if (AppState.userPets.length === 0) {
                 noPets.style.display = 'block';
                 petsContainer.style.display = 'none';
             } else {
@@ -939,6 +1159,12 @@
 
         // Open pet form for adding new pet
         function openPetForm(editMode = false, pet = null) {
+            if (!AppState.currentUser) {
+                showNotification('Please log in to add or edit pets', 'warning');
+                showLoginModal();
+                return;
+            }
+            
             formTitle.textContent = editMode ? 'Edit Pet' : 'Add a New Pet';
             petFormContainer.classList.add('active');
             
@@ -946,15 +1172,21 @@
                 // Fill form with pet data
                 petIdInput.value = pet.id;
                 document.getElementById('pet-name').value = pet.name;
-                document.getElementById('pet-type').value = pet.type;
-                document.getElementById('pet-breed').value = pet.breed;
-                document.getElementById('pet-age').value = pet.age;
-                document.getElementById('pet-weight').value = pet.weight;
-                document.getElementById('pet-birthday').value = pet.birthday;
-                document.getElementById('pet-notes').value = pet.notes;
+                document.getElementById('pet-species').value = pet.species;
+                document.getElementById('pet-breed').value = pet.breed || '';
+                document.getElementById('pet-dob').value = pet.dateOfBirth || '';
+                document.getElementById('pet-gender').value = pet.gender || '';
+                document.getElementById('pet-weight').value = pet.weight || '';
+                document.getElementById('pet-color').value = pet.color || '';
+                document.getElementById('pet-microchip').value = pet.microchipNumber || '';
+                document.getElementById('pet-medical-notes').value = pet.medicalNotes || '';
                 
                 // Set image preview
-                imagePreview.innerHTML = `<img src="${pet.image}" alt="${pet.name}">`;
+                if (pet.image) {
+                    imagePreview.innerHTML = `<img src="${pet.image}" alt="${pet.name}">`;
+                } else {
+                    imagePreview.innerHTML = '<i class="fas fa-camera"></i>';
+                }
             } else {
                 // Reset form
                 petForm.reset();
@@ -992,49 +1224,66 @@
         function handleFormSubmit(e) {
             e.preventDefault();
             
-            const formData = new FormData(petForm);
-            const imageSrc = imagePreview.querySelector('img') ? 
-                            imagePreview.querySelector('img').src : 
-                            "https://images.unsplash.com/photo-1560809454-892b55bce5f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80";
+            if (!AppState.currentUser) {
+                showNotification('Please log in to save pets', 'error');
+                return;
+            }
             
             const petData = {
-                id: petIdInput.value ? parseInt(petIdInput.value) : Date.now(),
+                userId: AppState.currentUser.uid,
                 name: document.getElementById('pet-name').value,
-                type: document.getElementById('pet-type').value,
-                breed: document.getElementById('pet-breed').value,
-                age: document.getElementById('pet-age').value ? parseInt(document.getElementById('pet-age').value) : 1,
-                weight: document.getElementById('pet-weight').value ? parseFloat(document.getElementById('pet-weight').value) : 5,
-                birthday: document.getElementById('pet-birthday').value,
-                notes: document.getElementById('pet-notes').value,
-                image: imageSrc
+                species: document.getElementById('pet-species').value,
+                breed: document.getElementById('pet-breed').value || '',
+                dateOfBirth: document.getElementById('pet-dob').value || '',
+                gender: document.getElementById('pet-gender').value || '',
+                weight: document.getElementById('pet-weight').value ? parseFloat(document.getElementById('pet-weight').value) : null,
+                color: document.getElementById('pet-color').value || '',
+                microchipNumber: document.getElementById('pet-microchip').value || '',
+                medicalNotes: document.getElementById('pet-medical-notes').value || '',
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
+            
+            // Add image if available
+            const imageSrc = imagePreview.querySelector('img') ? 
+                            imagePreview.querySelector('img').src : 
+                            null;
+            
+            if (imageSrc) {
+                petData.image = imageSrc;
+            }
             
             if (petIdInput.value) {
                 // Edit existing pet
-                const index = pets.findIndex(p => p.id === parseInt(petIdInput.value));
-                if (index !== -1) {
-                    // Preserve vaccinations
-                    petData.vaccinations = pets[index].vaccinations || [];
-                    pets[index] = petData;
-                }
+                db.collection('pets').doc(petIdInput.value).update(petData)
+                    .then(() => {
+                        showNotification(`${petData.name} has been updated successfully!`, 'success');
+                        loadUserPets();
+                        closePetForm();
+                    })
+                    .catch((error) => {
+                        console.error('Error updating pet:', error);
+                        showNotification('Error updating pet: ' + error.message, 'error');
+                    });
             } else {
                 // Add new pet
-                petData.vaccinations = [];
-                pets.push(petData);
+                petData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                
+                db.collection('pets').add(petData)
+                    .then((docRef) => {
+                        showNotification(`${petData.name} has been added successfully!`, 'success');
+                        loadUserPets();
+                        closePetForm();
+                    })
+                    .catch((error) => {
+                        console.error('Error adding pet:', error);
+                        showNotification('Error adding pet: ' + error.message, 'error');
+                    });
             }
-            
-            savePets();
-            renderPets();
-            updateNoPetsState();
-            closePetForm();
-            
-            // Show success message
-            alert(`${petData.name} has been ${petIdInput.value ? 'updated' : 'added'} successfully!`);
         }
 
         // Edit pet
         function editPet(id) {
-            const pet = pets.find(p => p.id === id);
+            const pet = AppState.userPets.find(p => p.id === id);
             if (pet) {
                 openPetForm(true, pet);
             }
@@ -1042,66 +1291,72 @@
 
         // View pet details
         function viewPet(id) {
-            const pet = pets.find(p => p.id === id);
+            const pet = AppState.userPets.find(p => p.id === id);
             if (!pet) return;
             
-            const typeIcon = pet.type === 'dog' ? 'fa-dog' : 
-                            pet.type === 'cat' ? 'fa-cat' :
-                            pet.type === 'bird' ? 'fa-crow' :
-                            pet.type === 'rabbit' ? 'fa-rabbit' : 'fa-paw';
+            const typeIcon = pet.species === 'dog' ? 'fa-dog' : 
+                            pet.species === 'cat' ? 'fa-cat' :
+                            pet.species === 'bird' ? 'fa-crow' :
+                            pet.species === 'rabbit' ? 'fa-rabbit' : 'fa-paw';
+            
+            const age = pet.dateOfBirth ? calculateAge(pet.dateOfBirth) : 'Unknown';
             
             modalPetName.textContent = pet.name;
             
             modalBody.innerHTML = `
                 <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem;">
                     <div style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden;">
-                        <img src="${pet.image}" alt="${pet.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="${pet.image || 'https://images.unsplash.com/photo-1560809454-892b55bce5f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80'}" alt="${pet.name}" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <div>
                         <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">${pet.name}</h3>
                         <p style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                             <i class="fas ${typeIcon}" style="color: var(--secondary);"></i>
-                            ${pet.breed} • ${pet.type}
+                            ${pet.breed || 'Unknown breed'} • ${pet.species}
                         </p>
                         <p style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                             <i class="fas fa-birthday-cake" style="color: var(--secondary);"></i>
-                            ${pet.age} years old • ${pet.weight} kg
+                            ${age} years old${pet.weight ? ` • ${pet.weight} kg` : ''}
                         </p>
-                        ${pet.birthday ? `
+                        ${pet.dateOfBirth ? `
                             <p style="display: flex; align-items: center; gap: 0.5rem;">
                                 <i class="fas fa-calendar" style="color: var(--secondary);"></i>
-                                Birthday: ${new Date(pet.birthday).toLocaleDateString()}
+                                Birthday: ${new Date(pet.dateOfBirth).toLocaleDateString()}
+                            </p>
+                        ` : ''}
+                        ${pet.gender ? `
+                            <p style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-venus-mars" style="color: var(--secondary);"></i>
+                                Gender: ${pet.gender}
+                            </p>
+                        ` : ''}
+                        ${pet.color ? `
+                            <p style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-palette" style="color: var(--secondary);"></i>
+                                Color: ${pet.color}
+                            </p>
+                        ` : ''}
+                        ${pet.microchipNumber ? `
+                            <p style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-microchip" style="color: var(--secondary);"></i>
+                                Microchip: ${pet.microchipNumber}
                             </p>
                         ` : ''}
                     </div>
                 </div>
                 
-                ${pet.notes ? `
+                ${pet.medicalNotes ? `
                     <div style="margin-bottom: 1.5rem;">
                         <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Medical Notes</h4>
-                        <p>${pet.notes}</p>
-                    </div>
-                ` : ''}
-                
-                ${pet.vaccinations && pet.vaccinations.length > 0 ? `
-                    <div class="medical-history">
-                        <h3><i class="fas fa-syringe"></i> Vaccination History</h3>
-                        <div class="vaccination-list">
-                            ${pet.vaccinations.map(vacc => `
-                                <div class="vaccination-item">
-                                    <div>${vacc.name}</div>
-                                    <div>Given: ${new Date(vacc.date).toLocaleDateString()}</div>
-                                </div>
-                            `).join('')}
-                        </div>
+                        <p>${pet.medicalNotes}</p>
                     </div>
                 ` : ''}
                 
                 <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                    <button class="btn" onclick="editPet(${pet.id}); closeModal();">
+                    <button class="btn" onclick="editPet('${pet.id}'); closeModal();">
                         <i class="fas fa-edit"></i> Edit
                     </button>
-                    <button class="btn btn-secondary" onclick="scheduleAppointment(${pet.id}); closeModal();">
+                    <button class="btn btn-secondary" onclick="scheduleAppointment('${pet.id}'); closeModal();">
                         <i class="fas fa-calendar"></i> Schedule Appointment
                     </button>
                 </div>
@@ -1117,12 +1372,188 @@
 
         // Schedule appointment for pet
         function scheduleAppointment(petId) {
-            const pet = pets.find(p => p.id === petId);
+            const pet = AppState.userPets.find(p => p.id === petId);
             if (pet) {
                 // Store the selected pet in sessionStorage to pre-fill the appointment form
                 sessionStorage.setItem('selectedPet', JSON.stringify({id: pet.id, name: pet.name}));
                 // Redirect to appointments page
                 window.location.href = 'appointments.html';
+            }
+        }
+
+        // Authentication Management
+        function updateAuthUI() {
+            if (AppState.currentUser) {
+                loginBtn.style.display = 'none';
+                registerBtn.style.display = 'none';
+                userMenu.style.display = 'block';
+            } else {
+                loginBtn.style.display = 'inline-flex';
+                registerBtn.style.display = 'inline-flex';
+                userMenu.style.display = 'none';
+            }
+        }
+
+        function updateUserUI(userData) {
+            if (userData && userName) {
+                userName.textContent = userData.displayName || userData.email;
+            }
+        }
+
+        function checkAdminStatus(uid) {
+            if (!uid) return;
+            
+            db.collection('admins').doc(uid).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        AppState.isAdmin = true;
+                        if (adminLink) adminLink.style.display = 'inline-flex';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error checking admin status:', error);
+                });
+        }
+
+        function showLoginModal() {
+            // Create a simple login modal
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Login Required</h2>
+                        <button class="modal-close" id="temp-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please log in to access this feature.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <button class="btn" onclick="window.location.href='index.html'">
+                                <i class="fas fa-home"></i> Go to Homepage
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            document.getElementById('temp-close').addEventListener('click', () => {
+                modal.remove();
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        function showRegisterModal() {
+            // Create a simple register modal
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Registration Required</h2>
+                        <button class="modal-close" id="temp-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please register to access this feature.</p>
+                        <div style="margin-top: 1.5rem;">
+                            <button class="btn" onclick="window.location.href='index.html'">
+                                <i class="fas fa-home"></i> Go to Homepage
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            document.getElementById('temp-close').addEventListener('click', () => {
+                modal.remove();
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        function logout() {
+            auth.signOut()
+                .then(() => {
+                    AppState.currentUser = null;
+                    AppState.isAdmin = false;
+                    AppState.userPets = [];
+                    updateAuthUI();
+                    updateNoPetsState();
+                    showNotification('Logged out successfully', 'info');
+                })
+                .catch((error) => {
+                    console.error('Logout error:', error);
+                    showNotification('Error logging out', 'error');
+                });
+        }
+
+        // Cart Management
+        function loadCart() {
+            const savedCart = localStorage.getItem('pdsaCart');
+            if (savedCart) {
+                try {
+                    const cart = JSON.parse(savedCart);
+                    const totalItems = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+                    cartCount.textContent = totalItems;
+                } catch (error) {
+                    console.error('Error parsing saved cart:', error);
+                    cartCount.textContent = '0';
+                }
+            }
+        }
+
+        // Enhanced Notification System
+        function showNotification(message, type) {
+            // Create notification container if it doesn't exist
+            let container = document.getElementById('notification-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'notification-container';
+                container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10000;';
+                document.body.appendChild(container);
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button class="close-notification">&times;</button>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Auto remove after 5 seconds
+            const autoRemove = setTimeout(() => {
+                closeNotification(notification);
+            }, 5000);
+            
+            // Close button event
+            const closeBtn = notification.querySelector('.close-notification');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    clearTimeout(autoRemove);
+                    closeNotification(notification);
+                });
+            }
+            
+            function closeNotification(notif) {
+                notif.classList.remove('show');
+                setTimeout(() => {
+                    if (notif.parentNode) {
+                        notif.parentNode.removeChild(notif);
+                    }
+                }, 300);
             }
         }
 

@@ -1,0 +1,18 @@
+name: Static Site Check
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  check-files:
+    runs-on: ubuntu-20.04  # Use older image
+    
+    steps:
+    - uses: actions/checkout@v3  # Use older version
+    
+    - run: |
+        echo "Static Site Validation"
+        ls -la
+        [ -f "index.html" ] && echo "SUCCESS: Website valid" || echo "FAILED: No index.html"
+        

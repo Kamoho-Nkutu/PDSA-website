@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <style>
         :root {
             --primary: #2563eb;
@@ -693,21 +697,6 @@
             background-color: var(--primary-dark);
         }
 
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--gray-300);
-            color: var(--gray-700);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--gray-50);
-        }
-
-        .btn-sm {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -760,26 +749,6 @@
         .status.cancelled {
             background-color: rgba(239, 68, 68, 0.1);
             color: var(--accent);
-        }
-
-        .status.active {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .status.inactive {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: var(--accent);
-        }
-
-        .status.shipped, .status.delivered {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .status.processing {
-            background-color: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
         }
 
         .action-buttons {
@@ -1123,13 +1092,52 @@
             display: block;
         }
 
-        /* Page Content */
-        .page-content {
-            display: none;
+        /* Login Page Styles */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 1rem;
         }
 
-        .page-content.active {
-            display: block;
+        .login-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+        }
+
+        .login-header {
+            padding: 2rem 2rem 1rem;
+            text-align: center;
+            background: var(--primary);
+            color: white;
+        }
+
+        .login-header img {
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .login-body {
+            padding: 2rem;
+        }
+
+        .login-footer {
+            padding: 1rem 2rem;
+            text-align: center;
+            background: var(--gray-50);
+            color: var(--gray-600);
+            font-size: 0.9rem;
         }
 
         /* Responsive Styles */
@@ -1201,7 +1209,36 @@
     </style>
 </head>
 <body>
-    <div class="admin-container">
+    <!-- Login Page -->
+    <div id="login-page" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+                <h1>Admin Dashboard</h1>
+            </div>
+            <div class="login-body">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                </form>
+            </div>
+            <div class="login-footer">
+                <p>PDSA Veterinary Clinic Admin System</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="admin-container" style="display: none;">
         <!-- Sidebar -->
         <aside class="admin-sidebar" id="admin-sidebar">
             <div class="sidebar-header">
@@ -1617,8 +1654,8 @@
                     
                     <div class="form-group">
                         <label for="team-specialization">Specialization</label>
-                        <input type="text" id="team-specialization">
-                    </div>
+                            <input type="text" id="team-specialization">
+                        </div>
                     
                     <div class="form-group">
                         <label for="team-description">Description/Bio</label>
@@ -1641,7 +1678,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-outline" id="cancel-team">Cancel</button>
+                <button class="btn" id="cancel-team">Cancel</button>
                 <button class="btn btn-primary" id="save-team">Save Team Member</button>
             </div>
         </div>
@@ -1651,12 +1688,521 @@
     <div id="toast-container"></div>
 
     <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
+            authDomain: "pdsa-database.firebaseapp.com",
+            databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
+            projectId: "pdsa-database",
+            storageBucket: "pdsa-database.firebasestorage.app",
+            messagingSenderId: "1041468794677",
+            appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
+            measurementId: "G-8QLD9BK9M0"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
         // Dashboard Data and State Management
         const dashboardState = {
             currentPage: 'dashboard',
             appointments: [],
             orders: [],
-            teamMembers: [
+            teamMembers: [],
+            websiteContent: {
+                clinicName: 'PDSA Veterinary Clinic',
+                heroTitle: 'Compassionate Care for Your Pets',
+                heroDescription: 'PDSA provides quality veterinary services to pets in Mfolo, Soweto. Book an appointment today and give your pet the care they deserve.',
+                emergencyNumber: '011 984 4340',
+                clinicAddress: '1188 Nancefield Moroka Road, Mfolo South, Soweto, 1868',
+                contactEmail: 'info@pdsa.org.za',
+                logo: 'https://www.pdsa.org.uk/media/12121/pdsa-logo.png'
+            },
+            stats: {
+                appointments: 0,
+                revenue: 0,
+                patients: 0,
+                lowStock: 0
+            },
+            charts: {
+                appointments: null,
+                services: null
+            },
+            realTimeUpdates: true,
+            lastUpdate: new Date(),
+            editingTeamMember: null,
+            currentAdmin: null
+        };
+
+        // DOM Content Loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFirebaseAuth();
+        });
+
+        // ==================== FIREBASE AUTHENTICATION ====================
+
+        function initializeFirebaseAuth() {
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    // Admin is signed in
+                    dashboardState.currentAdmin = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || 'Admin'
+                    };
+                    
+                    document.getElementById('user-name').textContent = dashboardState.currentAdmin.displayName;
+                    
+                    // Show dashboard and hide login
+                    document.getElementById('login-page').style.display = 'none';
+                    document.getElementById('admin-dashboard').style.display = 'flex';
+                    
+                    initializeDashboard();
+                    setupEventListeners();
+                    loadDashboardData();
+                    initializeCharts();
+                    loadTeamMembers();
+                    loadWebsiteContent();
+                    simulateRealTimeUpdates();
+                    
+                    showToast(`Welcome back, ${dashboardState.currentAdmin.displayName}!`, 'success');
+                    
+                } else {
+                    // Admin is signed out, show login
+                    document.getElementById('login-page').style.display = 'flex';
+                    document.getElementById('admin-dashboard').style.display = 'none';
+                }
+            });
+
+            // Login form submission
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<div class="loading"></div> Signing In...';
+                submitBtn.disabled = true;
+                
+                auth.signInWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // Login successful - handled by auth state listener
+                    })
+                    .catch((error) => {
+                        showToast('Login failed: ' + error.message, 'error');
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    });
+            });
+        }
+
+        // ==================== FIRESTORE DATA MANAGEMENT ====================
+
+        // Load all dashboard data from Firestore
+        async function loadDashboardData(forceRefresh = false) {
+            if (forceRefresh) {
+                showToast('Refreshing data...', 'info');
+            }
+            
+            try {
+                await Promise.all([
+                    loadAppointments(),
+                    loadOrders(),
+                    loadStats(),
+                    loadTeamMembers(),
+                    loadWebsiteContent()
+                ]);
+                
+                if (forceRefresh) {
+                    showToast('Data refreshed successfully', 'success');
+                }
+                
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showToast('Error loading data', 'error');
+            }
+        }
+
+        // Load appointments from Firestore
+        async function loadAppointments() {
+            try {
+                const snapshot = await db.collection('appointments')
+                    .orderBy('date', 'desc')
+                    .limit(50)
+                    .get();
+                
+                dashboardState.appointments = [];
+                snapshot.forEach(doc => {
+                    const appointment = doc.data();
+                    appointment.id = doc.id;
+                    appointment.date = appointment.date?.toDate() || new Date();
+                    dashboardState.appointments.push(appointment);
+                });
+                
+                updateAppointmentsUI();
+                
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+                // Fallback to sample data
+                loadSampleAppointments();
+            }
+        }
+
+        // Load orders from Firestore
+        async function loadOrders() {
+            try {
+                const snapshot = await db.collection('orders')
+                    .orderBy('orderDate', 'desc')
+                    .limit(50)
+                    .get();
+                
+                dashboardState.orders = [];
+                snapshot.forEach(doc => {
+                    const order = doc.data();
+                    order.id = doc.id;
+                    order.orderDate = order.orderDate?.toDate() || new Date();
+                    dashboardState.orders.push(order);
+                });
+                
+                updateOrdersUI();
+                
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                // Fallback to sample data
+                loadSampleOrders();
+            }
+        }
+
+        // Load stats from Firestore
+        async function loadStats() {
+            try {
+                // Calculate stats from actual data
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                // Today's appointments
+                const appointmentsSnapshot = await db.collection('appointments')
+                    .where('date', '>=', today)
+                    .get();
+                
+                // Monthly revenue (last 30 days)
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                
+                const ordersSnapshot = await db.collection('orders')
+                    .where('orderDate', '>=', thirtyDaysAgo)
+                    .where('status', 'in', ['delivered', 'shipped'])
+                    .get();
+                
+                // Active patients (unique pets with appointments in last 90 days)
+                const ninetyDaysAgo = new Date();
+                ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+                
+                const patientsSnapshot = await db.collection('appointments')
+                    .where('date', '>=', ninetyDaysAgo)
+                    .get();
+                
+                const uniquePets = new Set();
+                patientsSnapshot.forEach(doc => {
+                    uniquePets.add(doc.data().petId);
+                });
+                
+                dashboardState.stats = {
+                    appointments: appointmentsSnapshot.size,
+                    revenue: ordersSnapshot.docs.reduce((sum, doc) => sum + doc.data().total, 0),
+                    patients: uniquePets.size,
+                    lowStock: 42 // This would need a products collection to calculate properly
+                };
+                
+                updateStatsUI(dashboardState.stats);
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                // Fallback to sample stats
+                dashboardState.stats = {
+                    appointments: 24,
+                    revenue: 12458,
+                    patients: 156,
+                    lowStock: 42
+                };
+                updateStatsUI(dashboardState.stats);
+            }
+        }
+
+        // Load team members from Firestore
+        async function loadTeamMembers() {
+            try {
+                const snapshot = await db.collection('teamMembers')
+                    .orderBy('name')
+                    .get();
+                
+                if (snapshot.empty) {
+                    // If no team members exist, create sample data
+                    await createSampleTeamMembers();
+                    return;
+                }
+                
+                dashboardState.teamMembers = [];
+                snapshot.forEach(doc => {
+                    const member = doc.data();
+                    member.id = doc.id;
+                    dashboardState.teamMembers.push(member);
+                });
+                
+                updateTeamMembersUI();
+                
+            } catch (error) {
+                console.error('Error loading team members:', error);
+                loadSampleTeamMembers();
+            }
+        }
+
+        // Create sample team members in Firestore
+        async function createSampleTeamMembers() {
+            const sampleMembers = [
+                {
+                    name: 'Dr. Sarah Johnson',
+                    position: 'Head Veterinarian',
+                    specialization: 'Small Animal Surgery',
+                    description: 'Specializes in small animal surgery with 15 years of experience.',
+                    email: 'sarah.johnson@pdsa.org.za',
+                    photo: 'https://randomuser.me/api/portraits/women/65.jpg',
+                    status: 'active',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                },
+                {
+                    name: 'Dr. Michael Brown',
+                    position: 'Senior Veterinarian',
+                    specialization: 'Internal Medicine',
+                    description: 'Expert in internal medicine and chronic conditions.',
+                    email: 'michael.brown@pdsa.org.za',
+                    photo: 'https://randomuser.me/api/portraits/men/32.jpg',
+                    status: 'active',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                },
+                {
+                    name: 'Dr. Emma Wilson',
+                    position: 'Emergency Veterinarian',
+                    specialization: 'Emergency Care',
+                    description: 'Available 24/7 for critical and emergency cases.',
+                    email: 'emma.wilson@pdsa.org.za',
+                    photo: 'https://randomuser.me/api/portraits/women/44.jpg',
+                    status: 'active',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                },
+                {
+                    name: 'David Lee',
+                    position: 'Veterinary Nurse',
+                    specialization: 'Postoperative Care',
+                    description: 'Specialized in postoperative care and rehabilitation.',
+                    email: 'david.lee@pdsa.org.za',
+                    photo: 'https://randomuser.me/api/portraits/men/75.jpg',
+                    status: 'active',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                }
+            ];
+
+            try {
+                const batch = db.batch();
+                
+                sampleMembers.forEach(member => {
+                    const docRef = db.collection('teamMembers').doc();
+                    batch.set(docRef, member);
+                });
+                
+                await batch.commit();
+                await loadTeamMembers(); // Reload the team members
+                
+            } catch (error) {
+                console.error('Error creating sample team members:', error);
+                loadSampleTeamMembers();
+            }
+        }
+
+        // Load website content from Firestore
+        async function loadWebsiteContent() {
+            try {
+                const doc = await db.collection('websiteContent').doc('clinicInfo').get();
+                
+                if (doc.exists) {
+                    dashboardState.websiteContent = { ...dashboardState.websiteContent, ...doc.data() };
+                } else {
+                    // Create initial website content
+                    await db.collection('websiteContent').doc('clinicInfo').set(dashboardState.websiteContent);
+                }
+                
+                updateWebsiteContentUI();
+                
+            } catch (error) {
+                console.error('Error loading website content:', error);
+                updateWebsiteContentUI();
+            }
+        }
+
+        // ==================== FIREBASE DATA OPERATIONS ====================
+
+        // Save team member to Firestore
+        async function saveTeamMember() {
+            const name = document.getElementById('team-name').value;
+            const position = document.getElementById('team-position').value;
+            const specialization = document.getElementById('team-specialization').value;
+            const description = document.getElementById('team-description').value;
+            const email = document.getElementById('team-email').value;
+            const status = document.getElementById('team-status').value;
+            const photo = document.getElementById('team-photo-preview').src || 'https://via.placeholder.com/150';
+            
+            if (!name || !position) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const teamMemberData = {
+                name,
+                position,
+                specialization,
+                description,
+                email,
+                status,
+                photo,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            try {
+                if (dashboardState.editingTeamMember) {
+                    // Update existing member
+                    await db.collection('teamMembers').doc(dashboardState.editingTeamMember).update(teamMemberData);
+                    showToast('Team member updated successfully', 'success');
+                } else {
+                    // Add new member
+                    teamMemberData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('teamMembers').add(teamMemberData);
+                    showToast('Team member added successfully', 'success');
+                }
+                
+                hideModal('team-modal');
+                await loadTeamMembers(); // Reload to get the updated data
+                
+            } catch (error) {
+                console.error('Error saving team member:', error);
+                showToast('Error saving team member', 'error');
+            }
+        }
+
+        // Delete team member from Firestore
+        async function deleteTeamMember(id) {
+            if (confirm('Are you sure you want to delete this team member?')) {
+                try {
+                    await db.collection('teamMembers').doc(id).delete();
+                    showToast('Team member deleted successfully', 'success');
+                    await loadTeamMembers(); // Reload the team members
+                } catch (error) {
+                    console.error('Error deleting team member:', error);
+                    showToast('Error deleting team member', 'error');
+                }
+            }
+        }
+
+        // Save website content to Firestore
+        async function saveWebsiteContent() {
+            const websiteData = {
+                clinicName: document.getElementById('clinic-name').value,
+                heroTitle: document.getElementById('hero-title').value,
+                heroDescription: document.getElementById('hero-description').value,
+                emergencyNumber: document.getElementById('emergency-number').value,
+                clinicAddress: document.getElementById('clinic-address').value,
+                contactEmail: document.getElementById('contact-email').value,
+                logo: document.getElementById('logo-preview').src,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            
+            try {
+                await db.collection('websiteContent').doc('clinicInfo').set(websiteData, { merge: true });
+                dashboardState.websiteContent = { ...dashboardState.websiteContent, ...websiteData };
+                showToast('Website content saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving website content:', error);
+                showToast('Error saving website content', 'error');
+            }
+        }
+
+        // Update appointment status in Firestore
+        async function updateAppointmentStatus(appointmentId, newStatus) {
+            try {
+                await db.collection('appointments').doc(appointmentId).update({
+                    status: newStatus,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showToast(`Appointment status updated to ${newStatus}`, 'success');
+                await loadAppointments(); // Reload appointments
+                
+            } catch (error) {
+                console.error('Error updating appointment status:', error);
+                showToast('Error updating appointment status', 'error');
+            }
+        }
+
+        // Update order status in Firestore
+        async function updateOrderStatus(orderId, newStatus) {
+            try {
+                await db.collection('orders').doc(orderId).update({
+                    status: newStatus,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showToast(`Order status updated to ${newStatus}`, 'success');
+                await loadOrders(); // Reload orders
+                
+            } catch (error) {
+                console.error('Error updating order status:', error);
+                showToast('Error updating order status', 'error');
+            }
+        }
+
+        // Upload image to Firebase Storage
+        async function uploadImage(file, path) {
+            try {
+                const storageRef = storage.ref();
+                const fileRef = storageRef.child(path);
+                const snapshot = await fileRef.put(file);
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                return downloadURL;
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                throw error;
+            }
+        }
+
+        // ==================== FALLBACK SAMPLE DATA ====================
+
+        function loadSampleAppointments() {
+            dashboardState.appointments = [
+                { id: 1, petName: 'Max (Golden Retriever)', service: 'Annual Checkup', date: new Date(), time: '10:30 AM', vet: 'Dr. Sarah Johnson', status: 'confirmed' },
+                { id: 2, petName: 'Whiskers (Siamese Cat)', service: 'Vaccination', date: new Date(), time: '11:15 AM', vet: 'Dr. Michael Brown', status: 'confirmed' },
+                { id: 3, petName: 'Buddy (Labrador)', service: 'Dental Cleaning', date: new Date(), time: '2:00 PM', vet: 'Dr. Emma Wilson', status: 'pending' },
+                { id: 4, petName: 'Luna (Maine Coon)', service: 'Follow-up', date: new Date(), time: '3:45 PM', vet: 'Dr. Sarah Johnson', status: 'confirmed' },
+                { id: 5, petName: 'Rocky (German Shepherd)', service: 'Surgery Consultation', date: new Date(Date.now() + 86400000), time: '9:00 AM', vet: 'Dr. Michael Brown', status: 'pending' }
+            ];
+            updateAppointmentsUI();
+        }
+
+        function loadSampleOrders() {
+            dashboardState.orders = [
+                { id: 'ORD-00124', customer: { name: 'Lisa Chen' }, items: [{ name: 'Premium Dog Food' }, { name: 'Dental Chews' }], total: 499.98, status: 'shipped', orderDate: new Date() },
+                { id: 'ORD-00123', customer: { name: 'John Smith' }, items: [{ name: 'Flea Treatment' }, { name: 'Dog Collar' }], total: 329.98, status: 'processing', orderDate: new Date() },
+                { id: 'ORD-00122', customer: { name: 'Maria Garcia' }, items: [{ name: 'Cat Toy' }, { name: 'Joint Supplement' }], total: 379.98, status: 'delivered', orderDate: new Date(Date.now() - 86400000) },
+                { id: 'ORD-00121', customer: { name: 'David Wilson' }, items: [{ name: 'Grain-Free Cat Food' }], total: 599.97, status: 'shipped', orderDate: new Date(Date.now() - 172800000) }
+            ];
+            updateOrdersUI();
+        }
+
+        function loadSampleTeamMembers() {
+            dashboardState.teamMembers = [
                 {
                     id: 1,
                     name: 'Dr. Sarah Johnson',
@@ -1697,51 +2243,192 @@
                     photo: 'https://randomuser.me/api/portraits/men/75.jpg',
                     status: 'active'
                 }
-            ],
-            websiteContent: {
-                clinicName: 'PDSA Veterinary Clinic',
-                heroTitle: 'Compassionate Care for Your Pets',
-                heroDescription: 'PDSA provides quality veterinary services to pets in Mfolo, Soweto. Book an appointment today and give your pet the care they deserve.',
-                emergencyNumber: '011 984 4340',
-                clinicAddress: '1188 Nancefield Moroka Road, Mfolo South, Soweto, 1868',
-                contactEmail: 'info@pdsa.org.za',
-                logo: 'https://www.pdsa.org.uk/media/12121/pdsa-logo.png'
-            },
-            stats: {
-                appointments: 24,
-                revenue: 12458,
-                patients: 156,
-                lowStock: 42
-            },
-            charts: {
-                appointments: null,
-                services: null
-            },
-            realTimeUpdates: true,
-            lastUpdate: new Date(),
-            editingTeamMember: null
-        };
+            ];
+            updateTeamMembersUI();
+        }
 
-        // DOM Content Loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeDashboard();
-            setupEventListeners();
-            loadDashboardData();
-            initializeCharts();
-            loadTeamMembers();
-            loadWebsiteContent();
-            simulateRealTimeUpdates();
-        });
+        // ==================== UI UPDATES ====================
+
+        // Update team members UI
+        function updateTeamMembersUI() {
+            const teamTable = document.getElementById('team-table-body');
+            if (teamTable) {
+                teamTable.innerHTML = dashboardState.teamMembers.map(member => `
+                    <tr>
+                        <td>
+                            <img src="${member.photo}" alt="${member.name}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                        </td>
+                        <td>${member.name}</td>
+                        <td>${member.position}</td>
+                        <td>${member.specialization}</td>
+                        <td><span class="status ${member.status}">${member.status.charAt(0).toUpperCase() + member.status.slice(1)}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit" data-id="${member.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete" data-id="${member.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.action-btn.edit').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const memberId = this.getAttribute('data-id');
+                        editTeamMember(memberId);
+                    });
+                });
+                
+                document.querySelectorAll('.action-btn.delete').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const memberId = this.getAttribute('data-id');
+                        deleteTeamMember(memberId);
+                    });
+                });
+            }
+        }
+
+        // Update website content UI
+        function updateWebsiteContentUI() {
+            document.getElementById('clinic-name').value = dashboardState.websiteContent.clinicName;
+            document.getElementById('hero-title').value = dashboardState.websiteContent.heroTitle;
+            document.getElementById('hero-description').value = dashboardState.websiteContent.heroDescription;
+            document.getElementById('emergency-number').value = dashboardState.websiteContent.emergencyNumber;
+            document.getElementById('clinic-address').value = dashboardState.websiteContent.clinicAddress;
+            document.getElementById('contact-email').value = dashboardState.websiteContent.contactEmail;
+            document.getElementById('logo-preview').src = dashboardState.websiteContent.logo;
+        }
+
+        // Update appointments UI with Firebase data
+        function updateAppointmentsUI() {
+            // Update recent appointments activity
+            const activityList = document.getElementById('recent-appointments');
+            if (activityList) {
+                activityList.innerHTML = dashboardState.appointments.slice(0, 4).map(appointment => `
+                    <li class="activity-item">
+                        <div class="activity-icon appointment">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>${appointment.petName}</strong> - ${appointment.service}</p>
+                            <p class="time">${formatDate(appointment.date)} ${appointment.time} | ${appointment.vet}</p>
+                        </div>
+                    </li>
+                `).join('');
+            }
+            
+            // Update appointments table
+            const appointmentsTable = document.getElementById('appointments-table-body');
+            if (appointmentsTable) {
+                appointmentsTable.innerHTML = dashboardState.appointments.map(appointment => `
+                    <tr>
+                        <td>${appointment.petName}</td>
+                        <td>${appointment.service}</td>
+                        <td>${formatDate(appointment.date)} ${appointment.time}</td>
+                        <td>${appointment.vet}</td>
+                        <td>
+                            <select class="status-select" data-id="${appointment.id}" data-type="appointment">
+                                <option value="pending" ${appointment.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="confirmed" ${appointment.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                                <option value="completed" ${appointment.status === 'completed' ? 'selected' : ''}>Completed</option>
+                                <option value="cancelled" ${appointment.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn view" data-id="${appointment.id}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Add event listeners to status dropdowns
+                document.querySelectorAll('.status-select[data-type="appointment"]').forEach(select => {
+                    select.addEventListener('change', function() {
+                        const appointmentId = this.getAttribute('data-id');
+                        const newStatus = this.value;
+                        updateAppointmentStatus(appointmentId, newStatus);
+                    });
+                });
+            }
+        }
+
+        // Update orders UI with Firebase data
+        function updateOrdersUI() {
+            const ordersTable = document.getElementById('orders-table-body');
+            if (ordersTable) {
+                ordersTable.innerHTML = dashboardState.orders.map(order => `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${order.customer?.name || 'N/A'}</td>
+                        <td>${order.items?.map(item => item.name).join(', ') || 'N/A'}</td>
+                        <td>R${order.total?.toFixed(2) || '0.00'}</td>
+                        <td>
+                            <select class="status-select" data-id="${order.id}" data-type="order">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
+                                <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
+                        <td>${formatDate(order.orderDate)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn view" data-id="${order.id}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Add event listeners to status dropdowns
+                document.querySelectorAll('.status-select[data-type="order"]').forEach(select => {
+                    select.addEventListener('change', function() {
+                        const orderId = this.getAttribute('data-id');
+                        const newStatus = this.value;
+                        updateOrderStatus(orderId, newStatus);
+                    });
+                });
+            }
+            
+            // Update recent payments activity
+            const paymentsList = document.getElementById('recent-payments');
+            if (paymentsList) {
+                paymentsList.innerHTML = dashboardState.orders.slice(0, 3).map(order => `
+                    <li class="activity-item">
+                        <div class="activity-icon payment">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>${order.customer?.name || 'Customer'}</strong> - R${order.total?.toFixed(2) || '0.00'}</p>
+                            <p class="time">${formatDate(order.orderDate)} | ${order.status?.charAt(0).toUpperCase() + order.status?.slice(1) || 'Unknown'}</p>
+                        </div>
+                    </li>
+                `).join('');
+            }
+        }
+
+        // Update Stats UI
+        function updateStatsUI(stats) {
+            document.getElementById('today-appointments').textContent = stats.appointments;
+            document.getElementById('monthly-revenue').textContent = `R${stats.revenue.toLocaleString()}`;
+            document.getElementById('active-patients').textContent = stats.patients;
+            document.getElementById('low-stock').textContent = stats.lowStock;
+        }
+
+        // ==================== CORE DASHBOARD FUNCTIONS ====================
 
         // Initialize Dashboard
         function initializeDashboard() {
-            // Set active menu item
             document.querySelector('a[data-page="dashboard"]').classList.add('active');
-            
-            // Load initial data
-            loadInitialData();
-            
-            // Update last update time
             updateLastUpdateTime();
         }
 
@@ -1895,102 +2582,39 @@
             dashboardState.currentPage = page;
         }
 
-        // Load Initial Data
-        function loadInitialData() {
-            // Sample data for demonstration
-            dashboardState.appointments = [
-                { id: 1, petName: 'Max (Golden Retriever)', service: 'Annual Checkup', date: new Date(), time: '10:30 AM', vet: 'Dr. Sarah Johnson', status: 'confirmed' },
-                { id: 2, petName: 'Whiskers (Siamese Cat)', service: 'Vaccination', date: new Date(), time: '11:15 AM', vet: 'Dr. Michael Brown', status: 'confirmed' },
-                { id: 3, petName: 'Buddy (Labrador)', service: 'Dental Cleaning', date: new Date(), time: '2:00 PM', vet: 'Dr. Emma Wilson', status: 'pending' },
-                { id: 4, petName: 'Luna (Maine Coon)', service: 'Follow-up', date: new Date(), time: '3:45 PM', vet: 'Dr. Sarah Johnson', status: 'confirmed' },
-                { id: 5, petName: 'Rocky (German Shepherd)', service: 'Surgery Consultation', date: new Date(Date.now() + 86400000), time: '9:00 AM', vet: 'Dr. Michael Brown', status: 'pending' }
-            ];
-
-            dashboardState.orders = [
-                { id: 'ORD-00124', customer: { name: 'Lisa Chen' }, items: [{ name: 'Premium Dog Food' }, { name: 'Dental Chews' }], total: 499.98, status: 'shipped', orderDate: new Date() },
-                { id: 'ORD-00123', customer: { name: 'John Smith' }, items: [{ name: 'Flea Treatment' }, { name: 'Dog Collar' }], total: 329.98, status: 'processing', orderDate: new Date() },
-                { id: 'ORD-00122', customer: { name: 'Maria Garcia' }, items: [{ name: 'Cat Toy' }, { name: 'Joint Supplement' }], total: 379.98, status: 'delivered', orderDate: new Date(Date.now() - 86400000) },
-                { id: 'ORD-00121', customer: { name: 'David Wilson' }, items: [{ name: 'Grain-Free Cat Food' }], total: 599.97, status: 'shipped', orderDate: new Date(Date.now() - 172800000) }
-            ];
-
-            // Update UI with initial data
-            updateAppointmentsUI();
-            updateOrdersUI();
-            updateStatsUI(dashboardState.stats);
-        }
-
-        // Load Dashboard Data (Simulated API Call)
-        function loadDashboardData(forceRefresh = false) {
-            if (forceRefresh) {
-                showToast('Refreshing data...', 'info');
-                
-                // Simulate API delay
-                setTimeout(() => {
-                    // In a real app, this would fetch from Firebase/API
-                    dashboardState.stats.appointments = Math.floor(Math.random() * 10) + 20;
-                    dashboardState.stats.revenue = Math.floor(Math.random() * 2000) + 11000;
-                    dashboardState.stats.patients = Math.floor(Math.random() * 20) + 140;
-                    dashboardState.stats.lowStock = Math.floor(Math.random() * 10) + 35;
-                    
-                    updateStatsUI(dashboardState.stats);
-                    updateLastUpdateTime();
-                    showToast('Data refreshed successfully', 'success');
-                }, 1500);
+        // Team Management Functions
+        function showTeamModal(member = null) {
+            const modal = document.getElementById('team-modal');
+            const title = document.getElementById('team-modal-title');
+            const form = document.getElementById('team-form');
+            
+            if (member) {
+                // Editing existing member
+                title.textContent = 'Edit Team Member';
+                document.getElementById('team-name').value = member.name;
+                document.getElementById('team-position').value = member.position;
+                document.getElementById('team-specialization').value = member.specialization;
+                document.getElementById('team-description').value = member.description;
+                document.getElementById('team-email').value = member.email;
+                document.getElementById('team-status').value = member.status;
+                document.getElementById('team-photo-preview').src = member.photo;
+                dashboardState.editingTeamMember = member.id;
+            } else {
+                // Adding new member
+                title.textContent = 'Add Team Member';
+                form.reset();
+                document.getElementById('team-photo-preview').src = '';
+                dashboardState.editingTeamMember = null;
             }
+            
+            modal.classList.add('active');
         }
 
-        // Load Team Members
-        function loadTeamMembers() {
-            const teamTable = document.getElementById('team-table-body');
-            if (teamTable) {
-                teamTable.innerHTML = dashboardState.teamMembers.map(member => `
-                    <tr>
-                        <td>
-                            <img src="${member.photo}" alt="${member.name}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
-                        </td>
-                        <td>${member.name}</td>
-                        <td>${member.position}</td>
-                        <td>${member.specialization}</td>
-                        <td><span class="status ${member.status}">${member.status.charAt(0).toUpperCase() + member.status.slice(1)}</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn edit" data-id="${member.id}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="action-btn delete" data-id="${member.id}">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-                
-                // Add event listeners to action buttons
-                document.querySelectorAll('.action-btn.edit').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const memberId = this.getAttribute('data-id');
-                        editTeamMember(memberId);
-                    });
-                });
-                
-                document.querySelectorAll('.action-btn.delete').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const memberId = this.getAttribute('data-id');
-                        deleteTeamMember(memberId);
-                    });
-                });
+        function editTeamMember(id) {
+            const member = dashboardState.teamMembers.find(m => m.id === id);
+            if (member) {
+                showTeamModal(member);
             }
-        }
-
-        // Load Website Content
-        function loadWebsiteContent() {
-            document.getElementById('clinic-name').value = dashboardState.websiteContent.clinicName;
-            document.getElementById('hero-title').value = dashboardState.websiteContent.heroTitle;
-            document.getElementById('hero-description').value = dashboardState.websiteContent.heroDescription;
-            document.getElementById('emergency-number').value = dashboardState.websiteContent.emergencyNumber;
-            document.getElementById('clinic-address').value = dashboardState.websiteContent.clinicAddress;
-            document.getElementById('contact-email').value = dashboardState.websiteContent.contactEmail;
-            document.getElementById('logo-preview').src = dashboardState.websiteContent.logo;
         }
 
         // Initialize Charts
@@ -2112,249 +2736,6 @@
             dashboardState.charts.services.update();
         }
 
-        // Update Appointments UI
-        function updateAppointmentsUI() {
-            // Update recent appointments activity
-            const activityList = document.getElementById('recent-appointments');
-            if (activityList) {
-                activityList.innerHTML = dashboardState.appointments.slice(0, 4).map(appointment => `
-                    <li class="activity-item">
-                        <div class="activity-icon appointment">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <div class="activity-content">
-                            <p><strong>${appointment.petName}</strong> - ${appointment.service}</p>
-                            <p class="time">${formatDate(appointment.date)} ${appointment.time} | ${appointment.vet}</p>
-                        </div>
-                    </li>
-                `).join('');
-            }
-            
-            // Update appointments table
-            const appointmentsTable = document.getElementById('appointments-table-body');
-            if (appointmentsTable) {
-                appointmentsTable.innerHTML = dashboardState.appointments.map(appointment => `
-                    <tr>
-                        <td>${appointment.petName}</td>
-                        <td>${appointment.service}</td>
-                        <td>${formatDate(appointment.date)} ${appointment.time}</td>
-                        <td>${appointment.vet}</td>
-                        <td><span class="status ${appointment.status}">${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}</span></td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn view" data-id="${appointment.id}">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="action-btn edit" data-id="${appointment.id}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-                
-                // Add event listeners to action buttons
-                document.querySelectorAll('.action-btn.view').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const appointmentId = this.getAttribute('data-id');
-                        showToast(`Viewing appointment details for ID: ${appointmentId}`, 'info');
-                    });
-                });
-                
-                document.querySelectorAll('.action-btn.edit').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const appointmentId = this.getAttribute('data-id');
-                        showToast(`Editing appointment for ID: ${appointmentId}`, 'info');
-                    });
-                });
-            }
-        }
-
-        // Update Orders UI
-        function updateOrdersUI() {
-            const ordersTable = document.getElementById('orders-table-body');
-            if (ordersTable) {
-                ordersTable.innerHTML = dashboardState.orders.map(order => `
-                    <tr>
-                        <td>#${order.id}</td>
-                        <td>${order.customer.name}</td>
-                        <td>${order.items.map(item => item.name).join(', ')}</td>
-                        <td>R${order.total.toFixed(2)}</td>
-                        <td><span class="status ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
-                        <td>${formatDate(order.orderDate)}</td>
-                        <td>
-                            <div class="action-buttons">
-                                <button class="action-btn view" data-id="${order.id}">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="action-btn edit" data-id="${order.id}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-                
-                // Add event listeners to action buttons
-                document.querySelectorAll('.action-btn.view').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const orderId = this.getAttribute('data-id');
-                        showToast(`Viewing order details for ID: ${orderId}`, 'info');
-                    });
-                });
-                
-                document.querySelectorAll('.action-btn.edit').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const orderId = this.getAttribute('data-id');
-                        showToast(`Editing order for ID: ${orderId}`, 'info');
-                    });
-                });
-            }
-            
-            // Update recent payments activity
-            const paymentsList = document.getElementById('recent-payments');
-            if (paymentsList) {
-                paymentsList.innerHTML = dashboardState.orders.slice(0, 3).map(order => `
-                    <li class="activity-item">
-                        <div class="activity-icon payment">
-                            <i class="fas fa-credit-card"></i>
-                        </div>
-                        <div class="activity-content">
-                            <p><strong>${order.customer.name}</strong> - R${order.total.toFixed(2)}</p>
-                            <p class="time">${formatDate(order.orderDate)} | ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</p>
-                        </div>
-                    </li>
-                `).join('');
-                
-                // Add a registration activity
-                paymentsList.innerHTML += `
-                    <li class="activity-item">
-                        <div class="activity-icon registration">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <div class="activity-content">
-                            <p><strong>New Patient Registered</strong></p>
-                            <p class="time">Today, 1:30 PM | Bailey (Rabbit)</p>
-                        </div>
-                    </li>
-                `;
-            }
-        }
-
-        // Update Stats UI
-        function updateStatsUI(stats) {
-            document.getElementById('today-appointments').textContent = stats.appointments;
-            document.getElementById('monthly-revenue').textContent = `R${stats.revenue.toLocaleString()}`;
-            document.getElementById('active-patients').textContent = stats.patients;
-            document.getElementById('low-stock').textContent = stats.lowStock;
-        }
-
-        // Team Management Functions
-        function showTeamModal(member = null) {
-            const modal = document.getElementById('team-modal');
-            const title = document.getElementById('team-modal-title');
-            const form = document.getElementById('team-form');
-            
-            if (member) {
-                // Editing existing member
-                title.textContent = 'Edit Team Member';
-                document.getElementById('team-name').value = member.name;
-                document.getElementById('team-position').value = member.position;
-                document.getElementById('team-specialization').value = member.specialization;
-                document.getElementById('team-description').value = member.description;
-                document.getElementById('team-email').value = member.email;
-                document.getElementById('team-status').value = member.status;
-                document.getElementById('team-photo-preview').src = member.photo;
-                dashboardState.editingTeamMember = member.id;
-            } else {
-                // Adding new member
-                title.textContent = 'Add Team Member';
-                form.reset();
-                document.getElementById('team-photo-preview').src = '';
-                dashboardState.editingTeamMember = null;
-            }
-            
-            modal.classList.add('active');
-        }
-
-        function saveTeamMember() {
-            const name = document.getElementById('team-name').value;
-            const position = document.getElementById('team-position').value;
-            const specialization = document.getElementById('team-specialization').value;
-            const description = document.getElementById('team-description').value;
-            const email = document.getElementById('team-email').value;
-            const status = document.getElementById('team-status').value;
-            const photo = document.getElementById('team-photo-preview').src || 'https://via.placeholder.com/150';
-            
-            if (!name || !position) {
-                showToast('Please fill in all required fields', 'error');
-                return;
-            }
-            
-            if (dashboardState.editingTeamMember) {
-                // Update existing member
-                const index = dashboardState.teamMembers.findIndex(m => m.id === dashboardState.editingTeamMember);
-                if (index !== -1) {
-                    dashboardState.teamMembers[index] = {
-                        ...dashboardState.teamMembers[index],
-                        name,
-                        position,
-                        specialization,
-                        description,
-                        email,
-                        status,
-                        photo
-                    };
-                }
-                showToast('Team member updated successfully', 'success');
-            } else {
-                // Add new member
-                const newMember = {
-                    id: Date.now(),
-                    name,
-                    position,
-                    specialization,
-                    description,
-                    email,
-                    status,
-                    photo
-                };
-                dashboardState.teamMembers.push(newMember);
-                showToast('Team member added successfully', 'success');
-            }
-            
-            hideModal('team-modal');
-            loadTeamMembers();
-        }
-
-        function editTeamMember(id) {
-            const member = dashboardState.teamMembers.find(m => m.id === parseInt(id));
-            if (member) {
-                showTeamModal(member);
-            }
-        }
-
-        function deleteTeamMember(id) {
-            if (confirm('Are you sure you want to delete this team member?')) {
-                dashboardState.teamMembers = dashboardState.teamMembers.filter(m => m.id !== parseInt(id));
-                loadTeamMembers();
-                showToast('Team member deleted successfully', 'success');
-            }
-        }
-
-        // Website Content Management
-        function saveWebsiteContent() {
-            dashboardState.websiteContent.clinicName = document.getElementById('clinic-name').value;
-            dashboardState.websiteContent.heroTitle = document.getElementById('hero-title').value;
-            dashboardState.websiteContent.heroDescription = document.getElementById('hero-description').value;
-            dashboardState.websiteContent.emergencyNumber = document.getElementById('emergency-number').value;
-            dashboardState.websiteContent.clinicAddress = document.getElementById('clinic-address').value;
-            dashboardState.websiteContent.contactEmail = document.getElementById('contact-email').value;
-            dashboardState.websiteContent.logo = document.getElementById('logo-preview').src;
-            
-            showToast('Website content saved successfully', 'success');
-        }
-
         // Utility Functions
         function showModal(modalId) {
             document.getElementById(modalId).classList.add('active');
@@ -2401,11 +2782,15 @@
             document.body.appendChild(dropdown);
             
             // Add logout functionality
-            document.getElementById('logout-btn').addEventListener('click', function() {
+            document.getElementById('logout-btn').addEventListener('click', async function() {
                 showToast('Logging out...', 'info');
-                setTimeout(() => {
-                    window.location.href = 'admin-login.html';
-                }, 1000);
+                try {
+                    await auth.signOut();
+                    // Redirect will happen automatically due to auth state listener
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    showToast('Error logging out', 'error');
+                }
             });
             
             // Close dropdown when clicking outside
@@ -2443,74 +2828,32 @@
 
         // Simulate Real-time Updates
         function simulateRealTimeUpdates() {
-            setInterval(() => {
-                if (!dashboardState.realTimeUpdates) return;
-                
-                // Randomly update notification counts
-                const notificationCount = Math.floor(Math.random() * 10);
-                const messageCount = Math.floor(Math.random() * 5);
-                
-                document.getElementById('notification-count').textContent = notificationCount;
-                document.getElementById('message-count').textContent = messageCount;
-                
-                // Occasionally add a new appointment or order
-                if (Math.random() > 0.7) {
-                    const newAppointment = {
-                        id: Date.now(),
-                        petName: 'New Patient',
-                        service: 'Checkup',
-                        date: new Date(Date.now() + 86400000),
-                        time: '10:00 AM',
-                        vet: 'Available Vet',
-                        status: 'pending'
-                    };
-                    
-                    dashboardState.appointments.unshift(newAppointment);
-                    updateAppointmentsUI();
-                    
-                    // Highlight the new row
-                    const newRow = document.querySelector(`[data-id="${newAppointment.id}"]`).closest('tr');
-                    if (newRow) newRow.classList.add('new-item');
-                    
-                    showToast(`New appointment scheduled for ${newAppointment.petName}`, 'info');
-                }
-                
-                if (Math.random() > 0.8) {
-                    const newOrder = {
-                        id: `ORD-${Date.now()}`,
-                        customer: { name: 'New Customer' },
-                        items: [{ name: 'Pet Supplies' }],
-                        total: Math.floor(Math.random() * 500) + 50,
-                        status: 'processing',
-                        orderDate: new Date()
-                    };
-                    
-                    dashboardState.orders.unshift(newOrder);
-                    updateOrdersUI();
-                    
-                    // Highlight the new row
-                    const newRow = document.querySelector(`[data-id="${newOrder.id}"]`).closest('tr');
-                    if (newRow) newRow.classList.add('new-item');
-                    
-                    showToast(`New order received: ${newOrder.id}`, 'info');
-                }
-                
-                // Update stats occasionally
-                if (Math.random() > 0.9) {
-                    dashboardState.stats.appointments += Math.floor(Math.random() * 3) - 1;
-                    dashboardState.stats.revenue += Math.floor(Math.random() * 200) - 100;
-                    dashboardState.stats.patients += Math.floor(Math.random() * 2);
-                    dashboardState.stats.lowStock += Math.floor(Math.random() * 3) - 1;
-                    
-                    // Ensure stats don't go negative
-                    dashboardState.stats.appointments = Math.max(0, dashboardState.stats.appointments);
-                    dashboardState.stats.revenue = Math.max(0, dashboardState.stats.revenue);
-                    dashboardState.stats.patients = Math.max(0, dashboardState.stats.patients);
-                    dashboardState.stats.lowStock = Math.max(0, dashboardState.stats.lowStock);
-                    
-                    updateStatsUI(dashboardState.stats);
-                }
-            }, 10000); // Update every 10 seconds
+            // Real-time listeners for Firestore collections
+            if (dashboardState.realTimeUpdates) {
+                // Real-time listener for appointments
+                db.collection('appointments')
+                    .orderBy('date', 'desc')
+                    .limit(10)
+                    .onSnapshot((snapshot) => {
+                        snapshot.docChanges().forEach((change) => {
+                            if (change.type === 'added') {
+                                showToast('New appointment scheduled', 'info');
+                            }
+                        });
+                    });
+
+                // Real-time listener for orders
+                db.collection('orders')
+                    .orderBy('orderDate', 'desc')
+                    .limit(10)
+                    .onSnapshot((snapshot) => {
+                        snapshot.docChanges().forEach((change) => {
+                            if (change.type === 'added') {
+                                showToast('New order received', 'info');
+                            }
+                        });
+                    });
+            }
         }
 
         // Filter Dashboard Data
@@ -2555,14 +2898,18 @@
                         <td>${appointment.service}</td>
                         <td>${formatDate(appointment.date)} ${appointment.time}</td>
                         <td>${appointment.vet}</td>
-                        <td><span class="status ${appointment.status}">${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}</span></td>
+                        <td>
+                            <select class="status-select" data-id="${appointment.id}" data-type="appointment">
+                                <option value="pending" ${appointment.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="confirmed" ${appointment.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                                <option value="completed" ${appointment.status === 'completed' ? 'selected' : ''}>Completed</option>
+                                <option value="cancelled" ${appointment.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
                         <td>
                             <div class="action-buttons">
                                 <button class="action-btn view" data-id="${appointment.id}">
                                     <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="action-btn edit" data-id="${appointment.id}">
-                                    <i class="fas fa-edit"></i>
                                 </button>
                             </div>
                         </td>
@@ -2578,18 +2925,23 @@
                 ordersTable.innerHTML = filteredOrders.map(order => `
                     <tr>
                         <td>#${order.id}</td>
-                        <td>${order.customer.name}</td>
-                        <td>${order.items.map(item => item.name).join(', ')}</td>
-                        <td>R${order.total.toFixed(2)}</td>
-                        <td><span class="status ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
+                        <td>${order.customer?.name || 'N/A'}</td>
+                        <td>${order.items?.map(item => item.name).join(', ') || 'N/A'}</td>
+                        <td>R${order.total?.toFixed(2) || '0.00'}</td>
+                        <td>
+                            <select class="status-select" data-id="${order.id}" data-type="order">
+                                <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
+                                <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                            </select>
+                        </td>
                         <td>${formatDate(order.orderDate)}</td>
                         <td>
                             <div class="action-buttons">
                                 <button class="action-btn view" data-id="${order.id}">
                                     <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="action-btn edit" data-id="${order.id}">
-                                    <i class="fas fa-edit"></i>
                                 </button>
                             </div>
                         </td>
