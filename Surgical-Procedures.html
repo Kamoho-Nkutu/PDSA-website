@@ -74,6 +74,15 @@
         nav a:hover, nav a.active {
             background-color: rgba(255, 255, 255, 0.1);
         }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
         
         /* Hero Section */
         .hero {
@@ -105,11 +114,24 @@
             border-radius: 4px;
             font-weight: 600;
             transition: all 0.3s;
+            border: none;
+            cursor: pointer;
         }
         
         .btn:hover {
             background-color: #2980b9;
             transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #3498db;
+            color: #3498db;
+        }
+        
+        .btn-outline:hover {
+            background-color: #3498db;
+            color: white;
         }
         
         /* Services Section */
@@ -365,6 +387,119 @@
             color: #2c3e50;
             margin-bottom: 0.8rem;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2ecc71;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast.error {
+            background-color: #e74c3c;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
         
         /* Emergency banner */
         .emergency-banner {
@@ -473,8 +608,19 @@
             }
             
             nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                margin-top: 1rem;
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
             }
             
             .hero h2 {
@@ -502,13 +648,17 @@
                     <h1>PDSA Veterinary Clinic</h1>
                 </div>
                 <nav>
-                    <ul>
+                    <ul id="nav-menu">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="#" class="active">Services</a></li>
-                        <li><a href="#About">About Us</a></li>
-                        <li><a href="#">Our Team</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="team.html">Our Team</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="profile.html" class="btn-outline">My Profile</a></li>
                     </ul>
+                    <button class="mobile-menu-btn" id="mobile-menu-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
                 </nav>
             </div>
         </div>
@@ -519,7 +669,7 @@
         <div class="container">
             <h2>Surgical Procedures</h2>
             <p>Expert surgical care for your pets with state-of-the-art facilities and compassionate veterinary surgeons</p>
-            <a href="#contact" class="btn">Schedule a Consultation</a>
+            <button class="btn" id="consultation-btn">Schedule a Consultation</button>
         </div>
     </section>
 
@@ -534,8 +684,8 @@
                         <li><a href="veterinaryclinic.html"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
                         <li><a href="Surgical-Procedures.html" class="active"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
                         <li><a href="dental-care.html"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
-                        <li><a href="emergency-care.html"><i class="fas fa-chevron-right"></i> Emergency Care</a></li> n
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
+                        <li><a href="emergency-care.html"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
+                        <li><a href="pet-health-advice.html"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
                     </ul>
                 </div>
                 
@@ -549,6 +699,7 @@
                         <div class="service-tab" data-tab="procedures">Procedures</div>
                         <div class="service-tab" data-tab="pricing">Pricing</div>
                         <div class="service-tab" data-tab="recovery">Recovery</div>
+                        <div class="service-tab" data-tab="book">Book Surgery</div>
                     </div>
                     
                     <div class="tab-content active" id="overview">
@@ -602,26 +753,32 @@
                             <div class="detail-card">
                                 <h4><i class="fas fa-cut"></i> Spay & Neuter</h4>
                                 <p>Routine sterilization procedures to prevent unwanted litters and provide health benefits.</p>
+                                <button class="btn" style="margin-top: 10px; padding: 0.5rem 1rem;" data-procedure="Spay & Neuter">Learn More</button>
                             </div>
                             <div class="detail-card">
                                 <h4><i class="fas fa-bone"></i> Orthopedic Surgery</h4>
                                 <p>Fracture repairs, cruciate ligament repairs, and other bone and joint procedures.</p>
+                                <button class="btn" style="margin-top: 10px; padding: 0.5rem 1rem;" data-procedure="Orthopedic Surgery">Learn More</button>
                             </div>
                             <div class="detail-card">
                                 <h4><i class="fas fa-tumor"></i> Soft Tissue Surgery</h4>
                                 <p>Mass removals, abdominal surgeries, and other non-orthopedic procedures.</p>
+                                <button class="btn" style="margin-top: 10px; padding: 0.5rem 1rem;" data-procedure="Soft Tissue Surgery">Learn More</button>
                             </div>
                             <div class="detail-card">
                                 <h4><i class="fas fa-teeth"></i> Dental Surgery</h4>
                                 <p>Tooth extractions, oral tumor removals, and other dental procedures.</p>
+                                <button class="btn" style="margin-top: 10px; padding: 0.5rem 1rem;" data-procedure="Dental Surgery">Learn More</button>
                             </div>
                             <div class="detail-card">
                                 <h4><i class="fas fa-eye"></i> Ophthalmic Surgery</h4>
                                 <p>Eyelid corrections, cataract removal, and other eye procedures.</p>
+                                <button class="btn" style="margin-top: 10px; padding: 0.5rem 1rem;" data-procedure="Ophthalmic Surgery">Learn More</button>
                             </div>
                             <div class="detail-card">
                                 <h4><i class="fas fa-first-aid"></i> Emergency Surgery</h4>
                                 <p>Foreign body removal, wound repairs, and other urgent procedures.</p>
+                                <button class="btn" style="margin-top: 10px; padding: 0.5rem 1rem;" data-procedure="Emergency Surgery">Learn More</button>
                             </div>
                         </div>
                     </div>
@@ -716,6 +873,59 @@
                             <li>Signs of pain that aren't controlled with medication</li>
                         </ul>
                     </div>
+
+                    <div class="tab-content" id="book">
+                        <h3>Book a Surgical Consultation</h3>
+                        <p>Schedule a consultation with our surgical team to discuss your pet's needs and develop a treatment plan.</p>
+                        
+                        <form id="surgery-consultation-form">
+                            <div class="form-group">
+                                <label for="pet-type">Pet Type</label>
+                                <select id="pet-type" required>
+                                    <option value="">Select Pet Type</option>
+                                    <option value="dog">Dog</option>
+                                    <option value="cat">Cat</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="pet-breed">Pet Breed</label>
+                                <input type="text" id="pet-breed" placeholder="Enter your pet's breed" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="pet-age">Pet Age</label>
+                                <input type="text" id="pet-age" placeholder="e.g., 2 years" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="surgery-type">Type of Surgery Needed</label>
+                                <select id="surgery-type" required>
+                                    <option value="">Select Surgery Type</option>
+                                    <option value="spay-neuter">Spay/Neuter</option>
+                                    <option value="orthopedic">Orthopedic</option>
+                                    <option value="soft-tissue">Soft Tissue</option>
+                                    <option value="dental">Dental</option>
+                                    <option value="ophthalmic">Ophthalmic</option>
+                                    <option value="emergency">Emergency</option>
+                                    <option value="other">Other/Not Sure</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="consultation-date">Preferred Consultation Date</label>
+                                <input type="date" id="consultation-date" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="surgery-notes">Additional Information</label>
+                                <textarea id="surgery-notes" rows="4" placeholder="Please describe your pet's condition, any symptoms, or specific concerns..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn">Request Consultation</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -741,10 +951,10 @@
                 <div class="footer-col">
                     <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Services</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
                     </ul>
                 </div>
                 
@@ -775,9 +985,68 @@
         </div>
     </footer>
 
+    <!-- Consultation Modal -->
+    <div class="modal" id="consultation-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Schedule a Surgical Consultation</h2>
+            <form id="general-consultation-form">
+                <div class="form-group">
+                    <label for="general-pet-type">Pet Type</label>
+                    <select id="general-pet-type" required>
+                        <option value="">Select Pet Type</option>
+                        <option value="dog">Dog</option>
+                        <option value="cat">Cat</option>
+                        <option value="bird">Bird</option>
+                        <option value="rabbit">Rabbit</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="general-pet-breed">Pet Breed</label>
+                    <input type="text" id="general-pet-breed" placeholder="Enter your pet's breed" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="general-pet-age">Pet Age</label>
+                    <input type="text" id="general-pet-age" placeholder="e.g., 2 years" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="general-pet-name">Pet Name</label>
+                    <input type="text" id="general-pet-name" placeholder="Enter your pet's name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="general-consultation-date">Preferred Date</label>
+                    <input type="date" id="general-consultation-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="general-notes">Reason for Consultation</label>
+                    <textarea id="general-notes" rows="4" placeholder="Please describe your pet's condition or the reason for seeking surgical consultation..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="cancel-consultation-btn">Cancel</button>
+                    <button type="submit" class="btn">Request Consultation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Tab functionality for service pages
         document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const navMenu = document.getElementById('nav-menu');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('show');
+            });
+            
+            // Tab functionality for service pages
             const tabs = document.querySelectorAll('.service-tab');
             
             tabs.forEach(tab => {
@@ -798,6 +1067,125 @@
                     document.getElementById(tabId).classList.add('active');
                 });
             });
+            
+            // Procedure detail buttons
+            const procedureButtons = document.querySelectorAll('[data-procedure]');
+            
+            procedureButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const procedure = button.getAttribute('data-procedure');
+                    // Switch to the booking tab and pre-fill the procedure type
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelector('[data-tab="book"]').classList.add('active');
+                    
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById('book').classList.add('active');
+                    
+                    // Pre-fill the surgery type
+                    const surgeryTypeSelect = document.getElementById('surgery-type');
+                    for (let i = 0; i < surgeryTypeSelect.options.length; i++) {
+                        if (surgeryTypeSelect.options[i].text.toLowerCase().includes(procedure.toLowerCase())) {
+                            surgeryTypeSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                });
+            });
+            
+            // Modal functionality
+            const consultationModal = document.getElementById('consultation-modal');
+            const consultationBtn = document.getElementById('consultation-btn');
+            const cancelConsultationBtn = document.getElementById('cancel-consultation-btn');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            
+            consultationBtn.addEventListener('click', () => {
+                consultationModal.style.display = 'flex';
+            });
+            
+            // Close modal functions
+            function closeModal() {
+                consultationModal.style.display = 'none';
+            }
+            
+            cancelConsultationBtn.addEventListener('click', closeModal);
+            
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', closeModal);
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (event) => {
+                if (event.target === consultationModal) {
+                    closeModal();
+                }
+            });
+            
+            // Form submissions
+            const surgeryConsultationForm = document.getElementById('surgery-consultation-form');
+            const generalConsultationForm = document.getElementById('general-consultation-form');
+            
+            function showToast(message, type = 'success') {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                
+                document.body.appendChild(toast);
+                
+                // Show toast
+                setTimeout(() => toast.classList.add('show'), 100);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+            
+            function handleConsultationSubmit(form, isSurgeryForm = false) {
+                return function(e) {
+                    e.preventDefault();
+                    
+                    // In a real application, you would send this data to your server
+                    // For now, we'll just show a success message
+                    
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    
+                    // Show loading state
+                    submitBtn.innerHTML = '<i class="fas fa-spinner loading-spinner"></i> Submitting...';
+                    submitBtn.disabled = true;
+                    
+                    // Simulate API call
+                    setTimeout(() => {
+                        showToast('Consultation request submitted successfully! We will contact you within 24 hours to schedule your appointment.');
+                        form.reset();
+                        if (!isSurgeryForm) {
+                            closeModal();
+                        }
+                        
+                        // Restore button
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }, 1500);
+                };
+            }
+            
+            surgeryConsultationForm.addEventListener('submit', handleConsultationSubmit(surgeryConsultationForm, true));
+            generalConsultationForm.addEventListener('submit', handleConsultationSubmit(generalConsultationForm));
+            
+            // Set minimum date for consultation to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('consultation-date').min = today;
+            document.getElementById('general-consultation-date').min = today;
         });
     </script>
 </body>

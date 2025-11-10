@@ -1589,6 +1589,183 @@
             color: white;
         }
         
+        /* Payment Modal Styles */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .payment-method {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .payment-method:hover {
+            border-color: var(--secondary);
+            background: #f8f9fa;
+        }
+
+        .payment-method.selected {
+            border-color: var(--secondary);
+            background: var(--light);
+        }
+
+        .payment-method i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .payment-form {
+            margin-top: 1.5rem;
+        }
+
+        .payment-form-section {
+            display: none;
+        }
+
+        .payment-form-section.active {
+            display: block;
+        }
+
+        .card-element {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .card-errors {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .payment-summary {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-total {
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-top: 1px solid #ddd;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Order Success Modal */
+        .order-success {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .order-success i {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+
+        .order-details {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .order-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-detail-item:last-child {
+            margin-bottom: 0;
+            font-weight: bold;
+            border-top: 1px solid #ddd;
+            padding-top: 0.5rem;
+        }
+
+        /* Loading States */
+        .payment-processing {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .payment-processing i {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Additional styles for payment */
+        .payment-security {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .payment-security i {
+            color: var(--success);
+        }
+
+        .billing-address {
+            margin-top: 1.5rem;
+        }
+
+        /* Enhanced Cart Styles */
+        .cart-item-stock {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .stock-warning {
+            color: var(--warning);
+        }
+
+        .stock-error {
+            color: var(--danger);
+        }
+
+        /* Bank Details */
+        .bank-details {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .bank-detail-item {
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .bank-detail-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             header {
@@ -1651,6 +1828,10 @@
             
             .services, .products, .about, .team, .testimonials, .faq, .contact {
                 padding: 2rem 1rem;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -1749,7 +1930,7 @@
     <div id="public-website">
         <header>
             <div class="logo">
-                <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+                <img src="img/Logo-22.jpg" alt="PDSA Logo">
                 <h1>PDSA Veterinary Clinic</h1>
             </div>
             <nav>
@@ -1773,7 +1954,7 @@
                 <button class="btn btn-primary" id="register-btn">
                     <i class="fas fa-user-plus"></i> Register
                 </button>
-                <a href="admin-dashboard.html" class="admin-link" id="admin-link" style="display: none;">
+                <a href="admin-product.html" class="admin-link" id="admin-link" style="display: none;">
                     <i class="fas fa-cog"></i> Admin
                 </a>
                 <div id="user-menu" style="display: none;">
@@ -1781,11 +1962,11 @@
                         <span id="user-name"></span>
                         <i class="fas fa-chevron-down"></i>
                         <div class="user-dropdown">
-                            <a href="#" id="user-dashboard-link">Dashboard</a>
+                            <a href="index.html" id="user-dashboard-link">Dashboard</a>
                             <a href="profile.html" id="user-profile-link">My Profile</a>
                             <a href="my-pets.html" id="my-pets-link">My Pets</a>
                             <a href="appointments.html" id="my-appointments-link">Appointments</a>
-                            <a href="#" id="my-orders-link">Orders</a>
+                            <a href="orders.html" id="my-orders-link">Orders</a>
                             <a href="logout.js" id="logout-link">Logout</a>
                         </div>
                     </div>
@@ -1796,7 +1977,7 @@
         <section class="hero" id="home">
             <a href="tel:10111" class="emergency-banner" id="emergency-banner">
                 <i class="fas fa-phone-alt"></i>
-                <span>Emergency: 10111</span>
+                <span>Emergency: 011 984 4340</span>
             </a>
             <h2>Compassionate Care for Your Pets</h2>
             <p>PDSA provides quality veterinary services to pets in Mfolo, Soweto. Book an appointment today and give your pet the care they deserve.</p>
@@ -1818,7 +1999,7 @@
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-img">
-                        <img src="https://images.unsplash.com/photo-1530046339918-68a0c47a04f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Vaccination">
+                        <img src="img/DogVaccinationCost.jpg" alt="Vaccination">
                     </div>
                     <div class="service-content">
                         <h3>Vaccinations</h3>
@@ -1835,7 +2016,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-img">
-                        <img src="https://images.unsplash.com/photo-1583511655826-05700442b31f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Surgery">
+                        <img src="img/Desexing-e457a22b.jpeg" alt="Surgery">
                     </div>
                     <div class="service-content">
                         <h3>Surgical Procedures</h3>
@@ -1869,7 +2050,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-img">
-                        <img src="https://images.unsplash.com/photo-1553284965-e2815db2e5a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Microchipping">
+                        <img src="img/photo-1553284965-e2815db2e5a0.avif" alt="Microchipping">
                     </div>
                     <div class="service-content">
                         <h3>Microchipping</h3>
@@ -1886,7 +2067,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-img">
-                        <img src="https://images.unsplash.com/photo-1596276023096-329a9605c5c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Nutrition">
+                        <img src="img/images (1).jpeg" alt="Nutrition">
                     </div>
                     <div class="service-content">
                         <h3>Nutrition Counseling</h3>
@@ -1903,7 +2084,7 @@
                 </div>
                 <div class="service-card">
                     <div class="service-img">
-                        <img src="https://images.unsplash.com/photo-1575425186775-b8de9a427e67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Grooming">
+                        <img src="img/photo-1575425186775-b8de9a427e67.avif" alt="Grooming">
                     </div>
                     <div class="service-content">
                         <h3>Professional Grooming</h3>
@@ -1933,226 +2114,38 @@
                 <button class="filter-btn" data-filter="toys">Toys</button>
                 <button class="filter-btn" data-filter="health">Health & Wellness</button>
                 <button class="filter-btn" data-filter="accessories">Accessories</button>
+                <button class="filter-btn" data-filter="grooming">Grooming</button>
+                <button class="filter-btn" data-filter="medication">Medication</button>
             </div>
             
-            <div class="products-grid">
-                <!-- Product 1 -->
-                <div class="product-card auth-required" data-category="food">
-                    <div class="auth-overlay" id="product-auth-overlay-1">
-                        <h3>Login Required</h3>
-                        <p>Please login to add products to your cart</p>
-                        <button class="btn btn-primary" id="login-from-product">
-                            <i class="fas fa-sign-in-alt"></i> Login Now
-                        </button>
-                    </div>
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1589923188937-cb64779f4abe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80" alt="Premium Dog Food">
-                        <div class="product-badge">Bestseller</div>
-                    </div>
-                    <div class="product-content">
-                        <h3>Premium Dog Food</h3>
-                        <div class="product-price">R249.99</div>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>(128)</span>
-                        </div>
-                        <p class="product-description">Nutrient-rich formula for adult dogs with chicken as the first ingredient.</p>
-                        <div class="quantity-control">
-                            <button class="quantity-btn" data-action="decrease">-</button>
-                            <input type="number" class="quantity-input" value="1" min="1" max="10">
-                            <button class="quantity-btn" data-action="increase">+</button>
-                        </div>
-                        <div class="product-actions">
-                            <button class="btn btn-outline"><i class="far fa-heart"></i> Wishlist</button>
-                            <button class="btn btn-primary add-to-cart" data-product-id="prod1" data-product-name="Premium Dog Food" data-product-price="249.99"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                        </div>
-                    </div>
+            <!-- Loading State -->
+            <div id="products-loading" class="loading-state" style="text-align: center; padding: 3rem;">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--secondary);"></i>
                 </div>
-                
-                <!-- Product 2 -->
-                <div class="product-card auth-required" data-category="toys">
-                    <div class="auth-overlay" id="product-auth-overlay-2">
-                        <h3>Login Required</h3>
-                        <p>Please login to add products to your cart</p>
-                        <button class="btn btn-primary" id="login-from-product">
-                            <i class="fas fa-sign-in-alt"></i> Login Now
-                        </button>
-                    </div>
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1550747534-8c5da7c08b71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80" alt="Interactive Cat Toy">
-                    </div>
-                    <div class="product-content">
-                        <h3>Interactive Cat Toy</h3>
-                        <div class="product-price">R89.99</div>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>(64)</span>
-                        </div>
-                        <p class="product-description">Keeps your cat entertained for hours with feather attachments and unpredictable movements.</p>
-                        <div class="quantity-control">
-                            <button class="quantity-btn" data-action="decrease">-</button>
-                            <input type="number" class="quantity-input" value="1" min="1" max="10">
-                            <button class="quantity-btn" data-action="increase">+</button>
-                        </div>
-                        <div class="product-actions">
-                            <button class="btn btn-outline"><i class="far fa-heart"></i> Wishlist</button>
-                            <button class="btn btn-primary add-to-cart" data-product-id="prod2" data-product-name="Interactive Cat Toy" data-product-price="89.99"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 3 -->
-                <div class="product-card auth-required" data-category="health">
-                    <div class="auth-overlay" id="product-auth-overlay-3">
-                        <h3>Login Required</h3>
-                        <p>Please login to add products to your cart</p>
-                        <button class="btn btn-primary" id="login-from-product">
-                            <i class="fas fa-sign-in-alt"></i> Login Now
-                        </button>
-                    </div>
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1597484661643-3adc745bbd4a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Flea & Tick Treatment">
-                        <div class="product-badge">Sale</div>
-                    </div>
-                    <div class="product-content">
-                        <h3>Flea & Tick Treatment</h3>
-                        <div class="product-price">R179.99 <span class="old-price">R219.99</span></div>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>(92)</span>
-                        </div>
-                        <p class="product-description">3-month supply. Kills fleas, ticks, and chewing lice while preventing reinfestation.</p>
-                        <div class="quantity-control">
-                            <button class="quantity-btn" data-action="decrease">-</button>
-                            <input type="number" class="quantity-input" value="1" min="1" max="10">
-                            <button class="quantity-btn" data-action="increase">+</button>
-                        </div>
-                        <div class="product-actions">
-                            <button class="btn btn-outline"><i class="far fa-heart"></i> Wishlist</button>
-                            <button class="btn btn-primary add-to-cart" data-product-id="prod3" data-product-name="Flea & Tick Treatment" data-product-price="179.99"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 4 -->
-                <div class="product-card auth-required" data-category="accessories">
-                    <div class="auth-overlay" id="product-auth-overlay-4">
-                        <h3>Login Required</h3>
-                        <p>Please login to add products to your cart</p>
-                        <button class="btn btn-primary" id="login-from-product">
-                            <i class="fas fa-sign-in-alt"></i> Login Now
-                        </button>
-                    </div>
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1551290464-4a2e098d03a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2076&q=80" alt="Designer Dog Collar">
-                    </div>
-                    <div class="product-content">
-                        <h3>Designer Dog Collar</h3>
-                        <div class="product-price">R149.99</div>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <span>(47)</span>
-                        </div>
-                        <p class="product-description">Durable nylon collar with reflective stitching for nighttime visibility. Adjustable for perfect fit.</p>
-                        <div class="quantity-control">
-                            <button class="quantity-btn" data-action="decrease">-</button>
-                            <input type="number" class="quantity-input" value="1" min="1" max="10">
-                            <button class="quantity-btn" data-action="increase">+</button>
-                        </div>
-                        <div class="product-actions">
-                            <button class="btn btn-outline"><i class="far fa-heart"></i> Wishlist</button>
-                            <button class="btn btn-primary add-to-cart" data-product-id="prod4" data-product-name="Designer Dog Collar" data-product-price="149.99"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 5 -->
-                <div class="product-card auth-required" data-category="food">
-                    <div class="auth-overlay" id="product-auth-overlay-5">
-                        <h3>Login Required</h3>
-                        <p>Please login to add products to your cart</p>
-                        <button class="btn btn-primary" id="login-from-product">
-                            <i class="fas fa-sign-in-alt"></i> Login Now
-                        </button>
-                    </div>
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1597848212620-4f5f3d3b3db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80" alt="Grain-Free Cat Food">
-                    </div>
-                    <div class="product-content">
-                        <h3>Grain-Free Cat Food</h3>
-                        <div class="product-price">R199.99</div>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                            <span>(56)</span>
-                        </div>
-                        <p class="product-description">High-protein, grain-free formula with real salmon for optimal feline health.</p>
-                        <div class="quantity-control">
-                            <button class="quantity-btn" data-action="decrease">-</button>
-                            <input type="number" class="quantity-input" value="1" min="1" max="10">
-                            <button class="quantity-btn" data-action="increase">+</button>
-                        </div>
-                        <div class="product-actions">
-                            <button class="btn btn-outline"><i class="far fa-heart"></i> Wishlist</button>
-                            <button class="btn btn-primary add-to-cart" data-product-id="prod5" data-product-name="Grain-Free Cat Food" data-product-price="199.99"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Product 6 -->
-                <div class="product-card auth-required" data-category="health">
-                    <div class="auth-overlay" id="product-auth-overlay-6">
-                        <h3>Login Required</h3>
-                        <p>Please login to add products to your cart</p>
-                        <button class="btn btn-primary" id="login-from-product">
-                            <i class="fas fa-sign-in-alt"></i> Login Now
-                        </button>
-                    </div>
-                    <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" alt="Joint Supplement">
-                    </div>
-                    <div class="product-content">
-                        <h3>Joint Supplement</h3>
-                        <div class="product-price">R289.99</div>
-                        <div class="product-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <span>(112)</span>
-                        </div>
-                        <p class="product-description">Supports joint health and mobility with glucosamine, chondroitin, and MSM.</p>
-                        <div class="quantity-control">
-                            <button class="quantity-btn" data-action="decrease">-</button>
-                            <input type="number" class="quantity-input" value="1" min="1" max="10">
-                            <button class="quantity-btn" data-action="increase">+</button>
-                        </div>
-                        <div class="product-actions">
-                            <button class="btn btn-outline"><i class="far fa-heart"></i> Wishlist</button>
-                            <button class="btn btn-primary add-to-cart" data-product-id="prod6" data-product-name="Joint Supplement" data-product-price="289.99"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
+                <p style="margin-top: 1rem;">Loading products...</p>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="products-empty" class="empty-state" style="display: none; text-align: center; padding: 3rem;">
+                <i class="fas fa-box-open" style="font-size: 4rem; color: #ddd; margin-bottom: 1rem;"></i>
+                <h3 style="color: #666; margin-bottom: 1rem;">No Products Available</h3>
+                <p style="color: #888; margin-bottom: 2rem;">Check back soon for our latest pet products!</p>
+                <button class="btn btn-primary" id="initialize-products-btn">
+                    <i class="fas fa-plus"></i> Add Sample Products
+                </button>
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="products-grid" id="products-grid" style="display: none;">
+                <!-- Products will be loaded dynamically from Firebase -->
+            </div>
+            
+            <!-- Load More Button -->
+            <div class="load-more-container" style="text-align: center; margin-top: 2rem; display: none;" id="load-more-container">
+                <button class="btn btn-outline" id="load-more-btn">
+                    <i class="fas fa-redo"></i> Load More Products
+                </button>
             </div>
         </section>
 
@@ -2207,10 +2200,10 @@
                 </div>
                 <div class="team-card">
                     <div class="team-img">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Dr. Michael Brown">
+                        <img src="img/istockphoto-2190736325-612x612.jpg" alt="Dr. Mahlangu Browns">
                     </div>
                     <div class="team-info">
-                        <h3>Dr. Michael Brown</h3>
+                        <h3>Dr. Mahlangu Browns</h3>
                         <p>Senior Veterinarian</p>
                         <p>Expert in internal medicine and chronic conditions.</p>
                         <div class="social-links">
@@ -2221,10 +2214,10 @@
                 </div>
                 <div class="team-card">
                     <div class="team-img">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Dr. Emma Wilson">
+                        <img src="img/portrait-black-woman-isolated_53876-24873.avif" alt="Dr. Emma Mathada">
                     </div>
                     <div class="team-info">
-                        <h3>Dr. Emma Wilson</h3>
+                        <h3>Dr. Emma Mathada</h3>
                         <p>Emergency Veterinarian</p>
                         <p>Available 24/7 for critical and emergency cases.</p>
                         <div class="social-links">
@@ -2235,11 +2228,11 @@
                 </div>
                 <div class="team-card">
                     <div class="team-img">
-                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="David Lee">
+                        <img src="img/b9cb06b9541d4604a39b5673fdd6a10a.jpg" alt="David Lee">
                     </div>
                     <div class="team-info">
-                        <h3>David Lee</h3>
-                        <p>Veterinary Nurse</p>
+                        <h3>David Ledwaba</h3>
+                        <p>Veterinary nurse</p>
                         <p>Specialized in postoperative care and rehabilitation.</p>
                         <div class="social-links">
                             <a href="#"><i class="fab fa-linkedin-in"></i></a>
@@ -2262,10 +2255,10 @@
                     </div>
                     <div class="testimonial-author">
                         <div class="author-img">
-                            <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Lisa Chen">
+                            <img src="img/beautiful-black-woman-7424875.webp" alt="Lisa Chen">
                         </div>
                         <div class="author-info">
-                            <h4>Lisa Chen</h4>
+                            <h4>Lisanda Mabuza</h4>
                             <p>Dog Owner</p>
                         </div>
                     </div>
@@ -2448,18 +2441,15 @@
                         <li><a href="#about"><i class="fas fa-chevron-right"></i> About Us</a></li>
                         <li><a href="#team"><i class="fas fa-chevron-right"></i> Our Team</a></li>
                         <li><a href="#contact"><i class="fas fa-chevron-right"></i> Contact</a></li>
-                        <li><a href="#" id="footer-book-appointment"><i class="fas fa-chevron-right"></i> Book Appointment</a></li>
-                    </ul>
                 </div>
                 <div class="footer-col">
                     <h3>Services</h3>
                     <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Microchipping</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
+                        <li><a href="veterinaryclinic.html"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
+                        <li><a href="Surgical-Procedures.html"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
+                        <li><a href="dental-care.html"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
+                        <li><a href="emergency-care.html"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
+                        
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -2503,7 +2493,200 @@
         </div>
     </div>
 
-    <!-- Enhanced Modals -->
+    <!-- Enhanced Payment Modal -->
+    <div class="modal-overlay" id="payment-modal">
+        <div class="modal-dialog" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Complete Your Order</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="payment-step-1">
+                    <div class="payment-summary">
+                        <h3>Order Summary</h3>
+                        <div id="payment-order-items">
+                            <!-- Order items will be populated here -->
+                        </div>
+                        <div class="summary-item">
+                            <span>Subtotal:</span>
+                            <span id="payment-subtotal">R0.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Shipping:</span>
+                            <span id="payment-shipping">R0.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Tax:</span>
+                            <span id="payment-tax">R0.00</span>
+                        </div>
+                        <div class="summary-item summary-total">
+                            <span>Total:</span>
+                            <span id="payment-total">R0.00</span>
+                        </div>
+                    </div>
+
+                    <h3>Select Payment Method</h3>
+                    <div class="payment-methods">
+                        <div class="payment-method" data-method="card" onclick="selectPaymentMethod('card')">
+                            <i class="fas fa-credit-card"></i>
+                            <h4>Credit/Debit Card</h4>
+                            <p>Pay securely with your card</p>
+                        </div>
+                        <div class="payment-method" data-method="eft" onclick="selectPaymentMethod('eft')">
+                            <i class="fas fa-university"></i>
+                            <h4>Bank Transfer</h4>
+                            <p>EFT payment</p>
+                        </div>
+                        <div class="payment-method" data-method="cash" onclick="selectPaymentMethod('cash')">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <h4>Cash on Delivery</h4>
+                            <p>Pay when you receive</p>
+                        </div>
+                    </div>
+
+                    <div class="billing-address">
+                        <h3>Billing Address</h3>
+                        <div class="form-group">
+                            <label for="billing-address">Address</label>
+                            <textarea id="billing-address" rows="3" placeholder="Enter your billing address"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-outline" onclick="closePaymentModal()">Cancel</button>
+                        <button class="btn btn-primary" id="proceed-to-payment" onclick="proceedToPayment()" disabled>
+                            Proceed to Payment
+                        </button>
+                    </div>
+                </div>
+
+                <div id="payment-step-2" style="display: none;">
+                    <!-- Card Payment Form -->
+                    <div class="payment-form-section" id="card-payment-form">
+                        <h3>Card Payment</h3>
+                        <div class="card-element" id="card-element">
+                            <!-- Stripe card element will be inserted here -->
+                        </div>
+                        <div class="card-errors" id="card-errors"></div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="card-name">Name on Card</label>
+                                <input type="text" id="card-name" placeholder="John Doe">
+                            </div>
+                        </div>
+
+                        <div class="payment-security">
+                            <i class="fas fa-lock"></i>
+                            <span>Your payment information is secure and encrypted</span>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-outline" onclick="backToPaymentMethods()">Back</button>
+                            <button class="btn btn-primary" id="pay-now-btn" onclick="processCardPayment()">
+                                <i class="fas fa-lock"></i> Pay Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- EFT Payment Form -->
+                    <div class="payment-form-section" id="eft-payment-form">
+                        <h3>Bank Transfer Details</h3>
+                        <div class="bank-details">
+                            <div class="bank-detail-item">
+                                <strong>Bank:</strong> Standard Bank
+                            </div>
+                            <div class="bank-detail-item">
+                                <strong>Account Name:</strong> PDSA Veterinary Clinic
+                            </div>
+                            <div class="bank-detail-item">
+                                <strong>Account Number:</strong> 0123456789
+                            </div>
+                            <div class="bank-detail-item">
+                                <strong>Branch Code:</strong> 051001
+                            </div>
+                            <div class="bank-detail-item">
+                                <strong>Reference:</strong> <span id="eft-reference">ORD-123456</span>
+                            </div>
+                        </div>
+                        <p style="margin-top: 1rem; color: #666;">
+                            Please use the reference number above when making your payment. 
+                            Your order will be processed once payment is confirmed.
+                        </p>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-outline" onclick="backToPaymentMethods()">Back</button>
+                            <button class="btn btn-primary" onclick="confirmEFTPayment()">
+                                Confirm EFT Payment
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cash Payment Form -->
+                    <div class="payment-form-section" id="cash-payment-form">
+                        <h3>Cash on Delivery</h3>
+                        <p>You will pay when you receive your order. Please have the exact amount ready.</p>
+                        <div class="payment-summary">
+                            <h4>Amount to Pay:</h4>
+                            <div class="summary-total" id="cash-amount">R0.00</div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-outline" onclick="backToPaymentMethods()">Back</button>
+                            <button class="btn btn-primary" onclick="confirmCashPayment()">
+                                Confirm Cash Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Processing -->
+                <div id="payment-processing" style="display: none;">
+                    <div class="payment-processing">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <h3>Processing Payment</h3>
+                        <p>Please wait while we process your payment...</p>
+                    </div>
+                </div>
+
+                <!-- Order Success -->
+                <div id="order-success" style="display: none;">
+                    <div class="order-success">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Payment Successful!</h3>
+                        <p>Thank you for your order. Your payment has been processed successfully.</p>
+                        
+                        <div class="order-details">
+                            <h4>Order Details</h4>
+                            <div class="order-detail-item">
+                                <span>Order Number:</span>
+                                <span id="success-order-number">ORD-123456</span>
+                            </div>
+                            <div class="order-detail-item">
+                                <span>Total Amount:</span>
+                                <span id="success-order-total">R0.00</span>
+                            </div>
+                            <div class="order-detail-item">
+                                <span>Payment Method:</span>
+                                <span id="success-payment-method">Credit Card</span>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="viewOrderDetails()">
+                                View Order Details
+                            </button>
+                            <button class="btn btn-outline" onclick="closePaymentModal()">
+                                Continue Shopping
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Other Modals (Login, Register, Appointment, etc.) -->
     <div class="modal-overlay" id="login-modal">
         <div class="modal-dialog">
             <div class="modal-header">
@@ -2586,2106 +2769,1520 @@
         </div>
     </div>
 
-    <!-- Enhanced Appointment Modal -->
-    <div class="modal-overlay" id="appointment-modal">
-        <div class="modal-dialog">
-            <div class="modal-header">
-                <h2>Book an Appointment</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="appointment-step-1">
-                    <form id="appointment-form">
-                        <div class="form-group">
-                            <label for="appointment-pet">Select Pet</label>
-                            <select id="appointment-pet" required>
-                                <option value="">Select a pet</option>
-                            </select>
-                            <small><a href="#" id="add-pet-link">Add new pet</a></small>
-                        </div>
-                        <div class="form-group">
-                            <label for="appointment-service">Service Type</label>
-                            <select id="appointment-service" required>
-                                <option value="">Select a service</option>
-                                <option value="1">General Checkup - R250</option>
-                                <option value="2">Vaccination - R200</option>
-                                <option value="3">Dental Cleaning - R450</option>
-                                <option value="4">Spaying/Neutering - R800</option>
-                                <option value="5">Microchipping - R350</option>
-                                <option value="6">Grooming Service - R250</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="appointment-date">Preferred Date</label>
-                                <input type="date" id="appointment-date" required min="">
-                            </div>
-                            <div class="form-group">
-                                <label for="appointment-time">Preferred Time</label>
-                                <select id="appointment-time" required>
-                                    <option value="">Select a time</option>
-                                    <option value="09:00">09:00 AM</option>
-                                    <option value="10:00">10:00 AM</option>
-                                    <option value="11:00">11:00 AM</option>
-                                    <option value="14:00">02:00 PM</option>
-                                    <option value="15:00">03:00 PM</option>
-                                    <option value="16:00">04:00 PM</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="appointment-reason">Reason for Visit</label>
-                            <textarea id="appointment-reason" rows="3" placeholder="Please describe the reason for your visit"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary" style="width: 100%;">
-                                <i class="fas fa-calendar-check"></i> Book Appointment
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <div id="appointment-step-2" style="display: none;">
-                    <div class="appointment-confirmation">
-                        <h3>Appointment Confirmation</h3>
-                        <div class="confirmation-details">
-                            <div class="confirmation-item">
-                                <span class="confirmation-label">Pet:</span>
-                                <span class="confirmation-value" id="confirm-pet"></span>
-                            </div>
-                            <div class="confirmation-item">
-                                <span class="confirmation-label">Service:</span>
-                                <span class="confirmation-value" id="confirm-service"></span>
-                            </div>
-                            <div class="confirmation-item">
-                                <span class="confirmation-label">Date:</span>
-                                <span class="confirmation-value" id="confirm-date"></span>
-                            </div>
-                            <div class="confirmation-item">
-                                <span class="confirmation-label">Time:</span>
-                                <span class="confirmation-value" id="confirm-time"></span>
-                            </div>
-                            <div class="confirmation-item full-width">
-                                <span class="confirmation-label">Reason:</span>
-                                <span class="confirmation-value" id="confirm-reason"></span>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-outline" id="edit-appointment">Edit Details</button>
-                            <button class="btn btn-primary" id="confirm-appointment">Confirm Booking</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Pet Modal -->
-    <div class="modal-overlay" id="add-pet-modal">
-        <div class="modal-dialog">
-            <div class="modal-header">
-                <h2>Add New Pet</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="add-pet-form">
-                    <div class="form-group">
-                        <label for="pet-name">Pet Name *</label>
-                        <input type="text" id="pet-name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="pet-species">Species *</label>
-                        <select id="pet-species" name="species" required>
-                            <option value="">Select Species</option>
-                            <option value="dog">Dog</option>
-                            <option value="cat">Cat</option>
-                            <option value="bird">Bird</option>
-                            <option value="rabbit">Rabbit</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="pet-breed">Breed</label>
-                        <input type="text" id="pet-breed" name="breed">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="pet-dob">Date of Birth</label>
-                            <input type="date" id="pet-dob" name="dateOfBirth">
-                        </div>
-                        <div class="form-group">
-                            <label for="pet-gender">Gender</label>
-                            <select id="pet-gender" name="gender">
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="pet-color">Color/Markings</label>
-                            <input type="text" id="pet-color" name="color">
-                        </div>
-                        <div class="form-group">
-                            <label for="pet-weight">Weight (kg)</label>
-                            <input type="number" id="pet-weight" name="weight" step="0.1" min="0">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="pet-microchip">Microchip Number</label>
-                        <input type="text" id="pet-microchip" name="microchipNumber">
-                    </div>
-                    <div class="form-group">
-                        <label for="pet-medical-notes">Medical Notes</label>
-                        <textarea id="pet-medical-notes" name="medicalNotes" rows="3" placeholder="Any known allergies, conditions, or special needs"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline" id="cancel-add-pet">Cancel</button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Add Pet
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- User Dashboard Modal -->
-    <div class="modal-overlay" id="dashboard-modal">
-        <div class="modal-dialog" style="max-width: 800px;">
-            <div class="modal-header">
-                <h2>My Dashboard</h2>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="dashboard">
-                    <div class="dashboard-section">
-                        <h3>Quick Actions</h3>
-                        <div class="dashboard-grid">
-                            <div class="dashboard-card">
-                                <h4>Book Appointment</h4>
-                                <p>Schedule a new veterinary appointment</p>
-                                <button class="btn btn-primary btn-sm" onclick="showAppointmentModal()">Book Now</button>
-                            </div>
-                            <div class="dashboard-card">
-                                <h4>Add Pet</h4>
-                                <p>Register a new pet</p>
-                                <button class="btn btn-primary btn-sm" onclick="showAddPetModal()">Add Pet</button>
-                            </div>
-                            <div class="dashboard-card">
-                                <h4>Shop Products</h4>
-                                <p>Browse our pet products</p>
-                                <button class="btn btn-primary btn-sm" onclick="scrollToProducts()">Shop Now</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-section">
-                        <h3>My Pets</h3>
-                        <div id="user-pets-list">
-                            <div class="loading-spinner">
-                                <i class="fas fa-spinner"></i>
-                                <p>Loading pets...</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-section">
-                        <h3>Upcoming Appointments</h3>
-                        <div id="user-appointments-list">
-                            <div class="loading-spinner">
-                                <i class="fas fa-spinner"></i>
-                                <p>Loading appointments...</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-section">
-                        <h3>Recent Orders</h3>
-                        <div id="user-orders-list">
-                            <div class="loading-spinner">
-                                <i class="fas fa-spinner"></i>
-                                <p>Loading orders...</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Admin Panel (only visible to admins) -->
-                    <div class="dashboard-section admin-panel" id="admin-panel" style="display: none;">
-                        <h3><i class="fas fa-cog"></i> Admin Panel</h3>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <span class="number" id="stat-appointments">0</span>
-                                <span class="label">Today's Appointments</span>
-                            </div>
-                            <div class="stat-card">
-                                <span class="number" id="stat-orders">0</span>
-                                <span class="label">Pending Orders</span>
-                            </div>
-                            <div class="stat-card">
-                                <span class="number" id="stat-low-stock">0</span>
-                                <span class="label">Low Stock Items</span>
-                            </div>
-                            <div class="stat-card">
-                                <span class="number" id="stat-revenue">R0</span>
-                                <span class="label">Today's Revenue</span>
-                            </div>
-                        </div>
-                        <div style="margin-top: 1rem;">
-                            <button class="btn btn-danger" onclick="showAdminPanel()">Full Admin Dashboard</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Notification System -->
     <div id="notification-container"></div>
 
-   <script>
-    // Firebase Configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
-        authDomain: "pdsa-database.firebaseapp.com",
-        databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
-        projectId: "pdsa-database",
-        storageBucket: "pdsa-database.firebasestorage.app",
-        messagingSenderId: "1041468794677",
-        appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
-        measurementId: "G-8QLD9BK9M0"
-    };
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
+            authDomain: "pdsa-database.firebaseapp.com",
+            databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
+            projectId: "pdsa-database",
+            storageBucket: "pdsa-database.firebasestorage.app",
+            messagingSenderId: "1041468794677",
+            appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
+            measurementId: "G-8QLD9BK9M0"
+        };
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
 
-    // Application State
-    const AppState = {
-        currentUser: null,
-        cart: [],
-        userPets: [],
-        userAppointments: [],
-        userOrders: [],
-        isAdmin: false,
-        services: [
-            { id: 1, name: "General Checkup", price: 250 },
-            { id: 2, name: "Vaccination", price: 200 },
-            { id: 3, name: "Dental Cleaning", price: 450 },
-            { id: 4, name: "Spaying/Neutering", price: 800 },
-            { id: 5, name: "Microchipping", price: 350 },
-            { id: 6, name: "Grooming Service", price: 250 }
-        ]
-    };
+        // Application State
+        const AppState = {
+            currentUser: null,
+            cart: [],
+            userPets: [],
+            userAppointments: [],
+            userOrders: [],
+            isAdmin: false,
+            products: [],
+            services: [
+                { id: 1, name: "General Checkup", price: 250 },
+                { id: 2, name: "Vaccination", price: 200 },
+                { id: 3, name: "Dental Cleaning", price: 450 },
+                { id: 4, name: "Spaying/Neutering", price: 800 },
+                { id: 5, name: "Microchipping", price: 350 },
+                { id: 6, name: "Grooming Service", price: 250 }
+            ],
+            selectedPaymentMethod: null,
+            currentOrder: null
+        };
 
-    // DOM Elements
-    const DOM = {
-        modals: {
-            login: document.getElementById('login-modal'),
-            register: document.getElementById('register-modal'),
-            appointment: document.getElementById('appointment-modal'),
-            addPet: document.getElementById('add-pet-modal'),
-            dashboard: document.getElementById('dashboard-modal')
-        },
-        cart: {
-            overlay: document.getElementById('cart-overlay'),
-            container: document.getElementById('cart-container'),
-            items: document.getElementById('cart-items'),
-            total: document.getElementById('cart-total-amount'),
-            checkoutBtn: document.getElementById('checkout-btn')
-        },
-        auth: {
-            loginBtn: document.getElementById('login-btn'),
-            registerBtn: document.getElementById('register-btn'),
-            userMenu: document.getElementById('user-menu'),
-            userName: document.getElementById('user-name'),
-            adminLink: document.getElementById('admin-link')
-        }
-    };
+        // Payment Configuration
+        const PaymentConfig = {
+            shippingFee: 50,
+            freeShippingThreshold: 500,
+            taxRate: 0.15 // 15% VAT
+        };
 
-    // Initialize the application
-    document.addEventListener('DOMContentLoaded', function() {
-        initApplication();
-    });
-
-    // Application Initialization
-    function initApplication() {
-        initCart();
-        setupEventListeners();
-        setupAppointmentBooking();
-        setupModals();
-        setupDateRestrictions();
-        setupCartIconToProducts();
-        
-        // Firebase auth state listener
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                AppState.currentUser = {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName || user.email.split('@')[0],
-                    emailVerified: user.emailVerified
-                };
-                
-                // Check if user is admin
-                checkAdminStatus(user.uid);
-                
-                updateUserUI(AppState.currentUser);
-                loadUserData();
-            } else {
-                AppState.currentUser = null;
-                AppState.isAdmin = false;
-                AppState.userPets = [];
-                AppState.userAppointments = [];
-                AppState.userOrders = [];
-            }
-            updateAuthUI();
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initApplication();
         });
-        
-        showNotification('Welcome to PDSA Veterinary Clinic!', 'info');
-    }
 
-    // Cart Management
-    function initCart() {
-        const savedCart = localStorage.getItem('pdsaCart');
-        if (savedCart) {
-            try {
-                AppState.cart = JSON.parse(savedCart);
-                updateCartUI();
-            } catch (error) {
-                console.error('Error parsing saved cart:', error);
-                AppState.cart = [];
-                localStorage.removeItem('pdsaCart');
-            }
-        }
-    }
-
-    function updateCartUI() {
-        try {
-            const cartCountElement = document.querySelector('.cart-count');
-            if (cartCountElement) {
-                const totalItems = AppState.cart.reduce((total, item) => total + (item.quantity || 1), 0);
-                cartCountElement.textContent = totalItems;
-            }
+        // Application Initialization
+        function initApplication() {
+            initCart();
+            setupEventListeners();
+            setupAppointmentBooking();
+            setupModals();
+            setupDateRestrictions();
+            setupCartIconToProducts();
             
-            const cartItems = DOM.cart.items;
-            if (!cartItems) return;
-            
-            cartItems.innerHTML = '';
-            
-            if (AppState.cart.length === 0) {
-                const emptyCartMessage = document.getElementById('empty-cart-message');
-                if (emptyCartMessage) {
-                    emptyCartMessage.style.display = 'block';
-                    emptyCartMessage.innerHTML = `
-                        <i class="fas fa-shopping-cart" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
-                        <p style="margin-bottom: 1rem;">Your cart is empty</p>
-                        <button class="btn btn-primary" id="browse-products-from-cart">
-                            <i class="fas fa-paw"></i> Browse Products
-                        </button>
-                    `;
-                    
-                    // Add event listener to browse products button
-                    const browseBtn = document.getElementById('browse-products-from-cart');
-                    if (browseBtn) {
-                        browseBtn.onclick = function() {
-                            closeCart();
-                            const productsSection = document.getElementById('products');
-                            if (productsSection) {
-                                productsSection.scrollIntoView({ 
-                                    behavior: 'smooth',
-                                    block: 'start'
-                                });
-                            }
-                        };
-                    }
-                }
-                if (DOM.cart.checkoutBtn) {
-                    DOM.cart.checkoutBtn.disabled = true;
-                }
-            } else {
-                const emptyCartMessage = document.getElementById('empty-cart-message');
-                if (emptyCartMessage) {
-                    emptyCartMessage.style.display = 'none';
-                }
-                if (DOM.cart.checkoutBtn) {
-                    DOM.cart.checkoutBtn.disabled = false;
-                }
-                
-                AppState.cart.forEach(item => {
-                    const cartItem = document.createElement('div');
-                    cartItem.className = 'cart-item';
-                    cartItem.innerHTML = `
-                        <div class="cart-item-img">
-                            <img src="${item.image || 'https://via.placeholder.com/80'}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80'">
-                        </div>
-                        <div class="cart-item-details">
-                            <h4>${item.name || 'Unknown Product'}</h4>
-                            <div class="cart-item-price">R${parseFloat(item.price || 0).toFixed(2)}</div>
-                            <div class="cart-item-quantity">
-                                <button class="quantity-btn" data-action="decrease" data-id="${item.id}">-</button>
-                                <span>${item.quantity || 1}</span>
-                                <button class="quantity-btn" data-action="increase" data-id="${item.id}">+</button>
-                            </div>
-                        </div>
-                        <button class="cart-item-remove" data-id="${item.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    `;
-                    cartItems.appendChild(cartItem);
-                });
-            }
-            
-            const cartTotalElement = DOM.cart.total;
-            if (cartTotalElement) {
-                const total = AppState.cart.reduce((sum, item) => {
-                    const price = parseFloat(item.price || 0);
-                    const quantity = item.quantity || 1;
-                    return sum + (price * quantity);
-                }, 0);
-                cartTotalElement.textContent = `R${total.toFixed(2)}`;
-            }
-            
-            // Add event listeners to cart buttons
-            setTimeout(() => {
-                document.querySelectorAll('.cart-item-remove').forEach(btn => {
-                    btn.onclick = function() {
-                        const productId = this.getAttribute('data-id');
-                        removeFromCart(productId);
-                    };
-                });
-                
-                document.querySelectorAll('.cart-item .quantity-btn').forEach(btn => {
-                    btn.onclick = function() {
-                        const action = this.getAttribute('data-action');
-                        const productId = this.getAttribute('data-id');
-                        updateCartQuantity(productId, action);
-                    };
-                });
-            }, 100);
-            
-            saveCart();
-        } catch (error) {
-            console.error('Error updating cart UI:', error);
-        }
-    }
-
-    function addToCart(productId, productName, productPrice, productImage, quantity = 1) {
-        // Validate inputs
-        if (!productId || !productName) {
-            console.error('Invalid product data');
-            return;
-        }
-        
-        const price = parseFloat(productPrice) || 0;
-        const qty = parseInt(quantity) || 1;
-        
-        const existingItem = AppState.cart.find(item => item.id === productId);
-        
-        if (existingItem) {
-            existingItem.quantity += qty;
-        } else {
-            AppState.cart.push({
-                id: productId,
-                name: productName,
-                price: price,
-                image: productImage,
-                quantity: qty
-            });
-        }
-        
-        updateCartUI();
-        showNotification(`${productName} added to cart!`, 'success');
-    }
-
-    function removeFromCart(productId) {
-        AppState.cart = AppState.cart.filter(item => item.id !== productId);
-        updateCartUI();
-        showNotification('Item removed from cart', 'info');
-    }
-
-    function updateCartQuantity(productId, action) {
-        const item = AppState.cart.find(item => item.id === productId);
-        
-        if (item) {
-            if (action === 'increase') {
-                item.quantity = (item.quantity || 1) + 1;
-            } else if (action === 'decrease' && (item.quantity || 1) > 1) {
-                item.quantity = (item.quantity || 1) - 1;
-            }
-            
-            updateCartUI();
-        }
-    }
-
-    function saveCart() {
-        try {
-            localStorage.setItem('pdsaCart', JSON.stringify(AppState.cart));
-        } catch (error) {
-            console.error('Error saving cart to localStorage:', error);
-        }
-    }
-
-    // Enhanced Checkout Function
-    function checkout() {
-        if (!AppState.currentUser) {
-            showNotification('Please log in to checkout', 'warning');
-            showModal('login-modal');
-            return;
-        }
-        
-        if (AppState.cart.length === 0) {
-            showNotification('Your cart is empty', 'warning');
-            return;
-        }
-        
-        // Process checkout
-        showNotification('Processing your order...', 'info');
-        
-        try {
-            const orderId = 'ORD-' + Date.now();
-            const subtotal = AppState.cart.reduce((sum, item) => {
-                const price = parseFloat(item.price || 0);
-                const quantity = item.quantity || 1;
-                return sum + (price * quantity);
-            }, 0);
-            const shipping = subtotal > 0 ? 50 : 0;
-            const total = subtotal + shipping;
-            
-            const order = {
-                id: orderId,
-                userId: AppState.currentUser.uid,
-                userEmail: AppState.currentUser.email,
-                items: AppState.cart.map(item => ({
-                    id: item.id,
-                    name: item.name,
-                    price: parseFloat(item.price),
-                    quantity: item.quantity || 1,
-                    image: item.image,
-                    subtotal: parseFloat(item.price) * (item.quantity || 1)
-                })),
-                subtotal: subtotal,
-                shipping: shipping,
-                total: total,
-                status: 'pending',
-                paymentStatus: 'pending',
-                date: new Date().toISOString(),
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            
-            // Save order to Firestore
-            db.collection('orders').add(order)
-                .then((docRef) => {
-                    order.firebaseId = docRef.id;
-                    AppState.userOrders.unshift(order);
-                    
-                    // Clear cart
-                    AppState.cart = [];
-                    saveCart();
-                    updateCartUI();
-                    closeCart();
-                    
-                    showNotification(`Order #${orderId} placed successfully!`, 'success');
-                    
-                    // Show order tracking
-                    setTimeout(() => {
-                        showOrderTracking(order.firebaseId);
-                    }, 1000);
-                })
-                .catch((error) => {
-                    console.error('Error saving order:', error);
-                    showNotification('Error processing your order. Please try again.', 'error');
-                });
-            
-        } catch (error) {
-            console.error('Error during checkout:', error);
-            showNotification('Error processing your order. Please try again.', 'error');
-        }
-    }
-
-    // Authentication Management
-    function updateAuthUI() {
-        const loginBtn = DOM.auth.loginBtn;
-        const registerBtn = DOM.auth.registerBtn;
-        const userMenu = DOM.auth.userMenu;
-        const authOverlays = document.querySelectorAll('.auth-overlay');
-        const bookAppointmentBtn = document.getElementById('book-appointment-btn');
-        const footerBookAppointment = document.getElementById('footer-book-appointment');
-        const productCards = document.querySelectorAll('.product-card.auth-required');
-        
-        if (AppState.currentUser) {
-            // User is logged in
-            if (loginBtn) loginBtn.style.display = 'none';
-            if (registerBtn) registerBtn.style.display = 'none';
-            if (userMenu) userMenu.style.display = 'block';
-            
-            // Hide auth overlays on products
-            authOverlays.forEach(overlay => {
-                if (overlay) overlay.style.display = 'none';
-            });
-            
-            // Enable product interactions
-            productCards.forEach(card => {
-                card.classList.remove('auth-required');
-            });
-            
-            if (AppState.cart.length > 0 && DOM.cart.checkoutBtn) {
-                DOM.cart.checkoutBtn.disabled = false;
-            }
-            
-            // Enable appointment booking
-            if (bookAppointmentBtn) {
-                bookAppointmentBtn.onclick = function() {
-                    showModal('appointment-modal');
-                };
-            }
-            
-            if (footerBookAppointment) {
-                footerBookAppointment.onclick = function(e) {
-                    e.preventDefault();
-                    showModal('appointment-modal');
-                };
-            }
-            
-            // Enable add to cart buttons
-            document.querySelectorAll('.add-to-cart').forEach(btn => {
-                btn.disabled = false;
-                btn.style.opacity = '1';
-            });
-            
-        } else {
-            // User is not logged in
-            if (loginBtn) loginBtn.style.display = 'inline-flex';
-            if (registerBtn) registerBtn.style.display = 'inline-flex';
-            if (userMenu) userMenu.style.display = 'none';
-            
-            // Show auth overlays on products
-            authOverlays.forEach(overlay => {
-                if (overlay) overlay.style.display = 'flex';
-            });
-            
-            // Disable product interactions
-            productCards.forEach(card => {
-                card.classList.add('auth-required');
-            });
-            
-            if (DOM.cart.checkoutBtn) {
-                DOM.cart.checkoutBtn.disabled = true;
-            }
-            
-            // Redirect to login for appointments
-            if (bookAppointmentBtn) {
-                bookAppointmentBtn.onclick = function(e) {
-                    e.preventDefault();
-                    showModal('login-modal');
-                };
-            }
-            
-            if (footerBookAppointment) {
-                footerBookAppointment.onclick = function(e) {
-                    e.preventDefault();
-                    showModal('login-modal');
-                };
-            }
-            
-            // Disable add to cart buttons
-            document.querySelectorAll('.add-to-cart').forEach(btn => {
-                btn.disabled = true;
-                btn.style.opacity = '0.6';
-            });
-        }
-    }
-
-    // Firebase Authentication
-    function login(email, password) {
-        if (!email || !password) {
-            showNotification('Please enter email and password', 'error');
-            return;
-        }
-        
-        showNotification('Logging in...', 'info');
-        
-        auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                AppState.currentUser = {
-                    uid: user.uid,
-                    email: user.email,
-                    displayName: user.displayName || user.email.split('@')[0],
-                    emailVerified: user.emailVerified
-                };
-                
-                updateUserUI(AppState.currentUser);
-                updateAuthUI();
-                loadUserData();
-                
-                showNotification('Login successful!', 'success');
-                hideModal('login-modal');
-            })
-            .catch((error) => {
-                console.error('Login error:', error);
-                let errorMessage = 'Login failed';
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        errorMessage = 'Invalid email address';
-                        break;
-                    case 'auth/user-disabled':
-                        errorMessage = 'This account has been disabled';
-                        break;
-                    case 'auth/user-not-found':
-                        errorMessage = 'No account found with this email';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage = 'Incorrect password';
-                        break;
-                    default:
-                        errorMessage = error.message;
-                }
-                showNotification(errorMessage, 'error');
-            });
-    }
-
-    function register(userData) {
-        if (!userData.email || !userData.password) {
-            showNotification('Please fill in all required fields', 'error');
-            return;
-        }
-        
-        if (userData.password !== userData.confirmPassword) {
-            showNotification('Passwords do not match', 'error');
-            return;
-        }
-        
-        showNotification('Creating account...', 'info');
-        
-        auth.createUserWithEmailAndPassword(userData.email, userData.password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                
-                // Save additional user data to Firestore
-                return db.collection('users').doc(user.uid).set({
-                    firstName: userData.firstname || '',
-                    lastName: userData.lastname || '',
-                    email: userData.email,
-                    phone: userData.phone || '',
-                    address: userData.address || '',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => {
+            // Firebase auth state listener
+            auth.onAuthStateChanged((user) => {
+                if (user) {
                     AppState.currentUser = {
                         uid: user.uid,
                         email: user.email,
-                        displayName: `${userData.firstname || ''} ${userData.lastname || ''}`.trim() || user.email.split('@')[0],
-                        emailVerified: false
+                        displayName: user.displayName || user.email.split('@')[0],
+                        emailVerified: user.emailVerified
+                    };
+                    
+                    // Check if user is admin
+                    checkAdminStatus(user.uid);
+                    
+                    updateUserUI(AppState.currentUser);
+                    loadUserData();
+                } else {
+                    AppState.currentUser = null;
+                    AppState.isAdmin = false;
+                    AppState.userPets = [];
+                    AppState.userAppointments = [];
+                    AppState.userOrders = [];
+                }
+                updateAuthUI();
+            });
+            
+            // Load products from Firebase
+            loadProducts();
+            
+            showNotification('Welcome to PDSA Veterinary Clinic!', 'info');
+        }
+
+        // Fixed Product Loading Function
+        async function loadProducts() {
+            try {
+                console.log('Loading products from Firebase...');
+                
+                // Show loading state
+                showProductsLoading(true);
+                
+                // FIX: Use a simpler query that doesn't require composite indexes
+                const snapshot = await db.collection('products').get();
+                
+                AppState.products = [];
+                
+                if (snapshot.empty) {
+                    console.log('No products found in database');
+                    showProductsEmpty(true);
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const product = doc.data();
+                    product.id = doc.id;
+                    
+                    // Only include active products
+                    if (product.status !== 'inactive') {
+                        AppState.products.push(product);
+                    }
+                });
+                
+                console.log(`Loaded ${AppState.products.length} products`);
+                renderProducts();
+                
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showNotification('Error loading products: ' + error.message, 'error');
+                showProductsEmpty(true);
+            }
+        }
+
+        function showProductsLoading(show) {
+            const loadingEl = document.getElementById('products-loading');
+            const gridEl = document.getElementById('products-grid');
+            const emptyEl = document.getElementById('products-empty');
+            
+            if (show) {
+                loadingEl.style.display = 'block';
+                gridEl.style.display = 'none';
+                emptyEl.style.display = 'none';
+            } else {
+                loadingEl.style.display = 'none';
+            }
+        }
+
+        function showProductsEmpty(show) {
+            const loadingEl = document.getElementById('products-loading');
+            const gridEl = document.getElementById('products-grid');
+            const emptyEl = document.getElementById('products-empty');
+            
+            if (show) {
+                loadingEl.style.display = 'none';
+                gridEl.style.display = 'none';
+                emptyEl.style.display = 'block';
+            } else {
+                emptyEl.style.display = 'none';
+                gridEl.style.display = 'grid';
+            }
+        }
+
+        function renderProducts() {
+            const productsGrid = document.getElementById('products-grid');
+            const productsEmpty = document.getElementById('products-empty');
+            
+            if (AppState.products.length === 0) {
+                productsGrid.innerHTML = '';
+                showProductsEmpty(true);
+                return;
+            }
+            
+            showProductsLoading(false);
+            showProductsEmpty(false);
+            
+            // Render products grid
+            productsGrid.innerHTML = AppState.products.map(product => {
+                const stockStatus = getStockStatus(product.stock);
+                const stockBadge = product.stock === 0 ? 
+                    '<div class="product-badge">Out of Stock</div>' : 
+                    product.stock < 10 ? 
+                    '<div class="product-badge" style="background-color: var(--warning);">Low Stock</div>' : 
+                    '';
+                
+                return `
+                    <div class="product-card" data-category="${product.category || 'all'}">
+                        <div class="product-img">
+                            <img src="${product.imageUrl || 'https://via.placeholder.com/300x200?text=No+Image'}" 
+                                 alt="${product.name}" 
+                                 onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                            ${stockBadge}
+                        </div>
+                        <div class="product-content">
+                            <h3>${product.name}</h3>
+                            <div class="product-price">R${(product.price || 0).toFixed(2)}</div>
+                            <div class="product-rating">
+                                ${generateStarRating(product.rating || 4.5)}
+                                <span>(${product.rating || 4.5})</span>
+                            </div>
+                            <p class="product-description">${product.description || 'No description available.'}</p>
+                            
+                            <div class="stock-status ${stockStatus.class}">
+                                <i class="fas ${stockStatus.icon}"></i>
+                                ${stockStatus.text}
+                            </div>
+                            
+                            <div class="quantity-control">
+                                <button class="quantity-btn" data-action="decrease">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1" max="${Math.min(product.stock || 10, 10)}">
+                                <button class="quantity-btn" data-action="increase">+</button>
+                            </div>
+                            
+                            <div class="product-actions">
+                                <button class="btn btn-primary add-to-cart" 
+                                        data-product-id="${product.id}"
+                                        data-product-name="${product.name}"
+                                        data-product-price="${product.price}"
+                                        ${product.stock === 0 ? 'disabled' : ''}>
+                                    <i class="fas fa-shopping-cart"></i> 
+                                    ${product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                                </button>
+                                <button class="btn btn-outline wishlist-btn">
+                                    <i class="fas fa-heart"></i> Wishlist
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Add event listeners
+            setupProductEventListeners();
+            
+            // Setup filter functionality
+            setupProductFilters();
+        }
+
+        function getStockStatus(stock) {
+            if (stock === 0) {
+                return { class: 'out-of-stock', icon: 'fa-times-circle', text: 'Out of Stock' };
+            } else if (stock < 10) {
+                return { class: 'low-stock', icon: 'fa-exclamation-triangle', text: `Only ${stock} left` };
+            } else {
+                return { class: 'in-stock', icon: 'fa-check-circle', text: 'In Stock' };
+            }
+        }
+
+        function generateStarRating(rating) {
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+            
+            let stars = '';
+            
+            // Full stars
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            
+            // Half star
+            if (halfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            
+            // Empty stars
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            
+            return stars;
+        }
+
+        function setupProductEventListeners() {
+            // Add to cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!AppState.currentUser) {
+                        showNotification('Please log in to add items to cart', 'warning');
+                        showModal('login-modal');
+                        return;
+                    }
+                    
+                    const productId = this.getAttribute('data-product-id');
+                    const productName = this.getAttribute('data-product-name');
+                    const productPrice = parseFloat(this.getAttribute('data-product-price'));
+                    const productCard = this.closest('.product-card');
+                    const productImage = productCard.querySelector('.product-img img').src;
+                    const quantityInput = productCard.querySelector('.quantity-input');
+                    const quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
+                    
+                    addToCart(productId, productName, productPrice, productImage, quantity);
+                    
+                    // Reset quantity
+                    if (quantityInput) quantityInput.value = 1;
+                });
+            });
+            
+            // Quantity buttons
+            document.querySelectorAll('.quantity-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    const input = this.parentElement.querySelector('.quantity-input');
+                    if (!input) return;
+                    
+                    let value = parseInt(input.value) || 1;
+                    const max = parseInt(input.max) || 10;
+                    
+                    if (action === 'increase' && value < max) {
+                        input.value = value + 1;
+                    } else if (action === 'decrease' && value > 1) {
+                        input.value = value - 1;
+                    }
+                });
+            });
+            
+            // Wishlist buttons
+            document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!AppState.currentUser) {
+                        showNotification('Please log in to add items to wishlist', 'warning');
+                        showModal('login-modal');
+                        return;
+                    }
+                    showNotification('Added to wishlist!', 'success');
+                });
+            });
+        }
+
+        function setupProductFilters() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Update active button
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Filter products
+                    document.querySelectorAll('.product-card').forEach(card => {
+                        const category = card.getAttribute('data-category');
+                        
+                        if (filter === 'all' || category === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
+
+        // Cart Management
+        function initCart() {
+            const savedCart = localStorage.getItem('pdsaCart');
+            if (savedCart) {
+                try {
+                    AppState.cart = JSON.parse(savedCart);
+                    updateCartUI();
+                } catch (error) {
+                    console.error('Error parsing saved cart:', error);
+                    AppState.cart = [];
+                    localStorage.removeItem('pdsaCart');
+                }
+            }
+        }
+
+        function updateCartUI() {
+            try {
+                const cartCountElement = document.querySelector('.cart-count');
+                if (cartCountElement) {
+                    const totalItems = AppState.cart.reduce((total, item) => total + (item.quantity || 1), 0);
+                    cartCountElement.textContent = totalItems;
+                }
+                
+                const cartItems = document.getElementById('cart-items');
+                if (!cartItems) return;
+                
+                cartItems.innerHTML = '';
+                
+                if (AppState.cart.length === 0) {
+                    const emptyCartMessage = document.getElementById('empty-cart-message');
+                    if (emptyCartMessage) {
+                        emptyCartMessage.style.display = 'block';
+                    }
+                    if (document.getElementById('checkout-btn')) {
+                        document.getElementById('checkout-btn').disabled = true;
+                    }
+                } else {
+                    const emptyCartMessage = document.getElementById('empty-cart-message');
+                    if (emptyCartMessage) {
+                        emptyCartMessage.style.display = 'none';
+                    }
+                    if (document.getElementById('checkout-btn')) {
+                        document.getElementById('checkout-btn').disabled = false;
+                    }
+                    
+                    AppState.cart.forEach(item => {
+                        const cartItem = document.createElement('div');
+                        cartItem.className = 'cart-item';
+                        cartItem.innerHTML = `
+                            <div class="cart-item-img">
+                                <img src="${item.image || 'https://via.placeholder.com/80'}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80'">
+                            </div>
+                            <div class="cart-item-details">
+                                <h4>${item.name || 'Unknown Product'}</h4>
+                                <div class="cart-item-price">R${parseFloat(item.price || 0).toFixed(2)}</div>
+                                <div class="cart-item-quantity">
+                                    <button class="quantity-btn" data-action="decrease" data-id="${item.id}">-</button>
+                                    <span>${item.quantity || 1}</span>
+                                    <button class="quantity-btn" data-action="increase" data-id="${item.id}">+</button>
+                                </div>
+                            </div>
+                            <button class="cart-item-remove" data-id="${item.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        `;
+                        cartItems.appendChild(cartItem);
+                    });
+                }
+                
+                const cartTotalElement = document.getElementById('cart-total-amount');
+                if (cartTotalElement) {
+                    const total = AppState.cart.reduce((sum, item) => {
+                        const price = parseFloat(item.price || 0);
+                        const quantity = item.quantity || 1;
+                        return sum + (price * quantity);
+                    }, 0);
+                    cartTotalElement.textContent = `R${total.toFixed(2)}`;
+                }
+                
+                // Add event listeners to cart buttons
+                setTimeout(() => {
+                    document.querySelectorAll('.cart-item-remove').forEach(btn => {
+                        btn.onclick = function() {
+                            const productId = this.getAttribute('data-id');
+                            removeFromCart(productId);
+                        };
+                    });
+                    
+                    document.querySelectorAll('.cart-item .quantity-btn').forEach(btn => {
+                        btn.onclick = function() {
+                            const action = this.getAttribute('data-action');
+                            const productId = this.getAttribute('data-id');
+                            updateCartQuantity(productId, action);
+                        };
+                    });
+                }, 100);
+                
+                saveCart();
+            } catch (error) {
+                console.error('Error updating cart UI:', error);
+            }
+        }
+
+        function addToCart(productId, productName, productPrice, productImage, quantity = 1) {
+            // Validate inputs
+            if (!productId || !productName) {
+                console.error('Invalid product data');
+                return;
+            }
+            
+            const price = parseFloat(productPrice) || 0;
+            const qty = parseInt(quantity) || 1;
+            
+            const existingItem = AppState.cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                // Check if we exceed available stock
+                const product = AppState.products.find(p => p.id === productId);
+                if (product && (existingItem.quantity + qty) > product.stock) {
+                    showNotification(`Only ${product.stock} items available in stock`, 'warning');
+                    return;
+                }
+                existingItem.quantity += qty;
+            } else {
+                AppState.cart.push({
+                    id: productId,
+                    name: productName,
+                    price: price,
+                    image: productImage,
+                    quantity: qty
+                });
+            }
+            
+            updateCartUI();
+            showNotification(`${qty} x ${productName} added to cart!`, 'success');
+        }
+
+        function removeFromCart(productId) {
+            AppState.cart = AppState.cart.filter(item => item.id !== productId);
+            updateCartUI();
+            showNotification('Item removed from cart', 'info');
+        }
+
+        function updateCartQuantity(productId, action) {
+            const item = AppState.cart.find(item => item.id === productId);
+            
+            if (item) {
+                const product = AppState.products.find(p => p.id === productId);
+                
+                if (action === 'increase') {
+                    if (product && (item.quantity + 1) > product.stock) {
+                        showNotification(`Only ${product.stock} items available in stock`, 'warning');
+                        return;
+                    }
+                    item.quantity = (item.quantity || 1) + 1;
+                } else if (action === 'decrease' && (item.quantity || 1) > 1) {
+                    item.quantity = (item.quantity || 1) - 1;
+                }
+                
+                updateCartUI();
+            }
+        }
+
+        function saveCart() {
+            try {
+                localStorage.setItem('pdsaCart', JSON.stringify(AppState.cart));
+            } catch (error) {
+                console.error('Error saving cart to localStorage:', error);
+            }
+        }
+
+        // Enhanced Payment Functions
+        function openPaymentModal() {
+            if (!AppState.currentUser) {
+                showNotification('Please log in to proceed with payment', 'warning');
+                showModal('login-modal');
+                return;
+            }
+            
+            if (AppState.cart.length === 0) {
+                showNotification('Your cart is empty', 'warning');
+                return;
+            }
+            
+            // Validate stock before payment
+            if (!validateCartStock()) {
+                return;
+            }
+            
+            updatePaymentSummary();
+            showModal('payment-modal');
+            resetPaymentUI();
+        }
+
+        function updatePaymentSummary() {
+            const subtotal = calculateSubtotal();
+            const shipping = calculateShipping(subtotal);
+            const tax = calculateTax(subtotal);
+            const total = subtotal + shipping + tax;
+            
+            // Update summary display
+            document.getElementById('payment-subtotal').textContent = `R${subtotal.toFixed(2)}`;
+            document.getElementById('payment-shipping').textContent = `R${shipping.toFixed(2)}`;
+            document.getElementById('payment-tax').textContent = `R${tax.toFixed(2)}`;
+            document.getElementById('payment-total').textContent = `R${total.toFixed(2)}`;
+            
+            // Update order items
+            const orderItemsContainer = document.getElementById('payment-order-items');
+            orderItemsContainer.innerHTML = AppState.cart.map(item => `
+                <div class="summary-item">
+                    <span>${item.name} x${item.quantity}</span>
+                    <span>R${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+            `).join('');
+            
+            // Store order details for later use
+            AppState.currentOrder = {
+                subtotal,
+                shipping,
+                tax,
+                total,
+                items: AppState.cart.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    image: item.image
+                }))
+            };
+        }
+
+        function calculateSubtotal() {
+            return AppState.cart.reduce((sum, item) => {
+                return sum + (parseFloat(item.price) * (item.quantity || 1));
+            }, 0);
+        }
+
+        function calculateShipping(subtotal) {
+            return subtotal >= PaymentConfig.freeShippingThreshold ? 0 : PaymentConfig.shippingFee;
+        }
+
+        function calculateTax(subtotal) {
+            return subtotal * PaymentConfig.taxRate;
+        }
+
+        function selectPaymentMethod(method) {
+            AppState.selectedPaymentMethod = method;
+            
+            // Update UI
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.querySelector(`.payment-method[data-method="${method}"]`).classList.add('selected');
+            
+            // Enable proceed button
+            document.getElementById('proceed-to-payment').disabled = false;
+        }
+
+        function proceedToPayment() {
+            if (!AppState.selectedPaymentMethod) {
+                showNotification('Please select a payment method', 'error');
+                return;
+            }
+            
+            // Hide step 1, show step 2
+            document.getElementById('payment-step-1').style.display = 'none';
+            document.getElementById('payment-step-2').style.display = 'block';
+            
+            // Show selected payment form
+            document.querySelectorAll('.payment-form-section').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(`${AppState.selectedPaymentMethod}-payment-form`).classList.add('active');
+            
+            // Update EFT reference
+            if (AppState.selectedPaymentMethod === 'eft') {
+                document.getElementById('eft-reference').textContent = `ORD-${Date.now()}`;
+            }
+            
+            // Update cash amount
+            if (AppState.selectedPaymentMethod === 'cash') {
+                document.getElementById('cash-amount').textContent = `R${AppState.currentOrder.total.toFixed(2)}`;
+            }
+        }
+
+        function backToPaymentMethods() {
+            document.getElementById('payment-step-2').style.display = 'none';
+            document.getElementById('payment-step-1').style.display = 'block';
+        }
+
+        function closePaymentModal() {
+            hideModal('payment-modal');
+            resetPaymentUI();
+        }
+
+        function resetPaymentUI() {
+            AppState.selectedPaymentMethod = null;
+            document.getElementById('payment-step-1').style.display = 'block';
+            document.getElementById('payment-step-2').style.display = 'none';
+            document.getElementById('payment-processing').style.display = 'none';
+            document.getElementById('order-success').style.display = 'none';
+            
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.getElementById('proceed-to-payment').disabled = true;
+        }
+
+        // Enhanced Payment Processing
+        async function processCardPayment() {
+            // In a real implementation, you would integrate with Stripe or another payment processor
+            // For now, we'll simulate the payment process
+            
+            const payButton = document.getElementById('pay-now-btn');
+            const originalText = payButton.innerHTML;
+            
+            try {
+                // Show processing state
+                payButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                payButton.disabled = true;
+                
+                // Simulate API call to payment processor
+                await simulatePaymentAPI();
+                
+                // If successful, complete the order
+                await completeOrder('card', 'paid');
+                
+            } catch (error) {
+                console.error('Payment processing error:', error);
+                showNotification('Payment failed: ' + error.message, 'error');
+                
+                // Reset button
+                payButton.innerHTML = originalText;
+                payButton.disabled = false;
+            }
+        }
+
+        function confirmEFTPayment() {
+            showNotification('Please complete your bank transfer using the provided details. Your order will be processed once payment is confirmed.', 'info');
+            completeOrder('eft', 'pending');
+        }
+
+        function confirmCashPayment() {
+            completeOrder('cash', 'pending');
+        }
+
+        async function completeOrder(paymentMethod, paymentStatus) {
+            try {
+                // Show processing screen
+                document.getElementById('payment-step-2').style.display = 'none';
+                document.getElementById('payment-processing').style.display = 'block';
+                
+                const orderId = 'ORD-' + Date.now();
+                const orderData = {
+                    id: orderId,
+                    userId: AppState.currentUser.uid,
+                    userEmail: AppState.currentUser.email,
+                    userName: AppState.currentUser.displayName,
+                    items: AppState.currentOrder.items,
+                    subtotal: AppState.currentOrder.subtotal,
+                    shipping: AppState.currentOrder.shipping,
+                    tax: AppState.currentOrder.tax,
+                    total: AppState.currentOrder.total,
+                    status: 'confirmed',
+                    paymentMethod: paymentMethod,
+                    paymentStatus: paymentStatus,
+                    billingAddress: document.getElementById('billing-address').value || '',
+                    date: new Date().toISOString(),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // Update product stock and save order in a batch
+                const batch = db.batch();
+                
+                // Add order to batch
+                const orderRef = db.collection('orders').doc();
+                batch.set(orderRef, orderData);
+                
+                // Update product stock for each item
+                for (const cartItem of AppState.cart) {
+                    const product = AppState.products.find(p => p.id === cartItem.id);
+                    if (product) {
+                        const productRef = db.collection('products').doc(cartItem.id);
+                        batch.update(productRef, {
+                            stock: firebase.firestore.FieldValue.increment(-cartItem.quantity),
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                }
+                
+                // Commit the batch
+                await batch.commit();
+                
+                orderData.firebaseId = orderRef.id;
+                AppState.userOrders.unshift(orderData);
+                
+                // Clear cart
+                AppState.cart = [];
+                saveCart();
+                updateCartUI();
+                
+                // Show success screen
+                showOrderSuccess(orderData);
+                
+            } catch (error) {
+                console.error('Error completing order:', error);
+                showNotification('Error completing order: ' + error.message, 'error');
+                
+                // Return to payment methods
+                document.getElementById('payment-processing').style.display = 'none';
+                document.getElementById('payment-step-2').style.display = 'block';
+            }
+        }
+
+        function showOrderSuccess(order) {
+            document.getElementById('payment-processing').style.display = 'none';
+            document.getElementById('order-success').style.display = 'block';
+            
+            // Update success details
+            document.getElementById('success-order-number').textContent = order.id;
+            document.getElementById('success-order-total').textContent = `R${order.total.toFixed(2)}`;
+            document.getElementById('success-payment-method').textContent = 
+                order.paymentMethod.charAt(0).toUpperCase() + order.paymentMethod.slice(1);
+        }
+
+        function viewOrderDetails() {
+            closePaymentModal();
+            showOrderTracking(order.firebaseId);
+        }
+
+        // Utility Functions
+        function simulatePaymentAPI() {
+            return new Promise((resolve, reject) => {
+                // Simulate API call delay
+                setTimeout(() => {
+                    // Simulate 95% success rate
+                    if (Math.random() > 0.05) {
+                        resolve({ success: true, transactionId: 'TXN_' + Date.now() });
+                    } else {
+                        reject(new Error('Payment declined by bank'));
+                    }
+                }, 2000);
+            });
+        }
+
+        function validateCartStock() {
+            for (const cartItem of AppState.cart) {
+                const product = AppState.products.find(p => p.id === cartItem.id);
+                if (!product) {
+                    showNotification(`Product "${cartItem.name}" is no longer available`, 'error');
+                    return false;
+                }
+                if (product.stock < cartItem.quantity) {
+                    showNotification(`Only ${product.stock} items available for "${cartItem.name}"`, 'error');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Cart Modal Functions
+        function openCart() {
+            const cartContainer = document.getElementById('cart-container');
+            const cartOverlay = document.getElementById('cart-overlay');
+            if (cartContainer) cartContainer.classList.add('open');
+            if (cartOverlay) cartOverlay.classList.add('open');
+        }
+
+        function closeCart() {
+            const cartContainer = document.getElementById('cart-container');
+            const cartOverlay = document.getElementById('cart-overlay');
+            if (cartContainer) cartContainer.classList.remove('open');
+            if (cartOverlay) cartOverlay.classList.remove('open');
+        }
+
+        // Authentication Management
+        function updateAuthUI() {
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const userMenu = document.getElementById('user-menu');
+            const authOverlays = document.querySelectorAll('.auth-overlay');
+            const bookAppointmentBtn = document.getElementById('book-appointment-btn');
+            const productCards = document.querySelectorAll('.product-card.auth-required');
+            
+            if (AppState.currentUser) {
+                // User is logged in
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (registerBtn) registerBtn.style.display = 'none';
+                if (userMenu) userMenu.style.display = 'block';
+                
+                // Hide auth overlays on products
+                authOverlays.forEach(overlay => {
+                    if (overlay) overlay.style.display = 'none';
+                });
+                
+                // Enable product interactions
+                productCards.forEach(card => {
+                    card.classList.remove('auth-required');
+                });
+                
+                if (AppState.cart.length > 0 && document.getElementById('checkout-btn')) {
+                    document.getElementById('checkout-btn').disabled = false;
+                }
+                
+                // Enable appointment booking
+                if (bookAppointmentBtn) {
+                    bookAppointmentBtn.onclick = function() {
+                        showModal('appointment-modal');
+                    };
+                }
+                
+                // Enable add to cart buttons
+                document.querySelectorAll('.add-to-cart').forEach(btn => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                });
+                
+            } else {
+                // User is not logged in
+                if (loginBtn) loginBtn.style.display = 'inline-flex';
+                if (registerBtn) registerBtn.style.display = 'inline-flex';
+                if (userMenu) userMenu.style.display = 'none';
+                
+                // Show auth overlays on products
+                authOverlays.forEach(overlay => {
+                    if (overlay) overlay.style.display = 'flex';
+                });
+                
+                // Disable product interactions
+                productCards.forEach(card => {
+                    card.classList.add('auth-required');
+                });
+                
+                if (document.getElementById('checkout-btn')) {
+                    document.getElementById('checkout-btn').disabled = true;
+                }
+                
+                // Redirect to login for appointments
+                if (bookAppointmentBtn) {
+                    bookAppointmentBtn.onclick = function(e) {
+                        e.preventDefault();
+                        showModal('login-modal');
+                    };
+                }
+                
+                // Disable add to cart buttons
+                document.querySelectorAll('.add-to-cart').forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.6';
+                });
+            }
+        }
+
+        // Firebase Authentication
+        function login(email, password) {
+            if (!email || !password) {
+                showNotification('Please enter email and password', 'error');
+                return;
+            }
+            
+            showNotification('Logging in...', 'info');
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    AppState.currentUser = {
+                        uid: user.uid,
+                        email: user.email,
+                        displayName: user.displayName || user.email.split('@')[0],
+                        emailVerified: user.emailVerified
                     };
                     
                     updateUserUI(AppState.currentUser);
                     updateAuthUI();
+                    loadUserData();
                     
-                    showNotification('Registration successful! Welcome to PDSA Veterinary Clinic.', 'success');
-                    hideModal('register-modal');
-                });
-            })
-            .catch((error) => {
-                console.error('Registration error:', error);
-                let errorMessage = 'Registration failed';
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'Email already in use';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'Invalid email address';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'Password is too weak';
-                        break;
-                    default:
-                        errorMessage = error.message;
-                }
-                showNotification(errorMessage, 'error');
-            });
-    }
-
-    function logout() {
-        auth.signOut()
-            .then(() => {
-                AppState.currentUser = null;
-                AppState.isAdmin = false;
-                AppState.userPets = [];
-                AppState.userAppointments = [];
-                AppState.userOrders = [];
-                updateCartUI();
-                showNotification('Logged out successfully', 'info');
-                updateAuthUI();
-                hideModal('dashboard-modal');
-            })
-            .catch((error) => {
-                console.error('Logout error:', error);
-                showNotification('Error logging out: ' + error.message, 'error');
-            });
-    }
-
-    function updateUserUI(userData) {
-        const userName = DOM.auth.userName;
-        if (userData && userName) {
-            userName.textContent = userData.displayName || userData.email;
-        }
-    }
-
-    function checkAdminStatus(uid) {
-        if (!uid) return;
-        
-        db.collection('admins').doc(uid).get()
-            .then((doc) => {
-                if (doc.exists) {
-                    AppState.isAdmin = true;
-                    const adminPanel = document.getElementById('admin-panel');
-                    const adminLink = document.getElementById('admin-link');
-                    if (adminPanel) adminPanel.style.display = 'block';
-                    if (adminLink) adminLink.style.display = 'inline-flex';
-                    loadAdminStats();
-                }
-            })
-            .catch((error) => {
-                console.error('Error checking admin status:', error);
-            });
-    }
-
-    // Enhanced Appointment Management
-    function setupAppointmentBooking() {
-        const appointmentForm = document.getElementById('appointment-form');
-        if (appointmentForm) {
-            appointmentForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                bookAppointment();
-            });
-        }
-        
-        const confirmBtn = document.getElementById('confirm-appointment');
-        const editBtn = document.getElementById('edit-appointment');
-        
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', confirmAppointment);
-        }
-        if (editBtn) {
-            editBtn.addEventListener('click', showAppointmentForm);
-        }
-        
-        const addPetForm = document.getElementById('add-pet-form');
-        if (addPetForm) {
-            addPetForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                addNewPet();
-            });
-        }
-    }
-
-    function bookAppointment() {
-        if (!AppState.currentUser) {
-            showNotification('Please log in to book an appointment', 'warning');
-            showModal('login-modal');
-            return;
-        }
-        
-        const petSelect = document.getElementById('appointment-pet');
-        const serviceSelect = document.getElementById('appointment-service');
-        const dateInput = document.getElementById('appointment-date');
-        const timeSelect = document.getElementById('appointment-time');
-        const reasonTextarea = document.getElementById('appointment-reason');
-        
-        // Validate form
-        if (!petSelect || !petSelect.value) {
-            showNotification('Please select a pet', 'error');
-            return;
-        }
-        
-        if (!serviceSelect || !serviceSelect.value) {
-            showNotification('Please select a service', 'error');
-            return;
-        }
-        
-        if (!dateInput || !dateInput.value) {
-            showNotification('Please select a date', 'error');
-            return;
-        }
-        
-        if (!timeSelect || !timeSelect.value) {
-            showNotification('Please select a time', 'error');
-            return;
-        }
-        
-        const selectedPet = AppState.userPets.find(pet => pet.id === petSelect.value);
-        const selectedService = AppState.services.find(s => s.id == serviceSelect.value);
-        
-        if (!selectedPet) {
-            showNotification('Selected pet not found. Please refresh and try again.', 'error');
-            return;
-        }
-        
-        if (!selectedService) {
-            showNotification('Selected service not found. Please refresh and try again.', 'error');
-            return;
-        }
-        
-        // Show confirmation
-        const confirmPet = document.getElementById('confirm-pet');
-        const confirmService = document.getElementById('confirm-service');
-        const confirmDate = document.getElementById('confirm-date');
-        const confirmTime = document.getElementById('confirm-time');
-        const confirmReason = document.getElementById('confirm-reason');
-        
-        if (confirmPet) confirmPet.textContent = `${selectedPet.name} (${selectedPet.species})`;
-        if (confirmService) confirmService.textContent = `${selectedService.name} - R${selectedService.price}`;
-        if (confirmDate) confirmDate.textContent = formatDate(dateInput.value);
-        if (confirmTime) confirmTime.textContent = formatTime(timeSelect.value);
-        if (confirmReason) confirmReason.textContent = reasonTextarea.value || 'Not specified';
-        
-        const step1 = document.getElementById('appointment-step-1');
-        const step2 = document.getElementById('appointment-step-2');
-        
-        if (step1) step1.style.display = 'none';
-        if (step2) step2.style.display = 'block';
-    }
-
-    function confirmAppointment() {
-        const petSelect = document.getElementById('appointment-pet');
-        const serviceSelect = document.getElementById('appointment-service');
-        const dateInput = document.getElementById('appointment-date');
-        const timeSelect = document.getElementById('appointment-time');
-        const reasonTextarea = document.getElementById('appointment-reason');
-        
-        if (!petSelect || !serviceSelect || !dateInput || !timeSelect) {
-            showNotification('Error: Form data incomplete', 'error');
-            return;
-        }
-        
-        const selectedPet = AppState.userPets.find(pet => pet.id === petSelect.value);
-        const selectedService = AppState.services.find(s => s.id == serviceSelect.value);
-        
-        if (!selectedPet || !selectedService) {
-            showNotification('Error: Pet or service not found', 'error');
-            return;
-        }
-        
-        const appointmentData = {
-            userId: AppState.currentUser.uid,
-            userEmail: AppState.currentUser.email,
-            petId: petSelect.value,
-            petName: selectedPet.name,
-            petSpecies: selectedPet.species,
-            serviceId: serviceSelect.value,
-            serviceName: selectedService.name,
-            servicePrice: selectedService.price,
-            date: dateInput.value,
-            time: timeSelect.value,
-            reason: reasonTextarea.value || '',
-            status: 'pending',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        // Show loading state
-        const confirmBtn = document.getElementById('confirm-appointment');
-        if (confirmBtn) {
-            const originalText = confirmBtn.innerHTML;
-            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-            confirmBtn.disabled = true;
-        }
-        
-        // Save to Firestore
-        db.collection('appointments').add(appointmentData)
-            .then((docRef) => {
-                // Add to local state
-                appointmentData.id = docRef.id;
-                AppState.userAppointments.push(appointmentData);
-                
-                // Reset button
-                if (confirmBtn) {
-                    confirmBtn.innerHTML = 'Confirm Booking';
-                    confirmBtn.disabled = false;
-                }
-                
-                // Reset form and show success
-                hideModal('appointment-modal');
-                const appointmentForm = document.getElementById('appointment-form');
-                if (appointmentForm) appointmentForm.reset();
-                showAppointmentForm();
-                
-                // Reload appointments to ensure UI is updated
-                loadUserAppointments();
-                
-                showNotification('Appointment booked successfully! We will confirm shortly.', 'success');
-            })
-            .catch((error) => {
-                console.error('Error saving appointment:', error);
-                
-                // Reset button
-                if (confirmBtn) {
-                    confirmBtn.innerHTML = 'Confirm Booking';
-                    confirmBtn.disabled = false;
-                }
-                
-                showNotification('Error booking appointment: ' + error.message, 'error');
-            });
-    }
-
-    function showAppointmentForm() {
-        const step1 = document.getElementById('appointment-step-1');
-        const step2 = document.getElementById('appointment-step-2');
-        
-        if (step1) step1.style.display = 'block';
-        if (step2) step2.style.display = 'none';
-    }
-
-    // Enhanced Pet Management - FIXED VERSION
-    function loadUserPets() {
-        if (!AppState.currentUser) {
-            console.log('No user logged in, skipping pet load');
-            return;
-        }
-        
-        const petsList = document.getElementById('user-pets-list');
-        if (petsList) {
-            petsList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner"></i><p>Loading pets...</p></div>';
-        }
-        
-        // FIX: Use a simpler query that doesn't require composite indexes
-        db.collection('pets')
-            .where('userId', '==', AppState.currentUser.uid)
-            .get()
-            .then((querySnapshot) => {
-                AppState.userPets = [];
-                querySnapshot.forEach((doc) => {
-                    const pet = doc.data();
-                    pet.id = doc.id;
-                    AppState.userPets.push(pet);
-                });
-                
-                // Sort pets by creation date on the client side
-                AppState.userPets.sort((a, b) => {
-                    const dateA = a.createdAt ? a.createdAt.toDate() : new Date(0);
-                    const dateB = b.createdAt ? b.createdAt.toDate() : new Date(0);
-                    return dateB - dateA;
-                });
-                
-                updateAppointmentPetDropdown();
-                renderUserPets();
-            })
-            .catch((error) => {
-                console.error('Error loading pets:', error);
-                showNotification('Error loading pets: ' + error.message, 'error');
-            });
-    }
-
-    function addNewPet() {
-        const form = document.getElementById('add-pet-form');
-        if (!form) return;
-        
-        const formData = new FormData(form);
-        const petData = {
-            userId: AppState.currentUser.uid,
-            name: formData.get('name') || '',
-            species: formData.get('species') || '',
-            breed: formData.get('breed') || '',
-            dateOfBirth: formData.get('dateOfBirth') || '',
-            gender: formData.get('gender') || '',
-            color: formData.get('color') || '',
-            weight: parseFloat(formData.get('weight')) || 0,
-            medicalNotes: formData.get('medicalNotes') || '',
-            microchipNumber: formData.get('microchipNumber') || '',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        
-        // Validate required fields
-        if (!petData.name || !petData.species) {
-            showNotification('Please fill in pet name and species', 'error');
-            return;
-        }
-        
-        // Save to Firestore
-        db.collection('pets').add(petData)
-            .then((docRef) => {
-                petData.id = docRef.id;
-                AppState.userPets.push(petData);
-                
-                hideModal('add-pet-modal');
-                form.reset();
-                
-                showNotification(`${petData.name} has been added to your pets!`, 'success');
-                
-                // If we came from appointment modal, go back
-                if (document.getElementById('appointment-modal').classList.contains('active')) {
-                    showModal('appointment-modal');
-                }
-            })
-            .catch((error) => {
-                console.error('Error adding pet:', error);
-                showNotification('Error adding pet. Please try again.', 'error');
-            });
-    }
-
-    function updateAppointmentPetDropdown() {
-        const petSelect = document.getElementById('appointment-pet');
-        if (!petSelect) return;
-        
-        petSelect.innerHTML = '<option value="">Select a pet</option>';
-        
-        AppState.userPets.forEach(pet => {
-            const option = document.createElement('option');
-            option.value = pet.id;
-            option.textContent = `${pet.name} (${pet.species})`;
-            petSelect.appendChild(option);
-        });
-        
-        if (AppState.userPets.length === 0) {
-            petSelect.innerHTML = '<option value="">No pets registered. Please add a pet first.</option>';
-            petSelect.disabled = true;
-        } else {
-            petSelect.disabled = false;
-        }
-    }
-
-    // Event Listeners Setup
-    function setupEventListeners() {
-        setupAuthEventListeners();
-        setupCartEventListeners();
-        setupProductEventListeners();
-        setupFAQ();
-        setupNavScroll();
-        setupContactForm();
-    }
-
-    function setupAuthEventListeners() {
-        // Login form
-        const loginForm = document.getElementById('login-form');
-        if (loginForm) {
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                login(formData.get('email'), formData.get('password'));
-            });
-        }
-        
-        // Register form
-        const registerForm = document.getElementById('register-form');
-        if (registerForm) {
-            registerForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                register({
-                    firstname: formData.get('firstname'),
-                    lastname: formData.get('lastname'),
-                    email: formData.get('email'),
-                    password: formData.get('password'),
-                    confirmPassword: formData.get('confirmPassword'),
-                    phone: formData.get('phone'),
-                    address: formData.get('address')
-                });
-            });
-        }
-        
-        // Logout
-        const logoutLink = document.getElementById('logout-link');
-        if (logoutLink) {
-            logoutLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                logout();
-            });
-        }
-        
-        // User dashboard
-        const dashboardLink = document.getElementById('user-dashboard-link');
-        if (dashboardLink) {
-            dashboardLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                showDashboard();
-            });
-        }
-        
-        // Login from product
-        document.querySelectorAll('#login-from-product').forEach(btn => {
-            btn.addEventListener('click', function() {
-                showModal('login-modal');
-            });
-        });
-        
-        // Login and Register buttons
-        if (DOM.auth.loginBtn) {
-            DOM.auth.loginBtn.addEventListener('click', function() {
-                showModal('login-modal');
-            });
-        }
-        
-        if (DOM.auth.registerBtn) {
-            DOM.auth.registerBtn.addEventListener('click', function() {
-                showModal('register-modal');
-            });
-        }
-    }
-
-    function setupCartEventListeners() {
-        // Cart toggle
-        const cartBtn = document.getElementById('cart-btn');
-        const closeCartBtn = document.getElementById('close-cart');
-        const continueShoppingBtn = document.getElementById('continue-shopping');
-        
-        if (cartBtn) {
-            cartBtn.addEventListener('click', function() {
-                if (DOM.cart.container) DOM.cart.container.classList.add('open');
-                if (DOM.cart.overlay) DOM.cart.overlay.classList.add('open');
-            });
-        }
-        
-        if (closeCartBtn) {
-            closeCartBtn.addEventListener('click', closeCart);
-        }
-        
-        if (DOM.cart.overlay) {
-            DOM.cart.overlay.addEventListener('click', closeCart);
-        }
-        
-        if (continueShoppingBtn) {
-            continueShoppingBtn.addEventListener('click', function() {
-                closeCart();
-                const productsSection = document.getElementById('products');
-                if (productsSection) {
-                    productsSection.scrollIntoView({ 
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        }
-        
-        // Checkout button
-        if (DOM.cart.checkoutBtn) {
-            DOM.cart.checkoutBtn.addEventListener('click', checkout);
-        }
-    }
-
-    function setupProductEventListeners() {
-        // Add to cart buttons
-        document.querySelectorAll('.add-to-cart').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const productCard = this.closest('.product-card');
-                if (!productCard) return;
-                
-                const productId = this.getAttribute('data-product-id');
-                const productName = this.getAttribute('data-product-name');
-                const productPrice = this.getAttribute('data-product-price');
-                const productImage = productCard.querySelector('.product-img img')?.src;
-                const quantityInput = productCard.querySelector('.quantity-input');
-                const quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
-                
-                addToCart(productId, productName, productPrice, productImage, quantity);
-                
-                // Reset quantity
-                if (quantityInput) quantityInput.value = 1;
-            });
-        });
-        
-        // Product filters
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const filter = this.getAttribute('data-filter');
-                
-                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                
-                document.querySelectorAll('.product-card').forEach(card => {
-                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
+                    showNotification('Login successful!', 'success');
+                    hideModal('login-modal');
+                })
+                .catch((error) => {
+                    console.error('Login error:', error);
+                    let errorMessage = 'Login failed';
+                    switch (error.code) {
+                        case 'auth/invalid-email':
+                            errorMessage = 'Invalid email address';
+                            break;
+                        case 'auth/user-disabled':
+                            errorMessage = 'This account has been disabled';
+                            break;
+                        case 'auth/user-not-found':
+                            errorMessage = 'No account found with this email';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMessage = 'Incorrect password';
+                            break;
+                        default:
+                            errorMessage = error.message;
                     }
+                    showNotification(errorMessage, 'error');
                 });
-            });
-        });
-        
-        // Quantity controls
-        document.querySelectorAll('.quantity-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const action = this.getAttribute('data-action');
-                const input = this.parentElement.querySelector('.quantity-input');
-                if (!input) return;
-                
-                let value = parseInt(input.value) || 1;
-                
-                if (action === 'increase' && value < 10) {
-                    input.value = value + 1;
-                } else if (action === 'decrease' && value > 1) {
-                    input.value = value - 1;
-                }
-            });
-        });
-    }
+        }
 
-    function setupCartIconToProducts() {
-        const cartBtn = document.getElementById('cart-btn');
-        
-        if (cartBtn) {
-            cartBtn.addEventListener('click', function(e) {
-                // If cart is empty, scroll to products
-                if (AppState.cart.length === 0) {
+        function register(userData) {
+            if (!userData.email || !userData.password) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (userData.password !== userData.confirmPassword) {
+                showNotification('Passwords do not match', 'error');
+                return;
+            }
+            
+            showNotification('Creating account...', 'info');
+            
+            auth.createUserWithEmailAndPassword(userData.email, userData.password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    
+                    // Save additional user data to Firestore
+                    return db.collection('users').doc(user.uid).set({
+                        firstName: userData.firstname || '',
+                        lastName: userData.lastname || '',
+                        email: userData.email,
+                        phone: userData.phone || '',
+                        address: userData.address || '',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }).then(() => {
+                        AppState.currentUser = {
+                            uid: user.uid,
+                            email: user.email,
+                            displayName: `${userData.firstname || ''} ${userData.lastname || ''}`.trim() || user.email.split('@')[0],
+                            emailVerified: false
+                        };
+                        
+                        updateUserUI(AppState.currentUser);
+                        updateAuthUI();
+                        
+                        showNotification('Registration successful! Welcome to PDSA Veterinary Clinic.', 'success');
+                        hideModal('register-modal');
+                    });
+                })
+                .catch((error) => {
+                    console.error('Registration error:', error);
+                    let errorMessage = 'Registration failed';
+                    switch (error.code) {
+                        case 'auth/email-already-in-use':
+                            errorMessage = 'Email already in use';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'Invalid email address';
+                            break;
+                        case 'auth/weak-password':
+                            errorMessage = 'Password is too weak';
+                            break;
+                        default:
+                            errorMessage = error.message;
+                    }
+                    showNotification(errorMessage, 'error');
+                });
+        }
+
+        function logout() {
+            auth.signOut()
+                .then(() => {
+                    AppState.currentUser = null;
+                    AppState.isAdmin = false;
+                    AppState.userPets = [];
+                    AppState.userAppointments = [];
+                    AppState.userOrders = [];
+                    updateCartUI();
+                    showNotification('Logged out successfully', 'info');
+                    updateAuthUI();
+                })
+                .catch((error) => {
+                    console.error('Logout error:', error);
+                    showNotification('Error logging out: ' + error.message, 'error');
+                });
+        }
+
+        function updateUserUI(userData) {
+            const userName = document.getElementById('user-name');
+            if (userData && userName) {
+                userName.textContent = userData.displayName || userData.email;
+            }
+        }
+
+        function checkAdminStatus(uid) {
+            if (!uid) return;
+            
+            db.collection('admins').doc(uid).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        AppState.isAdmin = true;
+                        const adminPanel = document.getElementById('admin-panel');
+                        const adminLink = document.getElementById('admin-link');
+                        if (adminPanel) adminPanel.style.display = 'block';
+                        if (adminLink) adminLink.style.display = 'inline-flex';
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error checking admin status:', error);
+                });
+        }
+
+        // Event Listeners Setup
+        function setupEventListeners() {
+            setupAuthEventListeners();
+            setupCartEventListeners();
+            setupProductEventListeners();
+            setupFAQ();
+            setupNavScroll();
+            setupContactForm();
+            setupModals();
+        }
+
+        function setupAuthEventListeners() {
+            // Login form
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    e.stopPropagation();
-                    
-                    // Close cart if it's open
+                    const formData = new FormData(this);
+                    login(formData.get('email'), formData.get('password'));
+                });
+            }
+            
+            // Register form
+            const registerForm = document.getElementById('register-form');
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    register({
+                        firstname: formData.get('firstname'),
+                        lastname: formData.get('lastname'),
+                        email: formData.get('email'),
+                        password: formData.get('password'),
+                        confirmPassword: formData.get('confirmPassword'),
+                        phone: formData.get('phone'),
+                        address: formData.get('address')
+                    });
+                });
+            }
+            
+            // Logout
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            }
+            
+            // Login and Register buttons
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function() {
+                    showModal('login-modal');
+                });
+            }
+            
+            if (registerBtn) {
+                registerBtn.addEventListener('click', function() {
+                    showModal('register-modal');
+                });
+            }
+        }
+
+        function setupCartEventListeners() {
+            // Cart toggle
+            const cartBtn = document.getElementById('cart-btn');
+            const closeCartBtn = document.getElementById('close-cart');
+            const continueShoppingBtn = document.getElementById('continue-shopping');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            
+            if (cartBtn) {
+                cartBtn.addEventListener('click', openCart);
+            }
+            
+            if (closeCartBtn) {
+                closeCartBtn.addEventListener('click', closeCart);
+            }
+            
+            const cartOverlay = document.getElementById('cart-overlay');
+            if (cartOverlay) {
+                cartOverlay.addEventListener('click', closeCart);
+            }
+            
+            if (continueShoppingBtn) {
+                continueShoppingBtn.addEventListener('click', function() {
                     closeCart();
-                    
-                    // Show notification
-                    showNotification('Your cart is empty! Taking you to our products.', 'info');
-                    
-                    // Scroll to products section smoothly
                     const productsSection = document.getElementById('products');
                     if (productsSection) {
                         productsSection.scrollIntoView({ 
                             behavior: 'smooth',
                             block: 'start'
                         });
+                    }
+                });
+            }
+            
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', openPaymentModal);
+            }
+        }
+
+        function setupCartIconToProducts() {
+            const cartBtn = document.getElementById('cart-btn');
+            
+            if (cartBtn) {
+                cartBtn.addEventListener('click', function(e) {
+                    // If cart is empty, scroll to products
+                    if (AppState.cart.length === 0) {
+                        e.preventDefault();
+                        e.stopPropagation();
                         
-                        // Update navigation highlight
+                        // Close cart if it's open
+                        closeCart();
+                        
+                        // Show notification
+                        showNotification('Your cart is empty! Taking you to our products.', 'info');
+                        
+                        // Scroll to products section smoothly
+                        const productsSection = document.getElementById('products');
+                        if (productsSection) {
+                            productsSection.scrollIntoView({ 
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                            
+                            // Update navigation highlight
+                            document.querySelectorAll('nav a').forEach(link => {
+                                link.classList.remove('active');
+                                if (link.getAttribute('href') === '#products') {
+                                    link.classList.add('active');
+                                }
+                            });
+                        }
+                    } else {
+                        // If cart has items, open cart normally
+                        openCart();
+                    }
+                });
+            }
+        }
+
+        function setupContactForm() {
+            const contactForm = document.getElementById('contact-form');
+            if (!contactForm) return;
+            
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const contactData = {
+                    name: formData.get('name') || '',
+                    email: formData.get('email') || '',
+                    phone: formData.get('phone') || '',
+                    subject: formData.get('subject') || 'general',
+                    message: formData.get('message') || '',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'new'
+                };
+                
+                // Validate required fields
+                if (!contactData.name || !contactData.email || !contactData.message) {
+                    showNotification('Please fill in all required fields', 'error');
+                    return;
+                }
+                
+                showNotification('Sending your message...', 'info');
+                
+                // Save to Firestore
+                db.collection('contactMessages').add(contactData)
+                    .then((docRef) => {
+                        showNotification('Your message has been sent successfully! We will get back to you soon.', 'success');
+                        contactForm.reset();
+                    })
+                    .catch((error) => {
+                        console.error('Error sending message:', error);
+                        showNotification('Error sending message. Please try again.', 'error');
+                    });
+            });
+        }
+
+        function setupModals() {
+            // Login/Register modal toggles
+            const showRegister = document.getElementById('show-register');
+            const showLogin = document.getElementById('show-login');
+            
+            if (showRegister) {
+                showRegister.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    hideModal('login-modal');
+                    showModal('register-modal');
+                });
+            }
+            
+            if (showLogin) {
+                showLogin.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    hideModal('register-modal');
+                    showModal('login-modal');
+                });
+            }
+            
+            // Modal close buttons
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.modal-overlay').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                });
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    document.querySelectorAll('.modal-overlay').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                }
+            });
+        }
+
+        function setupFAQ() {
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', () => {
+                    const item = question.parentElement;
+                    item.classList.toggle('active');
+                });
+            });
+        }
+
+        function setupNavScroll() {
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY;
+                
+                document.querySelectorAll('section').forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    const sectionBottom = sectionTop + section.offsetHeight;
+                    const sectionId = section.getAttribute('id');
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
                         document.querySelectorAll('nav a').forEach(link => {
                             link.classList.remove('active');
-                            if (link.getAttribute('href') === '#products') {
+                            if (link.getAttribute('href') === `#${sectionId}`) {
                                 link.classList.add('active');
                             }
                         });
                     }
-                } else {
-                    // If cart has items, open cart normally
-                    if (DOM.cart.container) DOM.cart.container.classList.add('open');
-                    if (DOM.cart.overlay) DOM.cart.overlay.classList.add('open');
-                }
-            });
-        }
-    }
-
-    function setupContactForm() {
-        const contactForm = document.getElementById('contact-form');
-        if (!contactForm) return;
-        
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const contactData = {
-                name: formData.get('name') || '',
-                email: formData.get('email') || '',
-                phone: formData.get('phone') || '',
-                subject: formData.get('subject') || 'general',
-                message: formData.get('message') || '',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                status: 'new'
-            };
-            
-            // Validate required fields
-            if (!contactData.name || !contactData.email || !contactData.message) {
-                showNotification('Please fill in all required fields', 'error');
-                return;
-            }
-            
-            showNotification('Sending your message...', 'info');
-            
-            // Save to Firestore
-            db.collection('contactMessages').add(contactData)
-                .then((docRef) => {
-                    showNotification('Your message has been sent successfully! We will get back to you soon.', 'success');
-                    contactForm.reset();
-                })
-                .catch((error) => {
-                    console.error('Error sending message:', error);
-                    showNotification('Error sending message. Please try again.', 'error');
-                });
-        });
-    }
-
-    function setupModals() {
-        // Login/Register modal toggles
-        const showRegister = document.getElementById('show-register');
-        const showLogin = document.getElementById('show-login');
-        
-        if (showRegister) {
-            showRegister.addEventListener('click', function(e) {
-                e.preventDefault();
-                hideModal('login-modal');
-                showModal('register-modal');
-            });
-        }
-        
-        if (showLogin) {
-            showLogin.addEventListener('click', function(e) {
-                e.preventDefault();
-                hideModal('register-modal');
-                showModal('login-modal');
-            });
-        }
-        
-        // Add pet link in appointment modal
-        const addPetLink = document.getElementById('add-pet-link');
-        if (addPetLink) {
-            addPetLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                hideModal('appointment-modal');
-                showModal('add-pet-modal');
-            });
-        }
-        
-        // Cancel add pet
-        const cancelAddPet = document.getElementById('cancel-add-pet');
-        if (cancelAddPet) {
-            cancelAddPet.addEventListener('click', function() {
-                hideModal('add-pet-modal');
-                showModal('appointment-modal');
-            });
-        }
-        
-        // Modal close buttons
-        document.querySelectorAll('.close-modal').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.modal-overlay').forEach(modal => {
-                    modal.classList.remove('active');
                 });
             });
-        });
-        
-        // Close modals when clicking outside
-        window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-overlay')) {
-                document.querySelectorAll('.modal-overlay').forEach(modal => {
-                    modal.classList.remove('active');
-                });
-            }
-        });
-    }
 
-    function setupFAQ() {
-        document.querySelectorAll('.faq-question').forEach(question => {
-            question.addEventListener('click', () => {
-                const item = question.parentElement;
-                item.classList.toggle('active');
-            });
-        });
-    }
-
-    function setupNavScroll() {
-        window.addEventListener('scroll', () => {
-            const scrollPosition = window.scrollY;
-            
-            document.querySelectorAll('section').forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                const sectionBottom = sectionTop + section.offsetHeight;
-                const sectionId = section.getAttribute('id');
-                
-                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-                    document.querySelectorAll('nav a').forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${sectionId}`) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-        });
-
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                
-                if (targetSection) {
-                    window.scrollTo({
-                        top: targetSection.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
                     
-                    document.querySelectorAll('nav a').forEach(navLink => navLink.classList.remove('active'));
-                    link.classList.add('active');
-                }
-            });
-        });
-    }
-
-    function setupDateRestrictions() {
-        const dateInput = document.getElementById('appointment-date');
-        if (dateInput) {
-            const today = new Date().toISOString().split('T')[0];
-            dateInput.min = today;
-        }
-    }
-
-    // Utility Functions
-    function showModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.add('active');
-        }
-    }
-
-    function hideModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.remove('active');
-        }
-    }
-
-    function closeCart() {
-        if (DOM.cart.container) DOM.cart.container.classList.remove('open');
-        if (DOM.cart.overlay) DOM.cart.overlay.classList.remove('open');
-    }
-
-    function showDashboard() {
-        if (!AppState.currentUser) {
-            showNotification('Please log in to view your dashboard', 'warning');
-            showModal('login-modal');
-            return;
-        }
-        loadUserData();
-        showModal('dashboard-modal');
-    }
-
-    function showAppointmentModal() {
-        if (!AppState.currentUser) {
-            showNotification('Please log in to book an appointment', 'warning');
-            showModal('login-modal');
-            return;
-        }
-        updateAppointmentPetDropdown();
-        showModal('appointment-modal');
-    }
-
-    function showAddPetModal() {
-        if (!AppState.currentUser) {
-            showNotification('Please log in to add a pet', 'warning');
-            showModal('login-modal');
-            return;
-        }
-        showModal('add-pet-modal');
-    }
-
-    function scrollToProducts() {
-        const productsSection = document.getElementById('products');
-        if (productsSection) {
-            productsSection.scrollIntoView({ behavior: 'smooth' });
-        }
-        hideModal('dashboard-modal');
-    }
-
-    function showAdminPanel() {
-        showNotification('Admin panel would open here', 'info');
-    }
-
-    function calculateAge(dateString) {
-        if (!dateString) return 'Unknown';
-        
-        const birthDate = new Date(dateString);
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        
-        return age;
-    }
-
-    function formatDate(dateString) {
-        if (!dateString) return 'Invalid date';
-        
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    }
-
-    function formatTime(timeString) {
-        if (!timeString) return 'Invalid time';
-        
-        const [hours, minutes] = timeString.split(':');
-        const hour = parseInt(hours);
-        const ampm = hour >= 12 ? 'PM' : 'AM';
-        const displayHour = hour % 12 || 12;
-        return `${displayHour}:${minutes} ${ampm}`;
-    }
-
-    function getServiceName(serviceId) {
-        const service = AppState.services.find(s => s.id == serviceId);
-        return service ? service.name : 'Unknown Service';
-    }
-
-    // Enhanced Notification System
-    function showNotification(message, type) {
-        // Create notification container if it doesn't exist
-        let container = document.getElementById('notification-container');
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'notification-container';
-            container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10000;';
-            document.body.appendChild(container);
-        }
-        
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.innerHTML = `
-            <span>${message}</span>
-            <button class="close-notification">&times;</button>
-        `;
-        
-        container.appendChild(notification);
-        
-        // Show notification
-        setTimeout(() => {
-            notification.classList.add('show');
-        }, 100);
-        
-        // Auto remove after 5 seconds
-        const autoRemove = setTimeout(() => {
-            closeNotification(notification);
-        }, 5000);
-        
-        // Close button event
-        const closeBtn = notification.querySelector('.close-notification');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                clearTimeout(autoRemove);
-                closeNotification(notification);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        document.querySelectorAll('nav a').forEach(navLink => navLink.classList.remove('active'));
+                        link.classList.add('active');
+                    }
+                });
             });
         }
-        
-        function closeNotification(notif) {
-            notif.classList.remove('show');
+
+        function setupDateRestrictions() {
+            const dateInput = document.getElementById('appointment-date');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.min = today;
+            }
+        }
+
+        function setupAppointmentBooking() {
+            // Placeholder for appointment booking setup
+        }
+
+        // Utility Functions
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        function hideModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        // Enhanced Notification System
+        function showNotification(message, type) {
+            // Create notification container if it doesn't exist
+            let container = document.getElementById('notification-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'notification-container';
+                container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10000;';
+                document.body.appendChild(container);
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button class="close-notification">&times;</button>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Show notification
             setTimeout(() => {
-                if (notif.parentNode) {
-                    notif.parentNode.removeChild(notif);
-                }
-            }, 300);
-        }
-    }
-
-    // User Dashboard
-    function loadUserData() {
-        loadUserPets();
-        loadUserAppointments();
-        loadUserOrders();
-    }
-
-    function loadUserAppointments() {
-        if (!AppState.currentUser) return;
-        
-        const appointmentsList = document.getElementById('user-appointments-list');
-        if (appointmentsList) {
-            appointmentsList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner"></i><p>Loading appointments...</p></div>';
-        }
-        
-        // FIX: Use simpler query without composite indexes
-        db.collection('appointments')
-            .where('userId', '==', AppState.currentUser.uid)
-            .get()
-            .then((querySnapshot) => {
-                AppState.userAppointments = [];
-                querySnapshot.forEach((doc) => {
-                    const appointment = doc.data();
-                    appointment.id = doc.id;
-                    AppState.userAppointments.push(appointment);
-                });
-                
-                // Sort appointments by creation date on client side
-                AppState.userAppointments.sort((a, b) => {
-                    const dateA = a.createdAt ? a.createdAt.toDate() : new Date(0);
-                    const dateB = b.createdAt ? b.createdAt.toDate() : new Date(0);
-                    return dateB - dateA;
-                });
-                
-                renderUserAppointments();
-            })
-            .catch((error) => {
-                console.error('Error loading appointments:', error);
-                showNotification('Error loading appointments', 'error');
-            });
-    }
-
-    function loadUserOrders() {
-        if (!AppState.currentUser) return;
-        
-        const ordersList = document.getElementById('user-orders-list');
-        if (ordersList) {
-            ordersList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner"></i><p>Loading orders...</p></div>';
-        }
-        
-        // FIX: Use simpler query without composite indexes
-        db.collection('orders')
-            .where('userId', '==', AppState.currentUser.uid)
-            .get()
-            .then((querySnapshot) => {
-                AppState.userOrders = [];
-                querySnapshot.forEach((doc) => {
-                    const order = doc.data();
-                    order.firebaseId = doc.id;
-                    AppState.userOrders.push(order);
-                });
-                
-                // Sort orders by creation date on client side
-                AppState.userOrders.sort((a, b) => {
-                    const dateA = a.createdAt ? a.createdAt.toDate() : new Date(0);
-                    const dateB = b.createdAt ? b.createdAt.toDate() : new Date(0);
-                    return dateB - dateA;
-                });
-                
-                renderUserOrders();
-            })
-            .catch((error) => {
-                console.error('Error loading orders:', error);
-                showNotification('Error loading orders', 'error');
-            });
-    }
-
-    function loadAdminStats() {
-        if (!AppState.isAdmin) return;
-        
-        // Load today's appointments
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        db.collection('appointments')
-            .where('date', '==', today.toISOString().split('T')[0])
-            .get()
-            .then((querySnapshot) => {
-                const statElement = document.getElementById('stat-appointments');
-                if (statElement) statElement.textContent = querySnapshot.size;
-            });
-        
-        // Load pending orders
-        db.collection('orders')
-            .where('status', '==', 'pending')
-            .get()
-            .then((querySnapshot) => {
-                const statElement = document.getElementById('stat-orders');
-                if (statElement) statElement.textContent = querySnapshot.size;
-            });
-        
-        // Load today's revenue
-        db.collection('orders')
-            .where('date', '>=', today.toISOString())
-            .get()
-            .then((querySnapshot) => {
-                let revenue = 0;
-                querySnapshot.forEach(doc => {
-                    revenue += doc.data().total || 0;
-                });
-                const statElement = document.getElementById('stat-revenue');
-                if (statElement) statElement.textContent = `R${revenue.toFixed(2)}`;
-            });
-    }
-
-    function renderUserPets() {
-        const petsList = document.getElementById('user-pets-list');
-        if (!petsList) return;
-        
-        if (AppState.userPets.length === 0) {
-            petsList.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-paw" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
-                    <p>No pets registered yet.</p>
-                    <button class="btn btn-primary" onclick="showModal('add-pet-modal')">Add Your First Pet</button>
-                </div>
-            `;
-            return;
-        }
-        
-        petsList.innerHTML = AppState.userPets.map(pet => `
-            <div class="dashboard-card">
-                <h4>${pet.name} <small>(${pet.species})</small></h4>
-                <p><strong>Breed:</strong> ${pet.breed || 'Unknown'}</p>
-                <p><strong>Age:</strong> ${pet.dateOfBirth ? calculateAge(pet.dateOfBirth) + ' years' : 'Unknown'}</p>
-                <p><strong>Gender:</strong> ${pet.gender || 'Unknown'}</p>
-                <div style="margin-top: 0.5rem;">
-                    <button class="btn btn-outline btn-sm" onclick="editPet('${pet.id}')">Edit</button>
-                    <button class="btn btn-outline btn-sm" onclick="viewPetHistory('${pet.id}')">History</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function renderUserAppointments() {
-        const appointmentsList = document.getElementById('user-appointments-list');
-        if (!appointmentsList) return;
-        
-        if (AppState.userAppointments.length === 0) {
-            appointmentsList.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-calendar-times" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
-                    <p>No appointments scheduled.</p>
-                    <button class="btn btn-primary" onclick="showModal('appointment-modal')">Book Your First Appointment</button>
-                </div>
-            `;
-            return;
-        }
-        
-        const upcomingAppointments = AppState.userAppointments
-            .filter(apt => new Date(apt.date) >= new Date())
-            .sort((a, b) => new Date(a.date) - new Date(b.date))
-            .slice(0, 3);
-        
-        if (upcomingAppointments.length === 0) {
-            appointmentsList.innerHTML = '<p>No upcoming appointments.</p>';
-            return;
-        }
-        
-        appointmentsList.innerHTML = upcomingAppointments.map(apt => `
-            <div class="dashboard-card">
-                <h4>${getServiceName(apt.serviceId)}</h4>
-                <p><strong>Pet:</strong> ${apt.petName}</p>
-                <p><strong>Date:</strong> ${formatDate(apt.date)} at ${apt.time}</p>
-                <p><strong>Status:</strong> <span class="status status-${apt.status}">${apt.status}</span></p>
-                <div style="margin-top: 0.5rem;">
-                    <button class="btn btn-outline btn-sm" onclick="viewAppointment('${apt.id}')">Details</button>
-                    ${apt.status === 'pending' ? `<button class="btn btn-outline btn-sm" onclick="cancelAppointment('${apt.id}')">Cancel</button>` : ''}
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function renderUserOrders() {
-        const ordersList = document.getElementById('user-orders-list');
-        if (!ordersList) return;
-        
-        if (AppState.userOrders.length === 0) {
-            ordersList.innerHTML = `
-                <div class="empty-state">
-                    <i class="fas fa-shopping-cart" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
-                    <p>No orders yet.</p>
-                    <button class="btn btn-primary" onclick="scrollToProducts()">Start Shopping</button>
-                </div>
-            `;
-            return;
-        }
-        
-        const recentOrders = AppState.userOrders.slice(0, 3);
-        
-        ordersList.innerHTML = recentOrders.map(order => `
-            <div class="dashboard-card">
-                <h4>Order #${order.id}</h4>
-                <p><strong>Date:</strong> ${formatDate(order.date)}</p>
-                <p><strong>Items:</strong> ${order.items.length} item(s)</p>
-                <p><strong>Total:</strong> R${order.total.toFixed(2)}</p>
-                <p><strong>Status:</strong> <span class="status status-${order.status}">${order.status}</span></p>
-                <div style="margin-top: 0.5rem;">
-                    <button class="btn btn-outline btn-sm" onclick="viewOrder('${order.firebaseId}')">View Details</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Order Tracking System
-    function showOrderTracking(orderId) {
-        if (!orderId) return;
-        
-        db.collection('orders').doc(orderId).get()
-            .then((doc) => {
-                if (doc.exists) {
-                    const order = doc.data();
-                    order.firebaseId = doc.id;
-                    
-                    const modal = createOrderTrackingModal(order);
-                    document.body.appendChild(modal);
-                    showCustomModal(modal);
-                } else {
-                    showNotification('Order not found', 'error');
-                }
-            })
-            .catch((error) => {
-                console.error('Error loading order:', error);
-                showNotification('Error loading order details', 'error');
-            });
-    }
-
-    function createOrderTrackingModal(order) {
-        const modal = document.createElement('div');
-        modal.className = 'modal-overlay active';
-        modal.innerHTML = `
-            <div class="modal-dialog" style="max-width: 800px;">
-                <div class="modal-header">
-                    <h2>Order Tracking - #${order.id}</h2>
-                    <button class="close-modal" onclick="this.closest('.modal-overlay').remove()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="order-tracking-container">
-                        <div class="order-tracking-header">
-                            <h3>Order #${order.id}</h3>
-                            <p>Placed on ${formatDate(order.date)}</p>
-                            <div class="status-badge status-${order.status}">${order.status}</div>
-                        </div>
-                        
-                        <div class="tracking-timeline">
-                            ${generateOrderTimeline(order)}
-                        </div>
-                        
-                        <div class="order-details-grid">
-                            <div class="order-detail-card">
-                                <h4>Order Items</h4>
-                                <div class="order-items-list">
-                                    ${order.items.map(item => `
-                                        <div class="order-item">
-                                            <div class="order-item-info">
-                                                <div class="order-item-img">
-                                                    <img src="${item.image || 'https://via.placeholder.com/50'}" alt="${item.name}">
-                                                </div>
-                                                <div>
-                                                    <div class="order-item-name">${item.name}</div>
-                                                    <div class="order-item-meta">Qty: ${item.quantity} × R${item.price.toFixed(2)}</div>
-                                                </div>
-                                            </div>
-                                            <div class="order-item-total">R${item.subtotal.toFixed(2)}</div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                            
-                            <div class="order-detail-card">
-                                <h4>Order Summary</h4>
-                                <div class="order-totals">
-                                    <div class="total-line">
-                                        <span>Subtotal:</span>
-                                        <span>R${order.subtotal.toFixed(2)}</span>
-                                    </div>
-                                    <div class="total-line">
-                                        <span>Shipping:</span>
-                                        <span>R${order.shipping.toFixed(2)}</span>
-                                    </div>
-                                    <div class="total-line grand-total">
-                                        <span>Total:</span>
-                                        <span>R${order.total.toFixed(2)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" onclick="downloadInvoice('${order.firebaseId}')">
-                        <i class="fas fa-download"></i> Download Invoice
-                    </button>
-                    <button class="btn btn-outline" onclick="this.closest('.modal-overlay').remove()">Close</button>
-                </div>
-            </div>
-        `;
-        return modal;
-    }
-
-    function generateOrderTimeline(order) {
-        const steps = [
-            { status: 'pending', label: 'Order Placed', description: 'Your order has been received' },
-            { status: 'confirmed', label: 'Order Confirmed', description: 'Payment confirmed and order processing' },
-            { status: 'processing', label: 'Processing', description: 'Preparing your items for shipment' },
-            { status: 'shipped', label: 'Shipped', description: 'Your order is on the way' },
-            { status: 'delivered', label: 'Delivered', description: 'Order delivered successfully' }
-        ];
-        
-        const currentStatusIndex = steps.findIndex(step => step.status === order.status);
-        
-        return steps.map((step, index) => {
-            const isCompleted = index <= currentStatusIndex;
-            const isActive = index === currentStatusIndex;
-            const stepClass = isCompleted ? 'completed' : (isActive ? 'active' : '');
+                notification.classList.add('show');
+            }, 100);
             
-            return `
-                <div class="tracking-step ${stepClass}">
-                    <div class="tracking-date">${step.label}</div>
-                    <div class="tracking-description">${step.description}</div>
-                </div>
-            `;
-        }).join('');
-    }
+            // Auto remove after 5 seconds
+            const autoRemove = setTimeout(() => {
+                closeNotification(notification);
+            }, 5000);
+            
+            // Close button event
+            const closeBtn = notification.querySelector('.close-notification');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    clearTimeout(autoRemove);
+                    closeNotification(notification);
+                });
+            }
+            
+            function closeNotification(notif) {
+                notif.classList.remove('show');
+                setTimeout(() => {
+                    if (notif.parentNode) {
+                        notif.parentNode.removeChild(notif);
+                    }
+                }, 300);
+            }
+        }
 
-    function downloadInvoice(orderId) {
-        showNotification('Generating invoice...', 'info');
-        // In a real implementation, this would generate a PDF invoice
-        setTimeout(() => {
-            showNotification('Invoice downloaded successfully', 'success');
-        }, 1000);
-    }
-
-    function showCustomModal(modalElement) {
-        document.body.appendChild(modalElement);
-    }
-
-    // Placeholder functions for future implementation
-    function editPet(petId) {
-        showNotification('Edit pet functionality would open here', 'info');
-    }
-
-    function viewPetHistory(petId) {
-        showNotification('Pet history would be displayed here', 'info');
-    }
-
-    function viewAppointment(appointmentId) {
-        showNotification('Appointment details would be shown here', 'info');
-    }
-
-    function cancelAppointment(appointmentId) {
-        if (confirm('Are you sure you want to cancel this appointment?')) {
-            db.collection('appointments').doc(appointmentId).update({
-                status: 'cancelled',
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                // Update local state
-                const appointmentIndex = AppState.userAppointments.findIndex(apt => apt.id === appointmentId);
-                if (appointmentIndex !== -1) {
-                    AppState.userAppointments[appointmentIndex].status = 'cancelled';
-                }
+        // Sample Products Initialization
+        async function initializeSampleProducts() {
+            try {
+                showNotification('Adding sample products...', 'info');
                 
-                showNotification('Appointment cancelled', 'success');
-                renderUserAppointments();
-            })
-            .catch((error) => {
-                console.error('Error cancelling appointment:', error);
-                showNotification('Error cancelling appointment', 'error');
+                const sampleProducts = [
+                    {
+                        name: "Premium Dog Food",
+                        description: "High-quality dog food with all essential nutrients for your furry friend.",
+                        price: 299.99,
+                        category: "food",
+                        stock: 25,
+                        rating: 4.8,
+                        imageUrl: "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                        status: "active",
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    },
+                    {
+                        name: "Cat Toy Set",
+                        description: "Interactive toy set to keep your cat entertained and active.",
+                        price: 149.99,
+                        category: "toys",
+                        stock: 8,
+                        rating: 4.5,
+                        imageUrl: "https://images.unsplash.com/photo-1592194996308-7b43878c84c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                        status: "active",
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    },
+                    {
+                        name: "Pet Grooming Kit",
+                        description: "Complete grooming kit for all your pet's hygiene needs.",
+                        price: 399.99,
+                        category: "grooming",
+                        stock: 15,
+                        rating: 4.7,
+                        imageUrl: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80",
+                        status: "active",
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    }
+                ];
+                
+                // Add products to Firestore
+                const batch = db.batch();
+                sampleProducts.forEach(product => {
+                    const docRef = db.collection('products').doc();
+                    batch.set(docRef, product);
+                });
+                
+                await batch.commit();
+                showNotification('Sample products added successfully!', 'success');
+                
+                // Reload products
+                await loadProducts();
+                
+            } catch (error) {
+                console.error('Error adding sample products:', error);
+                showNotification('Error adding sample products: ' + error.message, 'error');
+            }
+        }
+
+        // User Dashboard Functions (placeholder)
+        function loadUserData() {
+            // Placeholder for user data loading
+        }
+
+        function showOrderTracking(orderId) {
+            // Placeholder for order tracking
+            showNotification('Order tracking would open here', 'info');
+        }
+
+        // Make functions globally available
+        window.showModal = showModal;
+        window.hideModal = hideModal;
+        window.openPaymentModal = openPaymentModal;
+        window.selectPaymentMethod = selectPaymentMethod;
+        window.proceedToPayment = proceedToPayment;
+        window.backToPaymentMethods = backToPaymentMethods;
+        window.closePaymentModal = closePaymentModal;
+        window.processCardPayment = processCardPayment;
+        window.confirmEFTPayment = confirmEFTPayment;
+        window.confirmCashPayment = confirmCashPayment;
+        window.viewOrderDetails = viewOrderDetails;
+        window.initializeSampleProducts = initializeSampleProducts;
+
+        // Add event listener for initialize products button
+        const initializeBtn = document.getElementById('initialize-products-btn');
+        if (initializeBtn) {
+            initializeBtn.addEventListener('click', initializeSampleProducts);
+        }
+
+        // Hero buttons
+        const learnMoreBtn = document.getElementById('learn-more-btn');
+        if (learnMoreBtn) {
+            learnMoreBtn.addEventListener('click', () => {
+                const aboutSection = document.getElementById('about');
+                if (aboutSection) {
+                    aboutSection.scrollIntoView({ behavior: 'smooth' });
+                }
             });
         }
-    }
 
-    function viewOrder(orderId) {
-        showOrderTracking(orderId);
-    }
-
-    // Hero buttons
-    const learnMoreBtn = document.getElementById('learn-more-btn');
-    if (learnMoreBtn) {
-        learnMoreBtn.addEventListener('click', () => {
-            const aboutSection = document.getElementById('about');
-            if (aboutSection) {
-                aboutSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    }
-
-    // Emergency button functionality
-    const emergencyBanner = document.getElementById('emergency-banner');
-    if (emergencyBanner) {
-        emergencyBanner.addEventListener('click', (e) => {
-            // Emergency button functionality
-        });
-    }
-
-    // Make functions globally available
-    window.showModal = showModal;
-    window.hideModal = hideModal;
-    window.showAppointmentModal = showAppointmentModal;
-    window.showAddPetModal = showAddPetModal;
-    window.scrollToProducts = scrollToProducts;
-    window.showAdminPanel = showAdminPanel;
-    window.editPet = editPet;
-    window.viewPetHistory = viewPetHistory;
-    window.viewAppointment = viewAppointment;
-    window.cancelAppointment = cancelAppointment;
-    window.viewOrder = viewOrder;
-    window.showOrderTracking = showOrderTracking;
-    window.downloadInvoice = downloadInvoice;
-</script>
+        // Emergency button functionality
+        const emergencyBanner = document.getElementById('emergency-banner');
+        if (emergencyBanner) {
+            emergencyBanner.addEventListener('click', (e) => {
+                // Emergency button functionality
+            });
+        }
+    </script>
 </body>
 </html>

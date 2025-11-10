@@ -75,6 +75,15 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
         
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
         /* Hero Section */
         .hero {
             background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1543852786-1cf6624b9987?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
@@ -105,11 +114,24 @@
             border-radius: 4px;
             font-weight: 600;
             transition: all 0.3s;
+            border: none;
+            cursor: pointer;
         }
         
         .btn:hover {
             background-color: #2980b9;
             transform: translateY(-3px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #3498db;
+            color: #3498db;
+        }
+        
+        .btn-outline:hover {
+            background-color: #3498db;
+            color: white;
         }
         
         /* Services Section */
@@ -146,6 +168,31 @@
             margin: 0 auto;
             color: #666;
             font-size: 1.1rem;
+        }
+        
+        /* Service Filter */
+        .service-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
         }
         
         .services-grid {
@@ -401,8 +448,19 @@
             }
             
             nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                margin-top: 1rem;
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
             }
             
             .hero h2 {
@@ -475,6 +533,119 @@
         .pricing-table tr:last-child td {
             border-bottom: none;
         }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2ecc71;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast.error {
+            background-color: #e74c3c;
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -483,17 +654,21 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <img src="https://www.pdsa.org.uk/media/12121/pdsa-logo.png" alt="PDSA Logo">
+                    <img src="img/Logo-22.jpg" alt="PDSA Logo">
                     <h1>PDSA Veterinary Clinic</h1>
                 </div>
                 <nav>
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#" class="active">Services</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Our Team</a></li>
-                        <li><a href="#">Contact</a></li>
+                    <ul id="nav-menu">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#services" class="active">Services</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#team">Our Team</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="profile.html" class="btn-outline">My Profile</a></li>
                     </ul>
+                    <button class="mobile-menu-btn" id="mobile-menu-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
                 </nav>
             </div>
         </div>
@@ -516,6 +691,15 @@
                 <p>We offer a wide range of veterinary services to keep your pets healthy and happy</p>
             </div>
             
+            <!-- Service Filter -->
+            <div class="service-filter">
+                <button class="filter-btn active" data-filter="all">All Services</button>
+                <button class="filter-btn" data-filter="preventive">Preventive Care</button>
+                <button class="filter-btn" data-filter="surgical">Surgical</button>
+                <button class="filter-btn" data-filter="emergency">Emergency</button>
+                <button class="filter-btn" data-filter="wellness">Wellness</button>
+            </div>
+            
             <div class="content-with-sidebar">
                 <!-- Sidebar Navigation -->
                 <div class="sidebar">
@@ -525,7 +709,8 @@
                         <li><a href="Surgical-Procedures.html"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
                         <li><a href="dental-care.html"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
                         <li><a href="emergency-care.html"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
+                        <li><a href="pet-health-advice.html"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
+                        <li><a href="microchipping.html"><i class="fas fa-chevron-right"></i> Microchipping</a></li>
                     </ul>
                 </div>
                 
@@ -538,6 +723,7 @@
                         <div class="service-tab active" data-tab="overview">Overview</div>
                         <div class="service-tab" data-tab="pricing">Pricing</div>
                         <div class="service-tab" data-tab="faq">FAQ</div>
+                        <div class="service-tab" data-tab="book">Book Appointment</div>
                     </div>
                     
                     <div class="tab-content active" id="overview">
@@ -619,11 +805,58 @@
                             <p>Vaccines protect your pet from serious diseases, some of which can be fatal. They also help prevent the spread of diseases to other animals in the community.</p>
                         </div>
                     </div>
+                    
+                    <div class="tab-content" id="book">
+                        <h3>Book a Vaccination Appointment</h3>
+                        <p>Schedule your pet's vaccination appointment with our experienced veterinary team.</p>
+                        
+                        <form id="appointment-form">
+                            <div class="form-group">
+                                <label for="pet-type">Pet Type</label>
+                                <select id="pet-type" required>
+                                    <option value="">Select Pet Type</option>
+                                    <option value="dog">Dog</option>
+                                    <option value="cat">Cat</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="pet-age">Pet Age</label>
+                                <input type="text" id="pet-age" placeholder="e.g., 2 years" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="vaccine-type">Vaccine Type</label>
+                                <select id="vaccine-type" required>
+                                    <option value="">Select Vaccine</option>
+                                    <option value="core-canine">Core Canine Vaccines</option>
+                                    <option value="rabies">Rabies Vaccine</option>
+                                    <option value="bordetella">Bordetella</option>
+                                    <option value="core-feline">Core Feline Vaccines</option>
+                                    <option value="feline-leukemia">Feline Leukemia</option>
+                                    <option value="other">Other/Consultation</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="appointment-date">Preferred Date</label>
+                                <input type="date" id="appointment-date" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="notes">Additional Notes</label>
+                                <textarea id="notes" rows="3" placeholder="Any special requirements or concerns..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn">Book Appointment</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             
             <div class="services-grid" id="services">
-                <div class="service-card">
+                <div class="service-card" data-category="preventive">
                     <div class="service-img">
                         <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1964&q=80" alt="Vaccinations">
                     </div>
@@ -636,11 +869,11 @@
                             <li><i class="fas fa-check-circle"></i> Puppy and kitten series</li>
                         </ul>
                         <div class="service-price">From R250</div>
-                        <a href="#" class="btn">Learn More</a>
+                        <button class="btn book-service-btn" data-service="Vaccinations">Book Now</button>
                     </div>
                 </div>
                 
-                <div class="service-card">
+                <div class="service-card" data-category="surgical">
                     <div class="service-img">
                         <img src="https://images.unsplash.com/photo-1583511655826-05700442b31f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="Surgical Procedures">
                     </div>
@@ -653,11 +886,11 @@
                             <li><i class="fas fa-check-circle"></i> Advanced orthopedic procedures</li>
                         </ul>
                         <div class="service-price">From R800</div>
-                        <a href="#" class="btn">Learn More</a>
+                        <button class="btn book-service-btn" data-service="Surgical Procedures">Book Now</button>
                     </div>
                 </div>
                 
-                <div class="service-card">
+                <div class="service-card" data-category="preventive">
                     <div class="service-img">
                         <img src="https://images.unsplash.com/photo-1544568100-847a948585b9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="Dental Care">
                     </div>
@@ -670,11 +903,11 @@
                             <li><i class="fas fa-check-circle"></i> Oral surgery</li>
                         </ul>
                         <div class="service-price">From R450</div>
-                        <a href="#" class="btn">Learn More</a>
+                        <button class="btn book-service-btn" data-service="Dental Care">Book Now</button>
                     </div>
                 </div>
 
-                <div class="service-card">
+                <div class="service-card" data-category="emergency">
                     <div class="service-img">
                         <img src="https://images.unsplash.com/photo-1577982787983-e07c8490b261?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" alt="Emergency Care">
                     </div>
@@ -687,11 +920,11 @@
                             <li><i class="fas fa-check-circle"></i> Trauma surgery</li>
                         </ul>
                         <div class="service-price">Emergency fee: R500</div>
-                        <a href="#" class="btn">Learn More</a>
+                        <button class="btn book-service-btn" data-service="Emergency Care">Book Now</button>
                     </div>
                 </div>
 
-                <div class="service-card">
+                <div class="service-card" data-category="preventive">
                     <div class="service-img">
                         <img src="https://images.unsplash.com/photo-1553284965-e2815db2e5a0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" alt="Microchipping">
                     </div>
@@ -704,11 +937,11 @@
                             <li><i class="fas fa-check-circle"></i> International standards</li>
                         </ul>
                         <div class="service-price">R350 once-off</div>
-                        <a href="#" class="btn">Learn More</a>
+                        <button class="btn book-service-btn" data-service="Microchipping">Book Now</button>
                     </div>
                 </div>
 
-                <div class="service-card">
+                <div class="service-card" data-category="wellness">
                     <div class="service-img">
                         <img src="https://images.unsplash.com/photo-1596276023096-329a9605c5c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80" alt="Pet Health Advice">
                     </div>
@@ -721,7 +954,7 @@
                             <li><i class="fas fa-check-circle"></i> Wellness plans</li>
                         </ul>
                         <div class="service-price">From R300</div>
-                        <a href="#" class="btn">Learn More</a>
+                        <button class="btn book-service-btn" data-service="Pet Health Advice">Book Now</button>
                     </div>
                 </div>
             </div>
@@ -748,22 +981,22 @@
                 <div class="footer-col">
                     <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Services</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-col">
                     <h3>Services</h3>
                     <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Microchipping</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
+                        <li><a href="veterinaryclinic.html"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
+                        <li><a href="Surgical-Procedures.html"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
+                        <li><a href="dental-care.html"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
+                        <li><a href="emergency-care.html"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
+                        <li><a href="microchipping.html"><i class="fas fa-chevron-right"></i> Microchipping</a></li>
+                        <li><a href="pet-health-advice.html"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
                     </ul>
                 </div>
                 
@@ -781,9 +1014,68 @@
         </div>
     </footer>
 
+    <!-- Appointment Modal -->
+    <div class="modal" id="appointment-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Book an Appointment</h2>
+            <form id="general-appointment-form">
+                <div class="form-group">
+                    <label for="service-type">Service Type</label>
+                    <input type="text" id="service-type" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="general-pet-type">Pet Type</label>
+                    <select id="general-pet-type" required>
+                        <option value="">Select Pet Type</option>
+                        <option value="dog">Dog</option>
+                        <option value="cat">Cat</option>
+                        <option value="bird">Bird</option>
+                        <option value="rabbit">Rabbit</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="general-pet-age">Pet Age</label>
+                    <input type="text" id="general-pet-age" placeholder="e.g., 2 years" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="general-pet-name">Pet Name</label>
+                    <input type="text" id="general-pet-name" placeholder="Enter your pet's name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="general-appointment-date">Preferred Date</label>
+                    <input type="date" id="general-appointment-date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="general-notes">Additional Notes</label>
+                    <textarea id="general-notes" rows="3" placeholder="Any special requirements or concerns..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="cancel-appointment-btn">Cancel</button>
+                    <button type="submit" class="btn">Book Appointment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Tab functionality for service pages
         document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const navMenu = document.getElementById('nav-menu');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('show');
+            });
+            
+            // Tab functionality for service pages
             const tabs = document.querySelectorAll('.service-tab');
             
             tabs.forEach(tab => {
@@ -804,6 +1096,126 @@
                     document.getElementById(tabId).classList.add('active');
                 });
             });
+            
+            // Service filtering
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const serviceCards = document.querySelectorAll('.service-card');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    btn.classList.add('active');
+                    
+                    const filterValue = btn.getAttribute('data-filter');
+                    
+                    serviceCards.forEach(card => {
+                        if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Appointment booking functionality
+            const appointmentModal = document.getElementById('appointment-modal');
+            const bookServiceBtns = document.querySelectorAll('.book-service-btn');
+            const serviceTypeInput = document.getElementById('service-type');
+            const cancelAppointmentBtn = document.getElementById('cancel-appointment-btn');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            
+            bookServiceBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const serviceName = btn.getAttribute('data-service');
+                    serviceTypeInput.value = serviceName;
+                    appointmentModal.style.display = 'flex';
+                });
+            });
+            
+            // Close modal functions
+            function closeModal() {
+                appointmentModal.style.display = 'none';
+            }
+            
+            cancelAppointmentBtn.addEventListener('click', closeModal);
+            
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', closeModal);
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (event) => {
+                if (event.target === appointmentModal) {
+                    closeModal();
+                }
+            });
+            
+            // Form submissions
+            const appointmentForm = document.getElementById('appointment-form');
+            const generalAppointmentForm = document.getElementById('general-appointment-form');
+            
+            function showToast(message, type = 'success') {
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i>
+                    <span>${message}</span>
+                `;
+                
+                document.body.appendChild(toast);
+                
+                // Show toast
+                setTimeout(() => toast.classList.add('show'), 100);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+            
+            function handleAppointmentSubmit(form, isVaccination = false) {
+                return function(e) {
+                    e.preventDefault();
+                    
+                    // In a real application, you would send this data to your server
+                    // For now, we'll just show a success message
+                    
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    
+                    // Show loading state
+                    submitBtn.innerHTML = '<i class="fas fa-spinner loading-spinner"></i> Booking...';
+                    submitBtn.disabled = true;
+                    
+                    // Simulate API call
+                    setTimeout(() => {
+                        showToast('Appointment booked successfully! We will contact you to confirm.');
+                        form.reset();
+                        closeModal();
+                        
+                        // Restore button
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }, 1500);
+                };
+            }
+            
+            appointmentForm.addEventListener('submit', handleAppointmentSubmit(appointmentForm, true));
+            generalAppointmentForm.addEventListener('submit', handleAppointmentSubmit(generalAppointmentForm));
+            
+            // Set minimum date for appointment to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointment-date').min = today;
+            document.getElementById('general-appointment-date').min = today;
         });
     </script>
 </body>

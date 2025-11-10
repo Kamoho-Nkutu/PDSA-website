@@ -129,6 +129,8 @@
             font-weight: 600;
             transition: all 0.3s;
             margin: 0.5rem;
+            border: none;
+            cursor: pointer;
         }
         
         .btn:hover {
@@ -350,6 +352,11 @@
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-left: 4px solid #e74c3c;
+            transition: transform 0.3s;
+        }
+        
+        .emergency-sign:hover {
+            transform: translateY(-5px);
         }
         
         .emergency-sign h4 {
@@ -374,6 +381,11 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .process-step:hover {
+            transform: translateY(-5px);
         }
         
         .step-number {
@@ -420,6 +432,11 @@
             padding: 1.5rem;
             border-radius: 8px;
             text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .first-aid-tip:hover {
+            transform: translateY(-5px);
         }
         
         .first-aid-tip i {
@@ -436,6 +453,7 @@
             border-radius: 8px;
             text-align: center;
             margin: 2rem 0;
+            animation: pulse 2s infinite;
         }
         
         .emergency-contact h3 {
@@ -448,6 +466,12 @@
             font-weight: bold;
             margin: 1rem 0;
             display: block;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .emergency-contact .phone:hover {
+            transform: scale(1.05);
         }
         
         .emergency-contact p {
@@ -519,6 +543,145 @@
             color: #bbb;
         }
         
+        /* New: Emergency Checklist */
+        .emergency-checklist {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .checklist-item:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        /* New: Emergency Map */
+        .emergency-map {
+            margin: 2rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .emergency-map:hover {
+            transform: scale(1.02);
+        }
+        
+        .map-placeholder {
+            background: #e0e0e0;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.2rem;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        /* New: Emergency Quiz */
+        .emergency-quiz {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+        
+        .quiz-question {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .quiz-option:hover {
+            background-color: #f5f7fa;
+        }
+        
+        .quiz-option input {
+            margin: 0;
+        }
+        
+        .quiz-result {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .quiz-result.correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .quiz-result.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* New: Emergency Resources */
+        .emergency-resources {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .resource-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .resource-card i {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+        
         /* Responsive Styles */
         @media (max-width: 900px) {
             .content-with-sidebar {
@@ -575,11 +738,11 @@
                 </div>
                 <nav>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#" class="active">Services</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Our Team</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#services" class="active">Services</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#team">Our Team</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
                     </ul>
                 </nav>
             </div>
@@ -611,12 +774,11 @@
                 <div class="sidebar">
                     <h3>Our Services</h3>
                     <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
-                        <li><a href="#" class="active"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Microchipping</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Pet Health Advice</a></li>
+                        <li><a href="veterinaryclinic.html"><i class="fas fa-chevron-right"></i> Vaccinations</a></li>
+                        <li><a href="Surgical-Procedures.html"><i class="fas fa-chevron-right"></i> Surgical Procedures</a></li>
+                        <li><a href="dental-care.html"><i class="fas fa-chevron-right"></i> Dental Care</a></li>
+                        <li><a href="emergency-care.html" class="active"><i class="fas fa-chevron-right"></i> Emergency Care</a></li>
+                        
                     </ul>
                 </div>
                 
@@ -636,7 +798,8 @@
                         <div class="service-tab active" data-tab="overview">Emergency Signs</div>
                         <div class="service-tab" data-tab="services">Our Services</div>
                         <div class="service-tab" data-tab="firstaid">First Aid</div>
-                        <div class="tab-content" data-tab="whattoexpect">What to Expect</div>
+                        <div class="service-tab" data-tab="whattoexpect">What to Expect</div>
+                        <div class="service-tab" data-tab="resources">Resources</div>
                     </div>
                     
                     <div class="tab-content active" id="overview">
@@ -676,6 +839,35 @@
                                 <h4><i class="fas fa-exclamation-triangle"></i> Distended Abdomen</h4>
                                 <p>Swollen, hard belly that may indicate bloat (GDV)</p>
                             </div>
+                        </div>
+                        
+                        <!-- Emergency Quiz -->
+                        <div class="emergency-quiz">
+                            <h3><i class="fas fa-question-circle"></i> Emergency Knowledge Quiz</h3>
+                            <p>Test your knowledge about pet emergencies:</p>
+                            
+                            <div class="quiz-question">
+                                <h4>What should you do if your pet is having a seizure?</h4>
+                                <div class="quiz-options">
+                                    <label class="quiz-option">
+                                        <input type="radio" name="quiz1" value="incorrect">
+                                        <span>Hold them down to prevent movement</span>
+                                    </label>
+                                    <label class="quiz-option">
+                                        <input type="radio" name="quiz1" value="incorrect">
+                                        <span>Put something in their mouth to prevent tongue biting</span>
+                                    </label>
+                                    <label class="quiz-option">
+                                        <input type="radio" name="quiz1" value="correct">
+                                        <span>Clear the area around them and time the seizure</span>
+                                    </label>
+                                </div>
+                                <div class="quiz-result" id="quiz1-result"></div>
+                            </div>
+                            
+                            <button class="btn" id="check-quiz">
+                                <i class="fas fa-check"></i> Check Answers
+                            </button>
                         </div>
                     </div>
                     
@@ -802,6 +994,54 @@
                             <h4><i class="fas fa-credit-card"></i> Financial Considerations</h4>
                             <p>Emergency care often requires immediate payment. We require a deposit for hospitalized pets. We accept cash, credit cards, and pet insurance. If financial concerns are an issue, please discuss this with our team—we may be able to suggest payment plans or other options.</p>
                         </div>
+                        
+                        <div class="emergency-map">
+                            <div class="map-placeholder">
+                                <i class="fas fa-map-marked-alt"></i> 
+                                <span>Interactive Map - Click for Directions</span>
+                                <small>1188 Nancefield Road, Mfolo, Soweto</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="resources">
+                        <h3>Emergency Resources</h3>
+                        <p>Additional resources to help you prepare for and handle pet emergencies:</p>
+                        
+                        <div class="emergency-resources">
+                            <div class="resource-card">
+                                <i class="fas fa-file-pdf"></i>
+                                <h4>Emergency Contact Card</h4>
+                                <p>Download and print our emergency contact card for quick reference</p>
+                                <button class="btn" style="margin-top: 1rem;">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                            </div>
+                            <div class="resource-card">
+                                <i class="fas fa-book-medical"></i>
+                                <h4>First Aid Guide</h4>
+                                <p>Comprehensive guide to pet first aid for common emergencies</p>
+                                <button class="btn" style="margin-top: 1rem;">
+                                    <i class="fas fa-download"></i> Download
+                                </button>
+                            </div>
+                            <div class="resource-card">
+                                <i class="fas fa-phone-volume"></i>
+                                <h4>Poison Control</h4>
+                                <p>24/7 Animal Poison Control Center: 1-888-426-4435</p>
+                                <a href="tel:18884264435" class="btn" style="margin-top: 1rem;">
+                                    <i class="fas fa-phone"></i> Call Now
+                                </a>
+                            </div>
+                            <div class="resource-card">
+                                <i class="fas fa-video"></i>
+                                <h4>Emergency Videos</h4>
+                                <p>Watch our instructional videos on handling pet emergencies</p>
+                                <button class="btn" style="margin-top: 1rem;">
+                                    <i class="fas fa-play"></i> Watch Now
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -810,9 +1050,41 @@
 
     <!-- Emergency Preparedness -->
     <div class="container">
-        <div class="detail-card" style="text-align: center; background-color: #e8f4fc;">
-            <h3><i class="fas fa-kit-medical"></i> Be Prepared for Pet Emergencies</h3>
-            <p>Create a pet first aid kit with gauze, non-stick bandages, adhesive tape, digital thermometer, hydrogen peroxide, antibiotic ointment, and our emergency contact information. Keep it easily accessible in your home.</p>
+        <div class="emergency-checklist">
+            <h3><i class="fas fa-kit-medical"></i> Emergency Preparedness Checklist</h3>
+            <p>Be ready for any pet emergency with these essential items:</p>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item1">
+                <label for="item1">Pet first aid kit (gauze, bandages, antiseptic)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item2">
+                <label for="item2">Emergency contact numbers (vet, poison control)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item3">
+                <label for="item3">Recent photo of your pet for identification</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item4">
+                <label for="item4">Medical records and vaccination history</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item5">
+                <label for="item5">Pet carrier or sturdy leash for transport</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item6">
+                <label for="item6">List of medications and dosages</label>
+            </div>
+            
+            <button class="btn" id="print-checklist" style="margin-top: 1rem;">
+                <i class="fas fa-print"></i> Print Checklist
+            </button>
+            <button class="btn btn-outline" id="reset-checklist" style="margin-top: 1rem; background: transparent; border: 1px solid #3498db; color: #3498db;">
+                <i class="fas fa-redo"></i> Reset Checklist
+            </button>
         </div>
     </div>
 
@@ -828,21 +1100,10 @@
                 <div class="footer-col">
                     <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Services</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-col">
-                    <h3>Emergency Services</h3>
-                    <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Critical Care</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Emergency Surgery</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Poison Control</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Trauma Care</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> 24/7 Monitoring</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="index.html#services"><i class="fas fa-chevron-right"></i> Services</a></li>
+                        <li><a href="index.html#about"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="index.html#contact"><i class="fas fa-chevron-right"></i> Contact</a></li>
                     </ul>
                 </div>
                 
@@ -891,6 +1152,72 @@
             phoneElements.forEach(element => {
                 element.addEventListener('click', function() {
                     window.location.href = 'tel:0119844340';
+                });
+            });
+            
+            // Print checklist functionality
+            document.getElementById('print-checklist').addEventListener('click', function() {
+                window.print();
+            });
+            
+            // Reset checklist functionality
+            document.getElementById('reset-checklist').addEventListener('click', function() {
+                const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    checkbox.parentElement.style.textDecoration = 'none';
+                    checkbox.parentElement.style.opacity = '1';
+                });
+            });
+            
+            // Map placeholder click functionality
+            document.querySelector('.map-placeholder').addEventListener('click', function() {
+                // In a real implementation, this would open Google Maps with directions
+                alert('Opening directions to PDSA Veterinary Clinic in Google Maps');
+                // window.open('https://maps.google.com/?q=1188+Nancefield+Road,+Mfolo,+Soweto');
+            });
+            
+            // Emergency checklist functionality
+            const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if(this.checked) {
+                        this.parentElement.style.textDecoration = 'line-through';
+                        this.parentElement.style.opacity = '0.7';
+                    } else {
+                        this.parentElement.style.textDecoration = 'none';
+                        this.parentElement.style.opacity = '1';
+                    }
+                });
+            });
+            
+            // Quiz functionality
+            document.getElementById('check-quiz').addEventListener('click', function() {
+                const selectedOption = document.querySelector('input[name="quiz1"]:checked');
+                const resultDiv = document.getElementById('quiz1-result');
+                
+                if (selectedOption) {
+                    if (selectedOption.value === 'correct') {
+                        resultDiv.textContent = 'Correct! During a seizure, clear the area around your pet to prevent injury and time the seizure. Do not restrain them or put anything in their mouth.';
+                        resultDiv.className = 'quiz-result correct';
+                    } else {
+                        resultDiv.textContent = 'Incorrect. The right answer is: Clear the area around them and time the seizure. Never restrain a seizing pet or put anything in their mouth.';
+                        resultDiv.className = 'quiz-result incorrect';
+                    }
+                    resultDiv.style.display = 'block';
+                } else {
+                    alert('Please select an answer before checking.');
+                }
+            });
+            
+            // Add hover effects to all interactive elements
+            const interactiveElements = document.querySelectorAll('.detail-card, .emergency-sign, .process-step, .first-aid-tip, .resource-card');
+            interactiveElements.forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
+                });
+                element.addEventListener('mouseleave', function() {
+                    this.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.1)';
                 });
             });
         });

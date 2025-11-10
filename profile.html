@@ -485,7 +485,7 @@
             padding: 2rem;
             border-radius: 8px;
             width: 90%;
-            max-width: 600px;
+            max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
@@ -500,65 +500,34 @@
             color: var(--gray);
         }
 
-        .avatar-options {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            margin: 1.5rem 0;
+        .form-group {
+            margin-bottom: 1.5rem;
         }
 
-        .upload-area {
-            border: 2px dashed var(--gray);
-            border-radius: 8px;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
             transition: var(--transition);
         }
 
-        .upload-area:hover {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
             border-color: var(--secondary);
-        }
-
-        .upload-area i {
-            font-size: 3rem;
-            color: var(--gray);
-            margin-bottom: 1rem;
-        }
-
-        .avatar-preview {
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .avatar-preview img {
-            max-width: 150px;
-            max-height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--secondary);
-        }
-
-        .default-avatars {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .default-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: var(--transition);
-        }
-
-        .default-avatar:hover {
-            border-color: var(--secondary);
-            transform: scale(1.05);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         }
 
         .modal-actions {
@@ -626,6 +595,46 @@
             font-size: 0.9rem;
             color: var(--secondary);
             text-decoration: none;
+        }
+
+        /* Error and Loading States */
+        .error-message {
+            background-color: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        
+        .loading-container {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner-large {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        .retry-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        
+        .retry-btn:hover {
+            background-color: #c0392b;
         }
 
         /* Responsive Styles */
@@ -734,49 +743,9 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        /* Debug Panel */
-        .debug-panel {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 10000;
-            max-width: 300px;
-            display: none;
-        }
-
-        .debug-toggle {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            z-index: 10001;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
     </style>
 </head>
 <body>
-    <!-- Debug Toggle -->
-    <button class="debug-toggle" id="debug-toggle">D</button>
-    <div class="debug-panel" id="debug-panel">
-        <h4>Firebase Debug Info</h4>
-        <div id="debug-info">Loading...</div>
-        <button class="btn btn-outline" id="retry-connection" style="margin-top: 10px; color: white; border-color: white;">Retry Connection</button>
-    </div>
-
     <header class="main-header">
         <div class="container">
             <div class="header-content">
@@ -807,7 +776,7 @@
                             <div class="user-dropdown">
                                 <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
                                 <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
-                                <a href="notifications.html"><i class="fas fa-bell"></i> Notifications <span class="badge">3</span></a>
+                                <a href="notifications.html"><i class="fas fa-bell"></i> Notifications</a>
                                 <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
                             </div>
                         </div>
@@ -822,157 +791,169 @@
 
     <main class="profile-container">
         <div class="container">
-            <div class="profile-header">
-                <h1><i class="fas fa-user-circle"></i> My Profile</h1>
-                <div class="profile-actions">
-                    <button class="btn btn-primary" id="edit-profile-btn">
-                        <i class="fas fa-edit"></i> Edit Profile
-                    </button>
-                    <button class="btn btn-outline" id="print-profile">
-                        <i class="fas fa-print"></i> Print Profile
-                    </button>
-                    <button class="btn btn-outline" id="demo-login-btn">
-                        <i class="fas fa-user"></i> Demo Login
-                    </button>
-                </div>
+            <!-- Loading State -->
+            <div id="loading-state" class="loading-container">
+                <div class="loading-spinner-large"></div>
+                <p>Loading your profile...</p>
             </div>
 
-            <div class="profile-content">
-                <div class="profile-sidebar">
-                    <div class="profile-avatar">
-                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" id="user-avatar-large">
-                        <button class="btn btn-outline change-avatar" id="change-avatar-btn">
-                            <i class="fas fa-camera"></i> Change Photo
+            <!-- Error State -->
+            <div id="error-state" class="error-message" style="display: none;">
+                <h3><i class="fas fa-exclamation-triangle"></i> Unable to Load Profile</h3>
+                <p id="error-details">There was an error loading your profile data.</p>
+                <button class="retry-btn" id="retry-load-btn">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+                <p style="margin-top: 1rem; font-size: 0.9rem;">
+                    If this problem continues, please <a href="contact.html">contact support</a>.
+                </p>
+            </div>
+
+            <!-- Main Profile Content (hidden initially) -->
+            <div id="profile-content" style="display: none;">
+                <div class="profile-header">
+                    <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+                    <div class="profile-actions">
+                        <button class="btn btn-primary" id="edit-profile-btn">
+                            <i class="fas fa-edit"></i> Edit Profile
                         </button>
-                    </div>
-                    <nav class="profile-nav">
-                        <a href="profile.html" class="active"><i class="fas fa-user"></i> Personal Info</a>
-                        <a href="my-pets.html"><i class="fas fa-paw"></i> My Pets <span class="badge" id="pets-count">0</span></a>
-                        <a href="appointments.html"><i class="fas fa-calendar-alt"></i> Appointments <span class="badge" id="appointments-count">0</span></a>
-                        <a href="payment-history.html"><i class="fas fa-receipt"></i> Payment History</a>
-                        <a href="prescriptions.html"><i class="fas fa-prescription-bottle"></i> Prescriptions</a>
-                        <a href="medical-records.html"><i class="fas fa-file-medical"></i> Medical Records</a>
-                        <a href="messages.html"><i class="fas fa-comments"></i> Messages <span class="badge" id="messages-count">0</span></a>
-                    </nav>
-                    
-                    <div class="progress-container">
-                        <h3 style="margin-bottom: 1rem; color: var(--primary);">Profile Completion</h3>
-                        <div class="progress-bar">
-                            <div class="progress" id="profile-progress" style="width: 0%;"></div>
-                        </div>
-                        <p style="text-align: center; color: var(--gray); font-size: 0.9rem;" id="profile-completion-text">0% Complete</p>
+                        <button class="btn btn-outline" id="print-profile">
+                            <i class="fas fa-print"></i> Print Profile
+                        </button>
                     </div>
                 </div>
 
-                <div class="profile-details">
-                    <div class="detail-section fade-in">
-                        <h2><i class="fas fa-id-card"></i> Personal Information</h2>
-                        <div class="detail-grid">
-                            <div class="detail-row">
-                                <span class="detail-label">Full Name:</span>
-                                <span class="detail-value" id="user-name">Loading...</span>
+                <div class="profile-content">
+                    <div class="profile-sidebar">
+                        <div class="profile-avatar">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80" alt="User Avatar" id="user-avatar-large">
+                            <button class="btn btn-outline" id="change-avatar-btn">
+                                <i class="fas fa-camera"></i> Change Photo
+                            </button>
+                        </div>
+                        <nav class="profile-nav">
+                            <a href="profile.html" class="active"><i class="fas fa-user"></i> Personal Info</a>
+                            <a href="my-pets.html"><i class="fas fa-paw"></i> My Pets <span class="badge" id="pets-count">0</span></a>
+                            <a href="appointments.html"><i class="fas fa-calendar-alt"></i> Appointments <span class="badge" id="appointments-count">0</span></a>
+                            <a href="payment-history.html"><i class="fas fa-receipt"></i> Payment History</a>
+                            <a href="prescriptions.html"><i class="fas fa-prescription-bottle"></i> Prescriptions</a>
+                            <a href="medical-records.html"><i class="fas fa-file-medical"></i> Medical Records</a>
+                        </nav>
+                        
+                        <div class="progress-container">
+                            <h3 style="margin-bottom: 1rem; color: var(--primary);">Profile Completion</h3>
+                            <div class="progress-bar">
+                                <div class="progress" id="profile-progress" style="width: 0%;"></div>
                             </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Email:</span>
-                                <span class="detail-value" id="user-email">Loading...</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Phone:</span>
-                                <span class="detail-value" id="user-phone">Loading...</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Date of Birth:</span>
-                                <span class="detail-value" id="user-dob">Loading...</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Address:</span>
-                                <span class="detail-value" id="user-address">Loading...</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Member Since:</span>
-                                <span class="detail-value" id="member-since">Loading...</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Last Login:</span>
-                                <span class="detail-value" id="last-login">Loading...</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Preferred Branch:</span>
-                                <span class="detail-value" id="preferred-branch">Loading...</span>
-                            </div>
+                            <p style="text-align: center; color: var(--gray); font-size: 0.9rem;" id="profile-completion-text">0% Complete</p>
                         </div>
                     </div>
 
-                    <div class="detail-section fade-in">
-                        <h2><i class="fas fa-shield-alt"></i> Account Security</h2>
-                        <div class="security-grid">
-                            <div class="security-item">
-                                <div class="security-icon">
-                                    <i class="fas fa-lock"></i>
+                    <div class="profile-details">
+                        <div class="detail-section fade-in">
+                            <h2><i class="fas fa-id-card"></i> Personal Information</h2>
+                            <div class="detail-grid">
+                                <div class="detail-row">
+                                    <span class="detail-label">Full Name:</span>
+                                    <span class="detail-value" id="user-name">Loading...</span>
                                 </div>
-                                <div class="security-content">
-                                    <h3>Password</h3>
-                                    <p id="password-last-changed">Last changed: Loading...</p>
+                                <div class="detail-row">
+                                    <span class="detail-label">Email:</span>
+                                    <span class="detail-value" id="user-email">Loading...</span>
                                 </div>
-                                <button class="btn btn-outline" id="change-password-btn">Change Password</button>
-                            </div>
-                            
-                            <div class="security-item">
-                                <div class="security-icon">
-                                    <i class="fas fa-mobile-alt"></i>
+                                <div class="detail-row">
+                                    <span class="detail-label">Phone:</span>
+                                    <span class="detail-value" id="user-phone">Loading...</span>
                                 </div>
-                                <div class="security-content">
-                                    <h3>Two-Factor Authentication</h3>
-                                    <p>Add an extra layer of security</p>
+                                <div class="detail-row">
+                                    <span class="detail-label">Date of Birth:</span>
+                                    <span class="detail-value" id="user-dob">Loading...</span>
                                 </div>
-                                <button class="btn btn-outline" id="enable-2fa-btn">Enable 2FA</button>
+                                <div class="detail-row">
+                                    <span class="detail-label">Address:</span>
+                                    <span class="detail-value" id="user-address">Loading...</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Member Since:</span>
+                                    <span class="detail-value" id="member-since">Loading...</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Last Login:</span>
+                                    <span class="detail-value" id="last-login">Loading...</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="detail-section fade-in">
-                        <h2><i class="fas fa-heart"></i> Membership Details</h2>
-                        <div class="membership-card">
-                            <div class="membership-header">
-                                <h3 id="membership-plan">Loading...</h3>
-                                <span class="membership-status" id="membership-status">Loading...</span>
-                            </div>
-                            <div class="membership-details">
-                                <p><i class="fas fa-id-card"></i> Member ID: <span id="member-id">Loading...</span></p>
-                                <p><i class="fas fa-calendar-alt"></i> Joined: <span id="membership-joined">Loading...</span></p>
-                                <p><i class="fas fa-calendar-check"></i> Expires: <span id="membership-expires">Loading...</span></p>
-                                <p><i class="fas fa-percentage"></i> Discount: <span id="membership-discount">Loading...</span></p>
-                                <p><i class="fas fa-gift"></i> <span id="membership-benefits">Loading...</span></p>
-                            </div>
-                            <div class="membership-actions">
-                                <button class="btn btn-success" id="renew-membership-btn">Renew Membership</button>
-                                <button class="btn btn-outline" id="view-benefits-btn" style="color: white; border-color: white;">View Benefits</button>
+                        <div class="detail-section fade-in">
+                            <h2><i class="fas fa-shield-alt"></i> Account Security</h2>
+                            <div class="security-grid">
+                                <div class="security-item">
+                                    <div class="security-icon">
+                                        <i class="fas fa-lock"></i>
+                                    </div>
+                                    <div class="security-content">
+                                        <h3>Password</h3>
+                                        <p>Last changed: <span id="password-last-changed">Recently</span></p>
+                                    </div>
+                                    <button class="btn btn-outline" id="change-password-btn">Change Password</button>
+                                </div>
+                                
+                                <div class="security-item">
+                                    <div class="security-icon">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="security-content">
+                                        <h3>Two-Factor Authentication</h3>
+                                        <p>Add an extra layer of security</p>
+                                    </div>
+                                    <button class="btn btn-outline" id="enable-2fa-btn">Enable 2FA</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="detail-section fade-in">
-                        <h2><i class="fas fa-chart-line"></i> Quick Stats</h2>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <h3>Pets</h3>
-                                <div class="stat-value" id="stats-pets">0</div>
-                                <a href="my-pets.html">View All Pets</a>
+
+                        <div class="detail-section fade-in">
+                            <h2><i class="fas fa-heart"></i> Membership Details</h2>
+                            <div class="membership-card">
+                                <div class="membership-header">
+                                    <h3 id="membership-plan">Basic Member</h3>
+                                    <span class="membership-status" id="membership-status">Active</span>
+                                </div>
+                                <div class="membership-details">
+                                    <p><i class="fas fa-id-card"></i> Member ID: <span id="member-id">PDSA123456</span></p>
+                                    <p><i class="fas fa-calendar-alt"></i> Joined: <span id="membership-joined">Jan 2023</span></p>
+                                    <p><i class="fas fa-calendar-check"></i> Expires: <span id="membership-expires">Jan 2024</span></p>
+                                    <p><i class="fas fa-percentage"></i> Discount: <span id="membership-discount">10% on services</span></p>
+                                </div>
+                                <div class="membership-actions">
+                                    <button class="btn btn-success" id="renew-membership-btn">Renew Membership</button>
+                                    <button class="btn btn-outline" id="view-benefits-btn" style="color: white; border-color: white;">View Benefits</button>
+                                </div>
                             </div>
-                            <div class="stat-card">
-                                <h3>Appointments</h3>
-                                <div class="stat-value" id="stats-appointments">0</div>
-                                <a href="appointments.html">View Appointments</a>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Spent This Year</h3>
-                                <div class="stat-value" id="stats-spent">R0</div>
-                                <a href="payment-history.html">View Payment History</a>
-                            </div>
-                            <div class="stat-card">
-                                <h3>Prescriptions</h3>
-                                <div class="stat-value" id="stats-prescriptions">0</div>
-                                <a href="prescriptions.html">View Prescriptions</a>
+                        </div>
+                        
+                        <div class="detail-section fade-in">
+                            <h2><i class="fas fa-chart-line"></i> Quick Stats</h2>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <h3>Pets</h3>
+                                    <div class="stat-value" id="stats-pets">0</div>
+                                    <a href="my-pets.html">View All Pets</a>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Appointments</h3>
+                                    <div class="stat-value" id="stats-appointments">0</div>
+                                    <a href="appointments.html">View Appointments</a>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Spent This Year</h3>
+                                    <div class="stat-value" id="stats-spent">R0</div>
+                                    <a href="payment-history.html">View Payments</a>
+                                </div>
+                                <div class="stat-card">
+                                    <h3>Prescriptions</h3>
+                                    <div class="stat-value" id="stats-prescriptions">0</div>
+                                    <a href="prescriptions.html">View Prescriptions</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -981,12 +962,77 @@
         </div>
     </main>
 
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="edit-profile-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Edit Profile</h2>
+            <form id="edit-profile-form">
+                <div class="form-group">
+                    <label for="edit-displayName">Full Name</label>
+                    <input type="text" id="edit-displayName" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-phone">Phone Number</label>
+                    <input type="tel" id="edit-phone" placeholder="+27 XXX XXX XXXX">
+                </div>
+                <div class="form-group">
+                    <label for="edit-dob">Date of Birth</label>
+                    <input type="date" id="edit-dob">
+                </div>
+                <div class="form-group">
+                    <label for="edit-address">Address</label>
+                    <textarea id="edit-address" rows="3" placeholder="Enter your full address"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="cancel-edit-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-profile-btn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal" id="change-password-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Change Password</h2>
+            <form id="change-password-form">
+                <div class="form-group">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm New Password</label>
+                    <input type="password" id="confirm-password" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" id="cancel-password-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="update-password-btn">
+                        <i class="fas fa-key"></i> Update Password
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <footer class="main-footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>PDSA Veterinary Clinic</h3>
                     <p>Providing compassionate care for pets in Soweto since 2010.</p>
+                    <div class="social-links" style="display: flex; gap: 15px; margin-top: 1rem;">
+                        <a href="#" style="color: #bbb; font-size: 1.2rem;"><i class="fab fa-facebook"></i></a>
+                        <a href="#" style="color: #bbb; font-size: 1.2rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" style="color: #bbb; font-size: 1.2rem;"><i class="fab fa-instagram"></i></a>
+                    </div>
                 </div>
                 <div class="footer-section">
                     <h3>Quick Links</h3>
@@ -1001,6 +1047,7 @@
                     <h3>Emergency</h3>
                     <p>24/7 Emergency Line: <strong>011 984 4340</strong></p>
                     <p>Address: 1188 Nancefield Road, Mfolo, Soweto</p>
+                    <p>Email: emergency@pdsa.org.za</p>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -1009,14 +1056,8 @@
         </div>
     </footer>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toast-message">Profile updated successfully!</span>
-    </div>
-
     <script>
-        // Firebase Configuration with error handling
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
             authDomain: "pdsa-database.firebaseapp.com",
@@ -1028,128 +1069,51 @@
             measurementId: "G-8QLD9BK9M0"
         };
 
-        // Initialize Firebase with error handling
-        let auth, db, storage;
-        let firebaseInitialized = false;
-
+        // Initialize Firebase
+        let auth, db;
         try {
-            // Initialize Firebase
             firebase.initializeApp(firebaseConfig);
             auth = firebase.auth();
             db = firebase.firestore();
-            storage = firebase.storage();
-            firebaseInitialized = true;
-            console.log('Firebase initialized successfully');
-            updateDebugInfo('Firebase: Initialized successfully');
+            console.log("Firebase initialized successfully");
         } catch (error) {
-            console.error('Firebase initialization error:', error);
-            updateDebugInfo(`Firebase Init Error: ${error.message}`);
-            showToast('Firebase initialization failed. Using demo mode.', 'error');
-            initializeDemoMode();
+            console.error("Firebase initialization error:", error);
         }
 
         // Application State
         const AppState = {
             currentUser: null,
-            userProfile: null,
-            userMembership: null,
-            userStats: {
-                pets: 0,
-                appointments: 0,
-                spent: 0,
-                prescriptions: 0
-            },
-            isDemoMode: false
+            userProfile: null
         };
 
-        // Demo mode initialization
-        function initializeDemoMode() {
-            AppState.isDemoMode = true;
-            AppState.currentUser = {
-                uid: 'demo-user',
-                email: 'demo@example.com',
-                displayName: 'Demo User'
-            };
-            AppState.userProfile = {
-                displayName: 'Demo User',
-                email: 'demo@example.com',
-                phone: '+27 71 234 5678',
-                dateOfBirth: '1985-03-15',
-                address: '1188 Nancefield Road\nMfolo, Soweto\nJohannesburg\n1868',
-                preferredBranch: 'Soweto Clinic',
-                memberSince: new Date('2020-06-15'),
-                lastLogin: new Date(),
-                avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80'
-            };
-            AppState.userMembership = {
-                planName: 'Premium Care',
-                status: 'active',
-                planType: 'premium',
-                startDate: new Date('2020-06-15'),
-                endDate: new Date('2024-06-15')
-            };
-            AppState.userStats = {
-                pets: 3,
-                appointments: 12,
-                spent: 4250,
-                prescriptions: 5
-            };
-            
-            updateAuthUI(true);
-            updateProfileUI();
-            updateMembershipUI();
-            updateStatsUI();
-            updateDebugInfo('Demo Mode: Active - No Firebase connection');
-        }
-
-        // Update debug information
-        function updateDebugInfo(message) {
-            const debugInfo = document.getElementById('debug-info');
-            const timestamp = new Date().toLocaleTimeString();
-            debugInfo.innerHTML += `<div>[${timestamp}] ${message}</div>`;
-            debugInfo.scrollTop = debugInfo.scrollHeight;
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            // Debug panel toggle
-            const debugToggle = document.getElementById('debug-toggle');
-            const debugPanel = document.getElementById('debug-panel');
+            // Show loading state initially
+            showLoadingState();
             
-            debugToggle.addEventListener('click', () => {
-                debugPanel.style.display = debugPanel.style.display === 'block' ? 'none' : 'block';
-            });
-
-            // Retry connection button
-            document.getElementById('retry-connection').addEventListener('click', () => {
-                location.reload();
-            });
-
-            // Initialize Firebase Auth Listener if Firebase is initialized
-            if (firebaseInitialized) {
-                auth.onAuthStateChanged((user) => {
-                    if (user) {
-                        AppState.currentUser = user;
-                        updateDebugInfo(`Auth: User signed in - ${user.email}`);
-                        updateAuthUI(true);
-                        loadUserProfile();
-                        loadUserMembership();
-                        loadUserStats();
-                    } else {
-                        AppState.currentUser = null;
-                        updateDebugInfo('Auth: No user signed in');
-                        updateAuthUI(false);
-                        // Don't redirect automatically, let user use demo mode
-                    }
-                }, (error) => {
-                    console.error('Auth state change error:', error);
-                    updateDebugInfo(`Auth Error: ${error.message}`);
-                    showToast('Authentication error. Using demo mode.', 'error');
-                    initializeDemoMode();
-                });
-            } else {
-                // Use demo mode if Firebase failed to initialize
-                initializeDemoMode();
+            // Check if Firebase was initialized properly
+            if (!auth) {
+                showError("Firebase authentication is not available. Please refresh the page.");
+                return;
             }
+
+            // Initialize Firebase Auth Listener
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    console.log("User authenticated:", user.uid);
+                    AppState.currentUser = user;
+                    updateAuthUI(true);
+                    loadUserProfile();
+                } else {
+                    console.log("No user authenticated, redirecting to index.html");
+                    AppState.currentUser = null;
+                    updateAuthUI(false);
+                    // Redirect to index.html if not logged in
+                    window.location.href = 'index.html';
+                }
+            }, (error) => {
+                console.error("Auth state change error:", error);
+                showError("Authentication error: " + error.message);
+            });
 
             // Update UI based on authentication state
             function updateAuthUI(isLoggedIn) {
@@ -1157,41 +1121,97 @@
                 const userMenu = document.getElementById('user-menu');
                 
                 if (isLoggedIn) {
-                    loginButtons.style.display = 'none';
-                    userMenu.style.display = 'block';
+                    if (loginButtons) loginButtons.style.display = 'none';
+                    if (userMenu) userMenu.style.display = 'block';
                 } else {
-                    loginButtons.style.display = 'flex';
-                    userMenu.style.display = 'none';
+                    if (loginButtons) loginButtons.style.display = 'flex';
+                    if (userMenu) userMenu.style.display = 'none';
                 }
             }
 
-            // Load user profile from Firestore with error handling
-            function loadUserProfile() {
-                if (!AppState.currentUser || AppState.isDemoMode) return;
-
-                updateDebugInfo('Firestore: Loading user profile...');
+            // Show loading state
+            function showLoadingState() {
+                const loadingState = document.getElementById('loading-state');
+                const errorState = document.getElementById('error-state');
+                const profileContent = document.getElementById('profile-content');
                 
+                if (loadingState) loadingState.style.display = 'block';
+                if (errorState) errorState.style.display = 'none';
+                if (profileContent) profileContent.style.display = 'none';
+            }
+
+            // Show error state
+            function showError(message) {
+                const loadingState = document.getElementById('loading-state');
+                const errorState = document.getElementById('error-state');
+                const profileContent = document.getElementById('profile-content');
+                const errorDetails = document.getElementById('error-details');
+                
+                if (loadingState) loadingState.style.display = 'none';
+                if (errorState) errorState.style.display = 'block';
+                if (profileContent) profileContent.style.display = 'none';
+                if (errorDetails) errorDetails.textContent = message;
+                
+                console.error("Profile Error:", message);
+            }
+
+            // Show profile content
+            function showProfileContent() {
+                const loadingState = document.getElementById('loading-state');
+                const errorState = document.getElementById('error-state');
+                const profileContent = document.getElementById('profile-content');
+                
+                if (loadingState) loadingState.style.display = 'none';
+                if (errorState) errorState.style.display = 'none';
+                if (profileContent) profileContent.style.display = 'block';
+            }
+
+            // Load user profile from Firestore
+            function loadUserProfile() {
+                if (!AppState.currentUser) {
+                    showError("No user logged in");
+                    return;
+                }
+
+                if (!db) {
+                    showError("Database not available");
+                    return;
+                }
+
+                console.log("Loading profile for user:", AppState.currentUser.uid);
+
+                // Try to get user profile from Firestore
                 db.collection('users').doc(AppState.currentUser.uid).get()
                     .then((doc) => {
                         if (doc.exists) {
+                            console.log("Profile found:", doc.data());
                             AppState.userProfile = doc.data();
-                            updateDebugInfo('Firestore: Profile loaded successfully');
                             updateProfileUI();
+                            showProfileContent();
                         } else {
-                            updateDebugInfo('Firestore: No profile found, creating new one');
+                            console.log("No profile found, creating new one");
+                            // Create a new user profile if it doesn't exist
                             createUserProfile();
                         }
                     })
                     .catch((error) => {
                         console.error('Error loading user profile:', error);
-                        updateDebugInfo(`Firestore Error: ${error.message} - Code: ${error.code}`);
-                        showToast('Error loading profile data. Using demo data.', 'error');
-                        initializeDemoMode();
+                        
+                        if (error.code === 'permission-denied') {
+                            showError('Database permissions error. Please check your Firestore security rules.');
+                        } else {
+                            showError('Error loading profile data: ' + error.message);
+                        }
                     });
             }
 
             // Create a new user profile in Firestore
             function createUserProfile() {
+                if (!AppState.currentUser || !db) {
+                    showError("Cannot create profile - missing user or database");
+                    return;
+                }
+
                 const userData = {
                     uid: AppState.currentUser.uid,
                     email: AppState.currentUser.email,
@@ -1199,9 +1219,8 @@
                     phone: '',
                     dateOfBirth: '',
                     address: '',
-                    preferredBranch: 'Soweto Clinic',
-                    memberSince: new Date(),
-                    lastLogin: new Date(),
+                    memberSince: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
                     avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&q=80',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1209,39 +1228,59 @@
 
                 db.collection('users').doc(AppState.currentUser.uid).set(userData)
                     .then(() => {
+                        console.log("Profile created successfully");
                         AppState.userProfile = userData;
-                        updateDebugInfo('Firestore: New profile created successfully');
                         updateProfileUI();
+                        showProfileContent();
                         showToast('Profile created successfully!');
                     })
                     .catch((error) => {
                         console.error('Error creating user profile:', error);
-                        updateDebugInfo(`Firestore Create Error: ${error.message}`);
-                        showToast('Error creating profile. Using demo data.', 'error');
-                        initializeDemoMode();
+                        
+                        if (error.code === 'permission-denied') {
+                            showError('Cannot create profile - database permissions denied. Please check your Firestore security rules.');
+                        } else {
+                            showError('Error creating profile: ' + error.message);
+                        }
                     });
             }
 
             // Update profile UI with user data
             function updateProfileUI() {
-                if (!AppState.userProfile) return;
+                if (!AppState.userProfile) {
+                    console.warn("No user profile data to display");
+                    return;
+                }
 
                 const profile = AppState.userProfile;
+                console.log("Updating UI with profile:", profile);
                 
                 // Update personal information
-                document.getElementById('user-name').textContent = profile.displayName || 'Not set';
-                document.getElementById('user-email').textContent = profile.email;
-                document.getElementById('user-phone').textContent = profile.phone || 'Not set';
-                document.getElementById('user-dob').textContent = profile.dateOfBirth ? new Date(profile.dateOfBirth).toLocaleDateString() : 'Not set';
-                document.getElementById('user-address').textContent = profile.address || 'Not set';
-                document.getElementById('member-since').textContent = profile.memberSince ? new Date(profile.memberSince).toLocaleDateString() : 'Not set';
-                document.getElementById('last-login').textContent = profile.lastLogin ? new Date(profile.lastLogin).toLocaleString() : 'Not set';
-                document.getElementById('preferred-branch').textContent = profile.preferredBranch || 'Not set';
+                const elements = {
+                    'user-name': profile.displayName || 'Not set',
+                    'user-email': profile.email || 'Not set',
+                    'user-phone': profile.phone || 'Not set',
+                    'user-dob': profile.dateOfBirth ? new Date(profile.dateOfBirth).toLocaleDateString() : 'Not set',
+                    'user-address': profile.address || 'Not set',
+                    'member-since': profile.memberSince ? new Date(profile.memberSince).toLocaleDateString() : 'Not set',
+                    'last-login': profile.lastLogin ? new Date(profile.lastLogin).toLocaleString() : 'Not set'
+                };
+
+                // Update each element
+                Object.keys(elements).forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.textContent = elements[id];
+                    }
+                });
 
                 // Update avatar
                 if (profile.avatarUrl) {
-                    document.getElementById('user-avatar-large').src = profile.avatarUrl;
-                    document.getElementById('user-avatar-small').src = profile.avatarUrl;
+                    const avatarLarge = document.getElementById('user-avatar-large');
+                    const avatarSmall = document.getElementById('user-avatar-small');
+                    
+                    if (avatarLarge) avatarLarge.src = profile.avatarUrl;
+                    if (avatarSmall) avatarSmall.src = profile.avatarUrl;
                 }
 
                 // Calculate profile completion
@@ -1251,236 +1290,250 @@
             // Calculate profile completion percentage
             function calculateProfileCompletion(profile) {
                 let completedFields = 0;
-                const totalFields = 6; // name, phone, dob, address, branch, avatar
+                const totalFields = 5; // name, phone, dob, address, avatar
                 
                 if (profile.displayName && profile.displayName !== '') completedFields++;
                 if (profile.phone && profile.phone !== '') completedFields++;
                 if (profile.dateOfBirth) completedFields++;
                 if (profile.address && profile.address !== '') completedFields++;
-                if (profile.preferredBranch && profile.preferredBranch !== '') completedFields++;
                 if (profile.avatarUrl && profile.avatarUrl !== '') completedFields++;
                 
                 const completionPercentage = Math.round((completedFields / totalFields) * 100);
                 
-                document.getElementById('profile-progress').style.width = `${completionPercentage}%`;
-                document.getElementById('profile-completion-text').textContent = `${completionPercentage}% Complete`;
-            }
-
-            // Load user membership data
-            function loadUserMembership() {
-                if (!AppState.currentUser || AppState.isDemoMode) {
-                    updateMembershipUI();
-                    return;
-                }
-
-                updateDebugInfo('Firestore: Loading membership data...');
+                const progressBar = document.getElementById('profile-progress');
+                const completionText = document.getElementById('profile-completion-text');
                 
-                db.collection('memberships')
-                    .where('userId', '==', AppState.currentUser.uid)
-                    .where('status', 'in', ['active', 'expiring'])
-                    .limit(1)
-                    .get()
-                    .then((querySnapshot) => {
-                        if (!querySnapshot.empty) {
-                            const doc = querySnapshot.docs[0];
-                            AppState.userMembership = doc.data();
-                            updateDebugInfo('Firestore: Membership data loaded');
-                            updateMembershipUI();
-                        } else {
-                            updateDebugInfo('Firestore: No active membership found');
-                            updateMembershipUI(true);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error loading membership:', error);
-                        updateDebugInfo(`Firestore Membership Error: ${error.message}`);
-                        updateMembershipUI(true);
-                    });
-            }
-
-            // Update membership UI
-            function updateMembershipUI(noMembership = false) {
-                if (noMembership || !AppState.userMembership) {
-                    document.getElementById('membership-plan').textContent = 'No Active Membership';
-                    document.getElementById('membership-status').textContent = 'Inactive';
-                    document.getElementById('membership-status').className = 'membership-status';
-                    document.getElementById('member-id').textContent = 'N/A';
-                    document.getElementById('membership-joined').textContent = 'N/A';
-                    document.getElementById('membership-expires').textContent = 'N/A';
-                    document.getElementById('membership-discount').textContent = '0%';
-                    document.getElementById('membership-benefits').textContent = 'No active benefits';
-                    document.getElementById('renew-membership-btn').textContent = 'Get Membership';
-                    return;
-                }
-
-                const membership = AppState.userMembership;
-                
-                document.getElementById('membership-plan').textContent = `${membership.planName} Member`;
-                document.getElementById('membership-status').textContent = membership.status.charAt(0).toUpperCase() + membership.status.slice(1);
-                document.getElementById('membership-status').className = `membership-status ${membership.status}`;
-                document.getElementById('member-id').textContent = membership.memberId || 'PDSA' + Math.floor(100000000 + Math.random() * 900000000);
-                document.getElementById('membership-joined').textContent = membership.startDate ? new Date(membership.startDate).toLocaleDateString() : 'N/A';
-                document.getElementById('membership-expires').textContent = membership.endDate ? new Date(membership.endDate).toLocaleDateString() : 'N/A';
-                
-                // Set benefits based on plan type
-                const benefits = {
-                    basic: '10% on all services',
-                    premium: '15% on all services, priority appointments',
-                    family: '20% on all services, priority appointments & emergency access'
-                };
-                
-                const discounts = {
-                    basic: '10%',
-                    premium: '15%',
-                    family: '20%'
-                };
-                
-                document.getElementById('membership-discount').textContent = discounts[membership.planType] || '0%';
-                document.getElementById('membership-benefits').textContent = benefits[membership.planType] || 'No active benefits';
-            }
-
-            // Load user statistics
-            function loadUserStats() {
-                if (AppState.isDemoMode) {
-                    updateStatsUI();
-                    return;
-                }
-
-                if (!AppState.currentUser) return;
-
-                updateDebugInfo('Firestore: Loading user statistics...');
-                
-                // For demo purposes, we'll use static data
-                // In a real app, you would query Firestore for actual counts
-                setTimeout(() => {
-                    updateStatsUI();
-                }, 1000);
-            }
-
-            // Update statistics UI
-            function updateStatsUI() {
-                document.getElementById('pets-count').textContent = AppState.userStats.pets;
-                document.getElementById('appointments-count').textContent = AppState.userStats.appointments;
-                document.getElementById('stats-pets').textContent = AppState.userStats.pets;
-                document.getElementById('stats-appointments').textContent = AppState.userStats.appointments;
-                document.getElementById('stats-spent').textContent = `R${AppState.userStats.spent.toLocaleString()}`;
-                document.getElementById('stats-prescriptions').textContent = AppState.userStats.prescriptions;
+                if (progressBar) progressBar.style.width = `${completionPercentage}%`;
+                if (completionText) completionText.textContent = `${completionPercentage}% Complete`;
             }
 
             // Show toast notification
             function showToast(message, type = 'success') {
-                const toast = document.getElementById('toast');
-                const toastMessage = document.getElementById('toast-message');
+                // Create toast element
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <i class="fas fa-${type === 'error' ? 'exclamation-triangle' : 'check-circle'}"></i>
+                    <span>${message}</span>
+                `;
                 
-                toastMessage.textContent = message;
-                toast.className = 'toast';
-                toast.classList.add(type);
-                toast.classList.add('show');
+                document.body.appendChild(toast);
                 
+                // Show toast
+                setTimeout(() => toast.classList.add('show'), 100);
+                
+                // Remove after 3 seconds
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 4000);
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.parentNode.removeChild(toast);
+                        }
+                    }, 300);
+                }, 3000);
             }
 
-            // Demo login functionality
-            document.getElementById('demo-login-btn').addEventListener('click', function() {
-                if (!AppState.isDemoMode) {
-                    initializeDemoMode();
+            // Modal functionality
+            const editProfileModal = document.getElementById('edit-profile-modal');
+            const changePasswordModal = document.getElementById('change-password-modal');
+
+            // Open edit profile modal
+            document.getElementById('edit-profile-btn').addEventListener('click', function() {
+                // Populate form with current data
+                if (AppState.userProfile) {
+                    document.getElementById('edit-displayName').value = AppState.userProfile.displayName || '';
+                    document.getElementById('edit-phone').value = AppState.userProfile.phone || '';
+                    document.getElementById('edit-dob').value = AppState.userProfile.dateOfBirth || '';
+                    document.getElementById('edit-address').value = AppState.userProfile.address || '';
                 }
-                showToast('Demo mode activated!', 'success');
+                editProfileModal.style.display = 'flex';
             });
 
-            // Print profile
-            document.getElementById('print-profile').addEventListener('click', function() {
-                window.print();
+            // Open change password modal
+            document.getElementById('change-password-btn').addEventListener('click', function() {
+                changePasswordModal.style.display = 'flex';
             });
 
-            // Mobile menu toggle
-            document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-                const nav = document.querySelector('.main-nav');
-                nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+            // Close modals
+            document.querySelectorAll('.close-modal').forEach(closeBtn => {
+                closeBtn.addEventListener('click', function() {
+                    editProfileModal.style.display = 'none';
+                    changePasswordModal.style.display = 'none';
+                });
             });
 
-            // Login/Register buttons
-            document.getElementById('login-btn').addEventListener('click', function() {
-                showToast('Redirecting to login page...', 'info');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 1000);
+            document.getElementById('cancel-edit-btn').addEventListener('click', function() {
+                editProfileModal.style.display = 'none';
             });
 
-            document.getElementById('register-btn').addEventListener('click', function() {
-                showToast('Redirecting to registration page...', 'info');
-                setTimeout(() => {
-                    window.location.href = 'register.html';
-                }, 1000);
+            document.getElementById('cancel-password-btn').addEventListener('click', function() {
+                changePasswordModal.style.display = 'none';
+            });
+
+            // Close modals when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === editProfileModal) {
+                    editProfileModal.style.display = 'none';
+                }
+                if (event.target === changePasswordModal) {
+                    changePasswordModal.style.display = 'none';
+                }
+            });
+
+            // Edit profile form submission
+            document.getElementById('edit-profile-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const updatedData = {
+                    displayName: document.getElementById('edit-displayName').value,
+                    phone: document.getElementById('edit-phone').value,
+                    dateOfBirth: document.getElementById('edit-dob').value,
+                    address: document.getElementById('edit-address').value,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                // Show loading state on save button
+                const saveBtn = document.getElementById('save-profile-btn');
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-spinner loading-spinner"></i> Saving...';
+                saveBtn.disabled = true;
+
+                db.collection('users').doc(AppState.currentUser.uid).update(updatedData)
+                    .then(() => {
+                        // Update local state
+                        AppState.userProfile = { ...AppState.userProfile, ...updatedData };
+                        updateProfileUI();
+                        editProfileModal.style.display = 'none';
+                        showToast('Profile updated successfully!');
+                    })
+                    .catch((error) => {
+                        console.error('Error updating profile:', error);
+                        showToast('Error updating profile: ' + error.message, 'error');
+                    })
+                    .finally(() => {
+                        // Restore button state
+                        saveBtn.innerHTML = originalText;
+                        saveBtn.disabled = false;
+                    });
+            });
+
+            // Change password form submission
+            document.getElementById('change-password-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+
+                if (newPassword !== confirmPassword) {
+                    showToast('New passwords do not match!', 'error');
+                    return;
+                }
+
+                if (newPassword.length < 6) {
+                    showToast('Password must be at least 6 characters long!', 'error');
+                    return;
+                }
+
+                // Show loading state on update button
+                const updateBtn = document.getElementById('update-password-btn');
+                const originalText = updateBtn.innerHTML;
+                updateBtn.innerHTML = '<i class="fas fa-spinner loading-spinner"></i> Updating...';
+                updateBtn.disabled = true;
+
+                // Reauthenticate user first
+                const user = auth.currentUser;
+                const credential = firebase.auth.EmailAuthProvider.credential(
+                    user.email, 
+                    currentPassword
+                );
+
+                user.reauthenticateWithCredential(credential)
+                    .then(() => {
+                        // Now update password
+                        return user.updatePassword(newPassword);
+                    })
+                    .then(() => {
+                        changePasswordModal.style.display = 'none';
+                        document.getElementById('change-password-form').reset();
+                        showToast('Password updated successfully!');
+                    })
+                    .catch((error) => {
+                        console.error('Error updating password:', error);
+                        if (error.code === 'auth/wrong-password') {
+                            showToast('Current password is incorrect!', 'error');
+                        } else {
+                            showToast('Error updating password: ' + error.message, 'error');
+                        }
+                    })
+                    .finally(() => {
+                        // Restore button state
+                        updateBtn.innerHTML = originalText;
+                        updateBtn.disabled = false;
+                    });
+            });
+
+            // Retry button functionality
+            document.getElementById('retry-load-btn').addEventListener('click', function() {
+                showLoadingState();
+                if (AppState.currentUser) {
+                    loadUserProfile();
+                } else {
+                    // Re-check authentication
+                    auth.onAuthStateChanged((user) => {
+                        if (user) {
+                            AppState.currentUser = user;
+                            loadUserProfile();
+                        } else {
+                            showError("Please log in to access your profile");
+                        }
+                    });
+                }
             });
 
             // Logout functionality
             document.getElementById('logout-btn').addEventListener('click', function(e) {
                 e.preventDefault();
                 if (confirm('Are you sure you want to logout?')) {
-                    if (firebaseInitialized && !AppState.isDemoMode) {
-                        auth.signOut()
-                            .then(() => {
-                                showToast('You have been logged out successfully.');
-                                setTimeout(() => {
-                                    window.location.href = 'index.html';
-                                }, 1500);
-                            })
-                            .catch((error) => {
-                                console.error('Error signing out:', error);
-                                showToast('Error logging out', 'error');
-                            });
-                    } else {
-                        showToast('Demo session ended.');
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 1500);
-                    }
+                    auth.signOut()
+                        .then(() => {
+                            showToast('You have been logged out successfully.');
+                            setTimeout(() => {
+                                window.location.href = 'index.html';
+                            }, 1500);
+                        })
+                        .catch((error) => {
+                            console.error('Error signing out:', error);
+                            showToast('Error logging out', 'error');
+                        });
                 }
             });
 
-            // Edit profile button
-            document.getElementById('edit-profile-btn').addEventListener('click', function() {
-                if (AppState.isDemoMode) {
-                    showToast('This feature is not available in demo mode', 'warning');
-                } else {
-                    showToast('Edit profile feature coming soon!', 'info');
+            // Placeholder functionality for other buttons
+            const placeholderButtons = [
+                'change-avatar-btn',
+                'print-profile',
+                'enable-2fa-btn',
+                'renew-membership-btn',
+                'view-benefits-btn'
+            ];
+
+            placeholderButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.addEventListener('click', function() {
+                        showToast('This feature is coming soon!', 'warning');
+                    });
                 }
             });
 
-            // Security actions
-            document.getElementById('change-password-btn').addEventListener('click', function() {
-                showToast('Password change feature coming soon!', 'info');
+            // Navigation buttons
+            document.getElementById('login-btn').addEventListener('click', function() {
+                window.location.href = 'index.html';
             });
 
-            document.getElementById('enable-2fa-btn').addEventListener('click', function() {
-                showToast('Two-factor authentication feature coming soon!', 'info');
-            });
-
-            // Membership actions
-            document.getElementById('renew-membership-btn').addEventListener('click', function() {
-                showToast('Redirecting to membership page...', 'info');
-                setTimeout(() => {
-                    window.location.href = 'membership.html';
-                }, 1000);
-            });
-
-            document.getElementById('view-benefits-btn').addEventListener('click', function() {
-                showToast('Redirecting to benefits page...', 'info');
-                setTimeout(() => {
-                    window.location.href = 'membership-benefits.html';
-                }, 1000);
-            });
-
-            // Change avatar button
-            document.getElementById('change-avatar-btn').addEventListener('click', function() {
-                if (AppState.isDemoMode) {
-                    showToast('Avatar change is not available in demo mode', 'warning');
-                } else {
-                    showToast('Avatar change feature coming soon!', 'info');
-                }
+            document.getElementById('register-btn').addEventListener('click', function() {
+                window.location.href = 'index.html';
             });
         });
     </script>

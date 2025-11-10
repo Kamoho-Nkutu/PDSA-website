@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Settings | PDSA Veterinary Clinic</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
         /* ===== VARIABLES ===== */
         :root {
@@ -62,50 +66,6 @@
 
         a:hover {
             color: var(--primary-dark);
-        }
-
-        /* ===== BUTTONS ===== */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: var(--border-radius);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            font-size: 0.95rem;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            color: white;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--primary-light);
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #d32f2f;
         }
 
         /* ===== HEADER ===== */
@@ -219,6 +179,50 @@
             color: var(--text-color);
         }
 
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #d32f2f;
+        }
+
         /* ===== SETTINGS CONTAINER ===== */
         .settings-container {
             padding: 30px 0;
@@ -238,6 +242,7 @@
             display: flex;
             border-bottom: 1px solid var(--border-color);
             margin-bottom: 30px;
+            overflow-x: auto;
         }
 
         .tab-btn {
@@ -250,6 +255,7 @@
             color: var(--text-light);
             position: relative;
             transition: var(--transition);
+            white-space: nowrap;
         }
 
         .tab-btn:hover {
@@ -524,6 +530,59 @@
             font-size: 0.9rem;
         }
 
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: var(--box-shadow);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+        }
+
+        .toast.warning {
+            background-color: var(--warning);
+        }
+
+        /* ===== LOADING STATES ===== */
+        .loading-container {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(44, 110, 207, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* ===== RESPONSIVE STYLES ===== */
         @media (max-width: 992px) {
             .nav-list {
@@ -600,6 +659,7 @@
                     <li><a href="index.html">Home</a></li>
                     <li><a href="services.html">Services</a></li>
                     <li><a href="about.html">About Us</a></li>
+                    <li><a href="profile.html">My Profile</a></li>
                 </ul>
             </nav>
             <div class="user-menu">
@@ -622,287 +682,318 @@
     <main class="settings-container container">
         <h1><i class="fas fa-cog"></i> Account Settings</h1>
         
-        <div class="settings-tabs">
-            <button class="tab-btn active" data-tab="account">Account</button>
-            <button class="tab-btn" data-tab="notifications">Notifications</button>
-            <button class="tab-btn" data-tab="privacy">Privacy</button>
-            <button class="tab-btn" data-tab="security">Security</button>
+        <!-- Loading State -->
+        <div id="loading-state" class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading your settings...</p>
         </div>
 
-        <!-- Account Settings Tab -->
-        <div class="tab-content active" id="account-tab">
-            <form class="settings-form">
-                <h2>General Settings</h2>
-                
-                <div class="form-group">
-                    <label for="language">Language</label>
-                    <select id="language" name="language">
-                        <option value="en">English</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
-                        <option value="de">German</option>
-                        <option value="it">Italian</option>
-                    </select>
-                    <p class="form-help">Change the language used throughout the application.</p>
-                </div>
-                
-                <div class="form-group">
-                    <label for="timezone">Timezone</label>
-                    <select id="timezone" name="timezone">
-                        <option value="GMT">GMT (London)</option>
-                        <option value="EST">EST (New York)</option>
-                        <option value="PST">PST (Los Angeles)</option>
-                        <option value="CET">CET (Paris)</option>
-                        <option value="AEST">AEST (Sydney)</option>
-                    </select>
-                    <p class="form-help">Set your local timezone for accurate time displays.</p>
-                </div>
-                
-                <div class="form-group">
-                    <label for="theme">Theme</label>
-                    <select id="theme" name="theme">
-                        <option value="light">Light</option>
-                        <option value="dark">Dark</option>
-                        <option value="system">System Default</option>
-                    </select>
-                    <p class="form-help">Choose between light and dark themes, or use your system's default.</p>
-                </div>
-                
-                <div class="form-group">
-                    <label for="date-format">Date Format</label>
-                    <select id="date-format" name="date-format">
-                        <option value="dd/mm/yyyy">DD/MM/YYYY</option>
-                        <option value="mm/dd/yyyy">MM/DD/YYYY</option>
-                        <option value="yyyy-mm-dd">YYYY-MM-DD</option>
-                    </select>
-                    <p class="form-help">Select your preferred date format.</p>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                    <button type="reset" class="btn btn-outline">Reset to Defaults</button>
-                </div>
-            </form>
+        <!-- Error State -->
+        <div id="error-state" class="error-message" style="display: none;">
+            <h3><i class="fas fa-exclamation-triangle"></i> Unable to Load Settings</h3>
+            <p id="error-details">There was an error loading your settings.</p>
+            <button class="btn btn-primary" id="retry-load-btn">
+                <i class="fas fa-redo"></i> Try Again
+            </button>
         </div>
 
-        <!-- Notifications Settings Tab -->
-        <div class="tab-content" id="notifications-tab">
-            <form class="settings-form">
-                <h2>Notification Preferences</h2>
-                <p class="form-help">Manage how you receive notifications from PDSA Veterinary Clinic.</p>
-                
-                <div class="notification-category">
-                    <h3>Appointment Reminders</h3>
-                    
-                    <div class="notification-item">
-                        <div class="notification-info">
-                            <h4>Email Notifications</h4>
-                            <p>Receive appointment reminders via email</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="notification-item">
-                        <div class="notification-info">
-                            <h4>SMS Notifications</h4>
-                            <p>Receive appointment reminders via text message</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="notification-item">
-                        <div class="notification-info">
-                            <h4>Push Notifications</h4>
-                            <p>Receive appointment reminders via browser or app notifications</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="notification-category">
-                    <h3>Medical Updates</h3>
-                    
-                    <div class="notification-item">
-                        <div class="notification-info">
-                            <h4>Test Results</h4>
-                            <p>Get notified when test results are available</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="notification-item">
-                        <div class="notification-info">
-                            <h4>Prescription Renewals</h4>
-                            <p>Receive reminders when prescriptions need renewal</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" checked>
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="notification-category">
-                    <h3>Clinic Updates</h3>
-                    
-                    <div class="notification-item">
-                        <div class="notification-info">
-                            <h4>Newsletters</h4>
-                            <p>Receive our monthly newsletter with pet care tips and clinic news</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    
-                    <div class="notification-item">
-                        <div class="notification-info">
-                            <h4>Promotional Offers</h4>
-                            <p>Get notified about special offers and discounts</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Save Preferences</button>
-                </div>
-            </form>
-        </div>
+        <!-- Main Content -->
+        <div id="settings-content" style="display: none;">
+            <div class="settings-tabs">
+                <button class="tab-btn active" data-tab="account">Account</button>
+                <button class="tab-btn" data-tab="notifications">Notifications</button>
+                <button class="tab-btn" data-tab="privacy">Privacy</button>
+                <button class="tab-btn" data-tab="security">Security</button>
+            </div>
 
-        <!-- Privacy Settings Tab -->
-        <div class="tab-content" id="privacy-tab">
-            <form class="settings-form">
-                <h2>Privacy Settings</h2>
-                <p class="form-help">Control how your information is shared and used.</p>
-                
-                <div class="privacy-option">
-                    <h3>Data Sharing for Research</h3>
-                    <p>Allow PDSA to use your pet's anonymized medical data for research purposes to help improve animal healthcare.</p>
-                    <label class="toggle-switch">
-                        <input type="checkbox">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="privacy-option">
-                    <h3>Personalized Recommendations</h3>
-                    <p>Allow us to use your information to provide personalized pet care recommendations and content.</p>
-                    <label class="toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="privacy-option">
-                    <h3>Profile Visibility</h3>
-                    <p>Who can see your profile information?</p>
-                    <div class="radio-group">
-                        <label class="radio-option">
-                            <input type="radio" name="profile-visibility" value="public" checked>
-                            <span>Public</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="profile-visibility" value="members">
-                            <span>PDSA Members Only</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="profile-visibility" value="private">
-                            <span>Private</span>
+            <!-- Account Settings Tab -->
+            <div class="tab-content active" id="account-tab">
+                <form class="settings-form" id="account-form">
+                    <h2>General Settings</h2>
+                    
+                    <div class="form-group">
+                        <label for="language">Language</label>
+                        <select id="language" name="language">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="it">Italian</option>
+                        </select>
+                        <p class="form-help">Change the language used throughout the application.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timezone">Timezone</label>
+                        <select id="timezone" name="timezone">
+                            <option value="GMT">GMT (London)</option>
+                            <option value="EST">EST (New York)</option>
+                            <option value="PST">PST (Los Angeles)</option>
+                            <option value="CET">CET (Paris)</option>
+                            <option value="AEST">AEST (Sydney)</option>
+                        </select>
+                        <p class="form-help">Set your local timezone for accurate time displays.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="theme">Theme</label>
+                        <select id="theme" name="theme">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="system">System Default</option>
+                        </select>
+                        <p class="form-help">Choose between light and dark themes, or use your system's default.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date-format">Date Format</label>
+                        <select id="date-format" name="date-format">
+                            <option value="dd/mm/yyyy">DD/MM/YYYY</option>
+                            <option value="mm/dd/yyyy">MM/DD/YYYY</option>
+                            <option value="yyyy-mm-dd">YYYY-MM-DD</option>
+                        </select>
+                        <p class="form-help">Select your preferred date format.</p>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="save-account-btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        <button type="reset" class="btn btn-outline">Reset to Defaults</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Notifications Settings Tab -->
+            <div class="tab-content" id="notifications-tab">
+                <form class="settings-form" id="notifications-form">
+                    <h2>Notification Preferences</h2>
+                    <p class="form-help">Manage how you receive notifications from PDSA Veterinary Clinic.</p>
+                    
+                    <div class="notification-category">
+                        <h3>Appointment Reminders</h3>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>Email Notifications</h4>
+                                <p>Receive appointment reminders via email</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="email-appointments" name="email-appointments">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>SMS Notifications</h4>
+                                <p>Receive appointment reminders via text message</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="sms-appointments" name="sms-appointments">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>Push Notifications</h4>
+                                <p>Receive appointment reminders via browser or app notifications</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="push-appointments" name="push-appointments">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="notification-category">
+                        <h3>Medical Updates</h3>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>Test Results</h4>
+                                <p>Get notified when test results are available</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="email-results" name="email-results">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>Prescription Renewals</h4>
+                                <p>Receive reminders when prescriptions need renewal</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="email-renewals" name="email-renewals">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="notification-category">
+                        <h3>Clinic Updates</h3>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>Newsletters</h4>
+                                <p>Receive our monthly newsletter with pet care tips and clinic news</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="email-newsletter" name="email-newsletter">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4>Promotional Offers</h4>
+                                <p>Get notified about special offers and discounts</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="email-promotions" name="email-promotions">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="save-notifications-btn">
+                            <i class="fas fa-save"></i> Save Preferences
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Privacy Settings Tab -->
+            <div class="tab-content" id="privacy-tab">
+                <form class="settings-form" id="privacy-form">
+                    <h2>Privacy Settings</h2>
+                    <p class="form-help">Control how your information is shared and used.</p>
+                    
+                    <div class="privacy-option">
+                        <h3>Data Sharing for Research</h3>
+                        <p>Allow PDSA to use your pet's anonymized medical data for research purposes to help improve animal healthcare.</p>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="data-sharing" name="data-sharing">
+                            <span class="toggle-slider"></span>
                         </label>
                     </div>
-                </div>
-                
-                <div class="privacy-option">
-                    <h3>Activity Tracking</h3>
-                    <p>Allow us to track your activity on our platform to improve your experience.</p>
-                    <label class="toggle-switch">
-                        <input type="checkbox" checked>
-                        <span class="toggle-slider"></span>
-                        <span class="toggle-label">Enable Tracking</span>
-                    </label>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Save Privacy Settings</button>
-                </div>
-            </form>
-        </div>
+                    
+                    <div class="privacy-option">
+                        <h3>Personalized Recommendations</h3>
+                        <p>Allow us to use your information to provide personalized pet care recommendations and content.</p>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="personalized-content" name="personalized-content">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="privacy-option">
+                        <h3>Profile Visibility</h3>
+                        <p>Who can see your profile information?</p>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="profile-visibility" value="public">
+                                <span>Public</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="profile-visibility" value="members">
+                                <span>PDSA Members Only</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="profile-visibility" value="private">
+                                <span>Private</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="privacy-option">
+                        <h3>Activity Tracking</h3>
+                        <p>Allow us to track your activity on our platform to improve your experience.</p>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="activity-tracking" name="activity-tracking">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="save-privacy-btn">
+                            <i class="fas fa-save"></i> Save Privacy Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-        <!-- Security Settings Tab -->
-        <div class="tab-content" id="security-tab">
-            <form class="settings-form">
-                <h2>Security Settings</h2>
-                <p class="form-help">Manage your account security and authentication methods.</p>
+            <!-- Security Settings Tab -->
+            <div class="tab-content" id="security-tab">
+                <form class="settings-form" id="security-form">
+                    <h2>Security Settings</h2>
+                    <p class="form-help">Manage your account security and authentication methods.</p>
+                    
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" name="current-password" placeholder="Enter your current password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" name="new-password" placeholder="Enter your new password">
+                        <p class="form-help">Use at least 8 characters with a mix of letters, numbers, and symbols.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your new password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="2fa">Two-Factor Authentication</label>
+                        <select id="2fa" name="2fa">
+                            <option value="none">Disabled</option>
+                            <option value="sms">SMS Verification</option>
+                            <option value="app">Authenticator App</option>
+                            <option value="email">Email Verification</option>
+                        </select>
+                        <p class="form-help">Add an extra layer of security to your account.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="session-timeout">Session Timeout</label>
+                        <select id="session-timeout" name="session-timeout">
+                            <option value="15">15 minutes</option>
+                            <option value="30">30 minutes</option>
+                            <option value="60">1 hour</option>
+                            <option value="120">2 hours</option>
+                            <option value="never">Never (not recommended)</option>
+                        </select>
+                        <p class="form-help">Set how long you can stay logged in without activity.</p>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="save-security-btn">
+                            <i class="fas fa-save"></i> Update Security Settings
+                        </button>
+                    </div>
+                </form>
                 
-                <div class="form-group">
-                    <label for="current-password">Current Password</label>
-                    <input type="password" id="current-password" name="current-password" placeholder="Enter your current password">
-                </div>
-                
-                <div class="form-group">
-                    <label for="new-password">New Password</label>
-                    <input type="password" id="new-password" name="new-password" placeholder="Enter your new password">
-                    <p class="form-help">Use at least 8 characters with a mix of letters, numbers, and symbols.</p>
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirm-password">Confirm New Password</label>
-                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your new password">
-                </div>
-                
-                <div class="form-group">
-                    <label for="2fa">Two-Factor Authentication</label>
-                    <select id="2fa" name="2fa">
-                        <option value="none">Disabled</option>
-                        <option value="sms">SMS Verification</option>
-                        <option value="app">Authenticator App</option>
-                        <option value="email">Email Verification</option>
-                    </select>
-                    <p class="form-help">Add an extra layer of security to your account.</p>
-                </div>
-                
-                <div class="form-group">
-                    <label for="session-timeout">Session Timeout</label>
-                    <select id="session-timeout" name="session-timeout">
-                        <option value="15">15 minutes</option>
-                        <option value="30" selected>30 minutes</option>
-                        <option value="60">1 hour</option>
-                        <option value="120">2 hours</option>
-                        <option value="never">Never (not recommended)</option>
-                    </select>
-                    <p class="form-help">Set how long you can stay logged in without activity.</p>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Update Security Settings</button>
-                </div>
-            </form>
-            
-            <div class="danger-zone">
-                <h2><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
-                <p>These actions are irreversible. Please proceed with caution.</p>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn btn-outline">Download My Data</button>
-                    <button type="button" class="btn btn-outline">Deactivate Account</button>
-                    <button type="button" class="btn btn-danger">Delete Account</button>
+                <div class="danger-zone">
+                    <h2><i class="fas fa-exclamation-triangle"></i> Danger Zone</h2>
+                    <p>These actions are irreversible. Please proceed with caution.</p>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="download-data-btn">
+                            <i class="fas fa-download"></i> Download My Data
+                        </button>
+                        <button type="button" class="btn btn-outline" id="deactivate-account-btn">
+                            <i class="fas fa-user-slash"></i> Deactivate Account
+                        </button>
+                        <button type="button" class="btn btn-danger" id="delete-account-btn">
+                            <i class="fas fa-trash-alt"></i> Delete Account
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -934,9 +1025,303 @@
         </div>
     </footer>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toast-message">Settings saved successfully!</span>
+    </div>
+
     <script>
-        // Tab functionality
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB6QmZtUg2qajsUfeii7MBkDmGEbm5JkOE",
+            authDomain: "pdsa-database.firebaseapp.com",
+            databaseURL: "https://pdsa-database-default-rtdb.firebaseio.com",
+            projectId: "pdsa-database",
+            storageBucket: "pdsa-database.firebasestorage.app",
+            messagingSenderId: "1041468794677",
+            appId: "1:1041468794677:web:e7d38f76c644173cf48e7c",
+            measurementId: "G-8QLD9BK9M0"
+        };
+
+        // Initialize Firebase
+        let auth, db;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            auth = firebase.auth();
+            db = firebase.firestore();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+        }
+
+        // Application State
+        const AppState = {
+            currentUser: null,
+            userSettings: null
+        };
+
         document.addEventListener('DOMContentLoaded', function() {
+            // Show loading state initially
+            showLoadingState();
+            
+            // Check if Firebase was initialized properly
+            if (!auth) {
+                showError("Firebase authentication is not available. Please refresh the page.");
+                return;
+            }
+
+            // Initialize Firebase Auth Listener
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    console.log("User authenticated:", user.uid);
+                    AppState.currentUser = user;
+                    updateAuthUI(true);
+                    loadUserSettings();
+                } else {
+                    console.log("No user authenticated, redirecting to index.html");
+                    AppState.currentUser = null;
+                    updateAuthUI(false);
+                    // Redirect to index.html if not logged in
+                    window.location.href = 'index.html';
+                }
+            }, (error) => {
+                console.error("Auth state change error:", error);
+                showError("Authentication error: " + error.message);
+            });
+
+            // Update UI based on authentication state
+            function updateAuthUI(isLoggedIn) {
+                const loginButtons = document.getElementById('login-buttons');
+                const userMenu = document.getElementById('user-menu');
+                
+                if (isLoggedIn) {
+                    if (loginButtons) loginButtons.style.display = 'none';
+                    if (userMenu) userMenu.style.display = 'block';
+                } else {
+                    if (loginButtons) loginButtons.style.display = 'flex';
+                    if (userMenu) userMenu.style.display = 'none';
+                }
+            }
+
+            // Show loading state
+            function showLoadingState() {
+                const loadingState = document.getElementById('loading-state');
+                const errorState = document.getElementById('error-state');
+                const settingsContent = document.getElementById('settings-content');
+                
+                if (loadingState) loadingState.style.display = 'block';
+                if (errorState) errorState.style.display = 'none';
+                if (settingsContent) settingsContent.style.display = 'none';
+            }
+
+            // Show error state
+            function showError(message) {
+                const loadingState = document.getElementById('loading-state');
+                const errorState = document.getElementById('error-state');
+                const settingsContent = document.getElementById('settings-content');
+                const errorDetails = document.getElementById('error-details');
+                
+                if (loadingState) loadingState.style.display = 'none';
+                if (errorState) errorState.style.display = 'block';
+                if (settingsContent) settingsContent.style.display = 'none';
+                if (errorDetails) errorDetails.textContent = message;
+                
+                console.error("Settings Error:", message);
+            }
+
+            // Show settings content
+            function showSettingsContent() {
+                const loadingState = document.getElementById('loading-state');
+                const errorState = document.getElementById('error-state');
+                const settingsContent = document.getElementById('settings-content');
+                
+                if (loadingState) loadingState.style.display = 'none';
+                if (errorState) errorState.style.display = 'none';
+                if (settingsContent) settingsContent.style.display = 'block';
+            }
+
+            // Load user settings from Firestore
+            function loadUserSettings() {
+                if (!AppState.currentUser) {
+                    showError("No user logged in");
+                    return;
+                }
+
+                if (!db) {
+                    showError("Database not available");
+                    return;
+                }
+
+                console.log("Loading settings for user:", AppState.currentUser.uid);
+
+                // Try to get user settings from Firestore
+                db.collection('userSettings').doc(AppState.currentUser.uid).get()
+                    .then((doc) => {
+                        if (doc.exists) {
+                            console.log("Settings found:", doc.data());
+                            AppState.userSettings = doc.data();
+                            updateSettingsUI();
+                            showSettingsContent();
+                        } else {
+                            console.log("No settings found, creating default settings");
+                            // Create default settings if they don't exist
+                            createDefaultSettings();
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error loading user settings:', error);
+                        
+                        if (error.code === 'permission-denied') {
+                            showError('Database permissions error. Please check your Firestore security rules.');
+                        } else {
+                            showError('Error loading settings: ' + error.message);
+                        }
+                    });
+            }
+
+            // Create default user settings in Firestore
+            function createDefaultSettings() {
+                if (!AppState.currentUser || !db) {
+                    showError("Cannot create settings - missing user or database");
+                    return;
+                }
+
+                const defaultSettings = {
+                    uid: AppState.currentUser.uid,
+                    account: {
+                        language: 'en',
+                        timezone: 'GMT',
+                        theme: 'light',
+                        dateFormat: 'dd/mm/yyyy'
+                    },
+                    notifications: {
+                        emailAppointments: true,
+                        smsAppointments: true,
+                        pushAppointments: false,
+                        emailResults: true,
+                        emailRenewals: true,
+                        emailNewsletter: false,
+                        emailPromotions: false
+                    },
+                    privacy: {
+                        dataSharing: false,
+                        personalizedContent: true,
+                        profileVisibility: 'members',
+                        activityTracking: true
+                    },
+                    security: {
+                        twoFactorAuth: 'none',
+                        sessionTimeout: '30'
+                    },
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                db.collection('userSettings').doc(AppState.currentUser.uid).set(defaultSettings)
+                    .then(() => {
+                        console.log("Default settings created successfully");
+                        AppState.userSettings = defaultSettings;
+                        updateSettingsUI();
+                        showSettingsContent();
+                        showToast('Default settings applied!');
+                    })
+                    .catch((error) => {
+                        console.error('Error creating user settings:', error);
+                        
+                        if (error.code === 'permission-denied') {
+                            showError('Cannot create settings - database permissions denied. Please check your Firestore security rules.');
+                        } else {
+                            showError('Error creating settings: ' + error.message);
+                        }
+                    });
+            }
+
+            // Update settings UI with user data
+            function updateSettingsUI() {
+                if (!AppState.userSettings) {
+                    console.warn("No user settings data to display");
+                    return;
+                }
+
+                const settings = AppState.userSettings;
+                console.log("Updating UI with settings:", settings);
+                
+                // Update account settings
+                if (settings.account) {
+                    document.getElementById('language').value = settings.account.language || 'en';
+                    document.getElementById('timezone').value = settings.account.timezone || 'GMT';
+                    document.getElementById('theme').value = settings.account.theme || 'light';
+                    document.getElementById('date-format').value = settings.account.dateFormat || 'dd/mm/yyyy';
+                }
+                
+                // Update notification settings
+                if (settings.notifications) {
+                    document.getElementById('email-appointments').checked = settings.notifications.emailAppointments || false;
+                    document.getElementById('sms-appointments').checked = settings.notifications.smsAppointments || false;
+                    document.getElementById('push-appointments').checked = settings.notifications.pushAppointments || false;
+                    document.getElementById('email-results').checked = settings.notifications.emailResults || false;
+                    document.getElementById('email-renewals').checked = settings.notifications.emailRenewals || false;
+                    document.getElementById('email-newsletter').checked = settings.notifications.emailNewsletter || false;
+                    document.getElementById('email-promotions').checked = settings.notifications.emailPromotions || false;
+                }
+                
+                // Update privacy settings
+                if (settings.privacy) {
+                    document.getElementById('data-sharing').checked = settings.privacy.dataSharing || false;
+                    document.getElementById('personalized-content').checked = settings.privacy.personalizedContent || true;
+                    
+                    // Set profile visibility radio button
+                    const profileVisibility = settings.privacy.profileVisibility || 'members';
+                    document.querySelectorAll('input[name="profile-visibility"]').forEach(radio => {
+                        if (radio.value === profileVisibility) {
+                            radio.checked = true;
+                        }
+                    });
+                    
+                    document.getElementById('activity-tracking').checked = settings.privacy.activityTracking || true;
+                }
+                
+                // Update security settings
+                if (settings.security) {
+                    document.getElementById('2fa').value = settings.security.twoFactorAuth || 'none';
+                    document.getElementById('session-timeout').value = settings.security.sessionTimeout || '30';
+                }
+            }
+
+            // Show toast notification
+            function showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toast-message');
+                
+                if (!toast || !toastMessage) return;
+                
+                // Update toast content and style
+                toastMessage.textContent = message;
+                toast.className = `toast ${type}`;
+                
+                // Show icon based on type
+                const icon = toast.querySelector('i');
+                if (icon) {
+                    if (type === 'error') {
+                        icon.className = 'fas fa-exclamation-triangle';
+                    } else if (type === 'warning') {
+                        icon.className = 'fas fa-exclamation-circle';
+                    } else {
+                        icon.className = 'fas fa-check-circle';
+                    }
+                }
+                
+                // Show toast
+                setTimeout(() => toast.classList.add('show'), 100);
+                
+                // Hide after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            // Tab functionality
             const tabButtons = document.querySelectorAll('.tab-btn');
             const tabContents = document.querySelectorAll('.tab-content');
             
@@ -953,14 +1338,284 @@
                     document.getElementById(`${tabId}-tab`).classList.add('active');
                 });
             });
-            
-            // Toggle switch functionality
-            const toggleSwitches = document.querySelectorAll('.toggle-switch input');
-            toggleSwitches.forEach(toggle => {
-                toggle.addEventListener('change', function() {
-                    // You can add additional functionality here if needed
-                    console.log(`Toggle switched: ${this.checked}`);
+
+            // Form submission handlers
+            document.getElementById('account-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveAccountSettings();
+            });
+
+            document.getElementById('notifications-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveNotificationSettings();
+            });
+
+            document.getElementById('privacy-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                savePrivacySettings();
+            });
+
+            document.getElementById('security-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveSecuritySettings();
+            });
+
+            // Save account settings
+            function saveAccountSettings() {
+                if (!AppState.currentUser || !db) return;
+                
+                const accountData = {
+                    language: document.getElementById('language').value,
+                    timezone: document.getElementById('timezone').value,
+                    theme: document.getElementById('theme').value,
+                    dateFormat: document.getElementById('date-format').value
+                };
+                
+                const saveBtn = document.getElementById('save-account-btn');
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                saveBtn.disabled = true;
+                
+                db.collection('userSettings').doc(AppState.currentUser.uid).update({
+                    account: accountData,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    // Update local state
+                    if (!AppState.userSettings) AppState.userSettings = {};
+                    AppState.userSettings.account = accountData;
+                    
+                    showToast('Account settings saved successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error saving account settings:', error);
+                    showToast('Error saving account settings: ' + error.message, 'error');
+                })
+                .finally(() => {
+                    // Restore button state
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
                 });
+            }
+
+            // Save notification settings
+            function saveNotificationSettings() {
+                if (!AppState.currentUser || !db) return;
+                
+                const notificationData = {
+                    emailAppointments: document.getElementById('email-appointments').checked,
+                    smsAppointments: document.getElementById('sms-appointments').checked,
+                    pushAppointments: document.getElementById('push-appointments').checked,
+                    emailResults: document.getElementById('email-results').checked,
+                    emailRenewals: document.getElementById('email-renewals').checked,
+                    emailNewsletter: document.getElementById('email-newsletter').checked,
+                    emailPromotions: document.getElementById('email-promotions').checked
+                };
+                
+                const saveBtn = document.getElementById('save-notifications-btn');
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                saveBtn.disabled = true;
+                
+                db.collection('userSettings').doc(AppState.currentUser.uid).update({
+                    notifications: notificationData,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    // Update local state
+                    if (!AppState.userSettings) AppState.userSettings = {};
+                    AppState.userSettings.notifications = notificationData;
+                    
+                    showToast('Notification preferences saved successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error saving notification settings:', error);
+                    showToast('Error saving notification settings: ' + error.message, 'error');
+                })
+                .finally(() => {
+                    // Restore button state
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                });
+            }
+
+            // Save privacy settings
+            function savePrivacySettings() {
+                if (!AppState.currentUser || !db) return;
+                
+                const privacyData = {
+                    dataSharing: document.getElementById('data-sharing').checked,
+                    personalizedContent: document.getElementById('personalized-content').checked,
+                    profileVisibility: document.querySelector('input[name="profile-visibility"]:checked').value,
+                    activityTracking: document.getElementById('activity-tracking').checked
+                };
+                
+                const saveBtn = document.getElementById('save-privacy-btn');
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                saveBtn.disabled = true;
+                
+                db.collection('userSettings').doc(AppState.currentUser.uid).update({
+                    privacy: privacyData,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    // Update local state
+                    if (!AppState.userSettings) AppState.userSettings = {};
+                    AppState.userSettings.privacy = privacyData;
+                    
+                    showToast('Privacy settings saved successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error saving privacy settings:', error);
+                    showToast('Error saving privacy settings: ' + error.message, 'error');
+                })
+                .finally(() => {
+                    // Restore button state
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                });
+            }
+
+            // Save security settings
+            function saveSecuritySettings() {
+                if (!AppState.currentUser || !db) return;
+                
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                // Check if passwords are being changed
+                if (newPassword || confirmPassword) {
+                    if (newPassword !== confirmPassword) {
+                        showToast('New passwords do not match!', 'error');
+                        return;
+                    }
+                    
+                    if (newPassword.length < 6) {
+                        showToast('Password must be at least 6 characters long!', 'error');
+                        return;
+                    }
+                    
+                    if (!currentPassword) {
+                        showToast('Please enter your current password to change it', 'error');
+                        return;
+                    }
+                    
+                    // Update password first
+                    const user = auth.currentUser;
+                    const credential = firebase.auth.EmailAuthProvider.credential(
+                        user.email, 
+                        currentPassword
+                    );
+                    
+                    user.reauthenticateWithCredential(credential)
+                        .then(() => {
+                            return user.updatePassword(newPassword);
+                        })
+                        .then(() => {
+                            // Clear password fields
+                            document.getElementById('current-password').value = '';
+                            document.getElementById('new-password').value = '';
+                            document.getElementById('confirm-password').value = '';
+                            
+                            showToast('Password updated successfully!');
+                        })
+                        .catch((error) => {
+                            console.error('Error updating password:', error);
+                            if (error.code === 'auth/wrong-password') {
+                                showToast('Current password is incorrect!', 'error');
+                            } else {
+                                showToast('Error updating password: ' + error.message, 'error');
+                            }
+                            return; // Don't proceed with saving other security settings
+                        });
+                }
+                
+                // Save other security settings
+                const securityData = {
+                    twoFactorAuth: document.getElementById('2fa').value,
+                    sessionTimeout: document.getElementById('session-timeout').value
+                };
+                
+                const saveBtn = document.getElementById('save-security-btn');
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                saveBtn.disabled = true;
+                
+                db.collection('userSettings').doc(AppState.currentUser.uid).update({
+                    security: securityData,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    // Update local state
+                    if (!AppState.userSettings) AppState.userSettings = {};
+                    AppState.userSettings.security = securityData;
+                    
+                    showToast('Security settings saved successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error saving security settings:', error);
+                    showToast('Error saving security settings: ' + error.message, 'error');
+                })
+                .finally(() => {
+                    // Restore button state
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.disabled = false;
+                });
+            }
+
+            // Danger zone button handlers
+            document.getElementById('download-data-btn').addEventListener('click', function() {
+                showToast('Data download feature coming soon!', 'warning');
+            });
+
+            document.getElementById('deactivate-account-btn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to deactivate your account? You can reactivate it within 30 days.')) {
+                    showToast('Account deactivation feature coming soon!', 'warning');
+                }
+            });
+
+            document.getElementById('delete-account-btn').addEventListener('click', function() {
+                if (confirm('WARNING: This will permanently delete your account and all associated data. This action cannot be undone. Are you sure?')) {
+                    showToast('Account deletion feature coming soon!', 'warning');
+                }
+            });
+
+            // Retry button functionality
+            document.getElementById('retry-load-btn').addEventListener('click', function() {
+                showLoadingState();
+                if (AppState.currentUser) {
+                    loadUserSettings();
+                } else {
+                    // Re-check authentication
+                    auth.onAuthStateChanged((user) => {
+                        if (user) {
+                            AppState.currentUser = user;
+                            loadUserSettings();
+                        } else {
+                            showError("Please log in to access your settings");
+                        }
+                    });
+                }
+            });
+
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    auth.signOut()
+                        .then(() => {
+                            showToast('You have been logged out successfully.');
+                            setTimeout(() => {
+                                window.location.href = 'index.html';
+                            }, 1500);
+                        })
+                        .catch((error) => {
+                            console.error('Error signing out:', error);
+                            showToast('Error logging out', 'error');
+                        });
+                }
             });
         });
     </script>
